@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="IO,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="流是【传输数据】的一种方式，传输的数据基本单位是字节，为了处理的方便，在字节的基础上引入了字符的概念（一个字符包含多个字节），所以按照处理单位的不同，有字节流和字符流的说法。从流的方向来分类的话，又有输入流和输出流之分。  字节流和字符流：一次处理一个字节的流为字节流，一次处理一个字符的流为字符流。 输入流和输出流：如果程序是要写数据，那么就要调用相应的输出流。反之，如果要去读数据，调用输入流。">
+<meta name="keywords" content="IO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java IO流">
+<meta property="og:url" content="http://yoursite.com/2019/08/11/Java IO流/index.html">
+<meta property="og:site_name" content="刘震">
+<meta property="og:description" content="流是【传输数据】的一种方式，传输的数据基本单位是字节，为了处理的方便，在字节的基础上引入了字符的概念（一个字符包含多个字节），所以按照处理单位的不同，有字节流和字符流的说法。从流的方向来分类的话，又有输入流和输出流之分。  字节流和字符流：一次处理一个字节的流为字节流，一次处理一个字符的流为字符流。 输入流和输出流：如果程序是要写数据，那么就要调用相应的输出流。反之，如果要去读数据，调用输入流。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-11T09:37:04.999Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java IO流">
+<meta name="twitter:description" content="流是【传输数据】的一种方式，传输的数据基本单位是字节，为了处理的方便，在字节的基础上引入了字符的概念（一个字符包含多个字节），所以按照处理单位的不同，有字节流和字符流的说法。从流的方向来分类的话，又有输入流和输出流之分。  字节流和字符流：一次处理一个字节的流为字节流，一次处理一个字符的流为字符流。 输入流和输出流：如果程序是要写数据，那么就要调用相应的输出流。反之，如果要去读数据，调用输入流。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/11/Java IO流/">
+
+
+
+
+
+  <title>Java IO流 | 刘震</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">刘震</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">知上进</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/11/Java IO流/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刘震">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="刘震">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java IO流</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-11T17:37:04+08:00">
+                2019-08-11 17:37:04
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-08-11T17:37:04+08:00">
+                2019-08-11
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>流是【传输数据】的一种方式，传输的数据基本单位是字节，为了处理的方便，在字节的基础上引入了字符的概念（一个字符包含多个字节），所以按照处理单位的不同，有字节流和字符流的说法。从流的方向来分类的话，又有输入流和输出流之分。</p>
+<ul>
+<li>字节流和字符流：一次处理一个字节的流为字节流，一次处理一个字符的流为字符流。</li>
+<li>输入流和输出流：如果程序是要写数据，那么就要调用相应的输出流。反之，如果要去读数据，调用输入流。</li>
+<li>数据源和目标媒介：输入流对应数据源，即数据从哪里读取。输出流对应目标媒介，即数据写入到哪里。文件、网络、内存缓存、管道都可以是数据源/目标媒介。<h1 id="管道流"><a href="#管道流" class="headerlink" title="管道流"></a>管道流</h1>管道流用于两个线程间通信，在两个线程间以流的方式传递数据。<h2 id="字节流"><a href="#字节流" class="headerlink" title="字节流"></a>字节流</h2><h3 id="PipedOutStream"><a href="#PipedOutStream" class="headerlink" title="PipedOutStream"></a>PipedOutStream</h3>PipedOutputStream3个write方法(继承自OutputStream)：<pre><code>* 1）write(int b)   将b的低八位写入流（高24位直接丢弃），就是一个字节。
+* 2）write(byte[] b) -&gt; write(b,0,b.length)  某个字符的编码值只有查询相应的编码表才能得到，有些麻烦。
+* 因此提供了这个字节数组的方法。直接利用&quot;好&quot;.getBytes()获得对应的字节数组之后，
+* 调用write(byte[])将字符写入流中。
+* 3）write(byte[] b,int offset,int len):将字符数组中从offset位置开始的len个字节数据写入流。
+* 4）后两个方法最终还是调用write(int b),完成流数据的写入。
+</code></pre><h3 id="PipedInputStream"><a href="#PipedInputStream" class="headerlink" title="PipedInputStream"></a>PipedInputStream</h3>在utf-8的编码中汉字一般占用3个字节，特殊的汉字占用4个字节。<pre><code>PipedInputStream的read方法（继承自InputStream）
+1）read()：一次读取一个【字节】，返回值是读取的【字节数据】。当返回-1时表示流中没有数据。
+2）read(byte[] b)-&gt;read(b,0,b.length):参考以下说明。
+3）read(byte[],int offset,int len)：最多读取len个字节，offset是数组中存储这些【字节】的起始位置。返回值是读取的【字节】数。这两个方法的内部还是调用read()方法来读取流，把读取的数组存储到传入的【字节数组】。
+</code></pre><h3 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 进程间通信的【字节流】 PipedOutputStream PipedInputStream</span><br><span class="line">     * @throws IOException</span><br><span class="line">     * @throws InterruptedException</span><br><span class="line">     */</span><br><span class="line">    public static void testPipedStream() throws IOException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        PipedOutputStream pipedOutputStream = new PipedOutputStream();</span><br><span class="line">        PipedInputStream pipedInputStream = new PipedInputStream(pipedOutputStream);</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * PipedOutputStream两个write方法(继承自OutputStream)：</span><br><span class="line">         * 1）write(int b)   将b的低八位写入流（高24位直接丢弃），就是一个字节。</span><br><span class="line">         * 2）write(byte[] b) -&gt; write(b,0,b.length)  某个字符的编码值只有查询相应的编码表才能得到，有些麻烦。</span><br><span class="line">         * 因此提供了这个字节数组的方法。直接利用&quot;好&quot;.getBytes()获得对应的字节数组之后，</span><br><span class="line">         * 调用write(byte[])将字符写入流中。</span><br><span class="line">         * 3）write(byte[] b,int offset,int len):将字符数组中从offset位置开始的len个字节数据写入流。</span><br><span class="line">         * 4）后两个方法最终还是调用write(int b),完成流数据的写入。</span><br><span class="line">         */</span><br><span class="line">        new Thread(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                   for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">                        System.out.println(&quot;piped outputStream 向流中写入数据&quot;);</span><br><span class="line">                        pipedOutputStream.write((&quot;好&quot; + i).getBytes());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        pipedOutputStream.close();</span><br><span class="line">                    &#125; catch (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 在utf-8的编码中汉字一般占用3个字节，特殊的汉字占用4个字节。</span><br><span class="line">         *PipedInputStream的read方法（继承自InputStream）</span><br><span class="line">         * read()：一次读取一个【字节】，返回值是读取的【字节数据】。当返回-1时表示流中没有数据。</span><br><span class="line">         * read(byte[] b)-&gt;read(b,0,b.length):参考以下说明。</span><br><span class="line">         * read(byte[],int offset,int len)：最多读取len个字节，offset是数组中存储这些【字节】的起始位置。</span><br><span class="line">         * 返回值是读取的【字节】数。</span><br><span class="line">         * 这两个方法的内部还是调用read()方法来读取流，把读取的数组存储到传入的【字节数组】。</span><br><span class="line">         *</span><br><span class="line">         */</span><br><span class="line"></span><br><span class="line">        new Thread(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line"></span><br><span class="line">                    byte[] aa = new byte[4];</span><br><span class="line">                    while ((pipedInputStream.read(aa)) != -1) &#123;</span><br><span class="line">                        System.out.println(&quot;piped inputStream 从流中读取数据&quot;);</span><br><span class="line">                        System.out.println(new String(aa));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                finally &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        pipedInputStream.close();</span><br><span class="line">                    &#125; catch (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="字符流"><a href="#字符流" class="headerlink" title="字符流"></a>字符流</h3><p>字符流是在字节流的基础上封装而来，允许用户可以在流中直接操作字符，而不必先计算一个字符对应几个字节，再从字节流中读取需要的组合字节。</p>
+<h4 id="PipedWriter"><a href="#PipedWriter" class="headerlink" title="PipedWriter"></a>PipedWriter</h4><p>几个写入字符流的方法：<br>1）write(int a):a的低8位写入流中<br>2)write(char[] c):直接写入字符数组<br>3）write(String s):直接写入字符串<br>后两个方法最终同样是调用第1个方法完成流的写入(将字符变量强制转化为int)。</p>
+<h4 id="PipedReader"><a href="#PipedReader" class="headerlink" title="PipedReader"></a>PipedReader</h4><p>读取【字符】流：<br> 1）read():返回一个流中的【字符】，如果没有数据返回-1<br> 2）read(char[] c)-&gt;read(char[] c,0,c.length)<br> 3)read(char[] c,int offset,int len):从【字符流】中最多读取len个字符到【字符数<br> offset是存储【字符】的起始位置。返回值是读取的【字符数量】，如果是-1表示没有【字符】可以读取了。<br> 4）同样的，后2个方法也是调用第1个方法实现的。</p>
+<h4 id="测试代码-1"><a href="#测试代码-1" class="headerlink" title="测试代码"></a>测试代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 进程间通信的【字符流】</span><br><span class="line">     */</span><br><span class="line">    public static void testPipedReaderWriter() throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        PipedWriter pipedWriter = new PipedWriter();</span><br><span class="line">        PipedReader pipedReader = new PipedReader(pipedWriter);</span><br><span class="line">        /**</span><br><span class="line">         * 几个写入字符流的方法：</span><br><span class="line">         * 1）write(int a):a的低8位写入流中</span><br><span class="line">         * 2)write(char[] c):直接写入字符数组</span><br><span class="line">         * 3）write(String s):直接写入字符串</span><br><span class="line">         * 后两个方法最终同样是调用第1个方法完成流的写入(将字符变量强制转化为int)。</span><br><span class="line">         */</span><br><span class="line">        new Thread(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">                        System.out.println(&quot;piped writer 向流中写入数据&quot;);</span><br><span class="line">                        pipedWriter.write(&quot;好&quot; + i);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                catch (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                finally &#123;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            pipedWriter.close();</span><br><span class="line">                        &#125; catch (IOException e) &#123;</span><br><span class="line">                            e.printStackTrace();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         *读取【字符】流：</span><br><span class="line">         * 1）read():返回一个流中的【字符】，如果没有数据返回-1</span><br><span class="line">         * 2）read(char[] c)-&gt;read(char[] c,0,c.length)</span><br><span class="line">         * 3)read(char[] c,int offset,int len):从【字符流】中最多读取len个字符到【字符数组】c中，</span><br><span class="line">         * offset是存储【字符】的起始位置。返回值是读取的【字符数量】，如果是-1表示没有【字符】可以读取了。</span><br><span class="line">         * 4）同样的，后2个方法也是调用第1个方法实现的。</span><br><span class="line">         */</span><br><span class="line"></span><br><span class="line">        new Thread(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    int i;</span><br><span class="line">                    while ((i=pipedReader.read())!=-1) &#123;</span><br><span class="line">                        System.out.println(&quot;piped reader读取流数据&quot;);</span><br><span class="line">                        System.out.println((char)i);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                finally &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        pipedReader.close();</span><br><span class="line">                    &#125; catch (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="字节数组流"><a href="#字节数组流" class="headerlink" title="字节数组流"></a>字节数组流</h2><p>以内存中【字节数组】作为流的数据源和目标媒介。</p>
+<h3 id="测试代码-2"><a href="#测试代码-2" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 【字节数组流】,数据源和目标媒介都是内存中的【字节数组】。</span><br><span class="line">     * 输出流的目标媒介是【内存中字节数组】</span><br><span class="line">     * 输入流的数据源是【内存中字节数组】</span><br><span class="line">     * @throws IOException</span><br><span class="line">     */</span><br><span class="line"></span><br><span class="line">    public static void testByteArrayStream() throws IOException &#123;</span><br><span class="line">        //字节数组输出流的目标媒介是其内部维护的字节数组</span><br><span class="line">        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();</span><br><span class="line">        byteArrayOutputStream.write(&quot;好1&quot;.getBytes());</span><br><span class="line">        byteArrayOutputStream.write(&quot;好2&quot;.getBytes());</span><br><span class="line">        System.out.println(&quot;打印字节数组[输出流]中的内容：&quot;+byteArrayOutputStream.toString());</span><br><span class="line"></span><br><span class="line">        //字节输入流的数据源是内存中的字节数组</span><br><span class="line">        byte[] sourceBytes = byteArrayOutputStream.toByteArray();</span><br><span class="line">        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(sourceBytes);</span><br><span class="line">        //字节数组</span><br><span class="line">        byte[] content = new byte[4];</span><br><span class="line">        while (byteArrayInputStream.read(content) != -1) &#123;</span><br><span class="line">            System.out.println(&quot;字节数组[输入流]中内容是：&quot;+new String(content));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="字符数据流"><a href="#字符数据流" class="headerlink" title="字符数据流"></a>字符数据流</h2><p>以内存中的【字符数组】作为数据源和目标媒介</p>
+<h3 id="测试代码-3"><a href="#测试代码-3" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * 【字符数组流】，数据源和目标媒介都是内存中的【字符数组】</span><br><span class="line">    * Writer的目标媒介是【字符数组】</span><br><span class="line">    * Reader的数据源是【字符数组】</span><br><span class="line">    */</span><br><span class="line">   public static void testCharReaderWriter() throws IOException &#123;</span><br><span class="line">       //【字符数组】输出流的写入</span><br><span class="line">       CharArrayWriter charArrayWriter = new CharArrayWriter();</span><br><span class="line">       charArrayWriter.write(&quot;好1&quot;);</span><br><span class="line">       charArrayWriter.write(&quot;好2&quot;);</span><br><span class="line">       System.out.println(&quot;【字符数组输出流】的内容是：&quot;+charArrayWriter.toString());</span><br><span class="line">       //从流中取出字符数组</span><br><span class="line">       char[] chars = charArrayWriter.toCharArray();</span><br><span class="line">       charArrayWriter.close();</span><br><span class="line">       //【字符数组】输入流的读取</span><br><span class="line">       CharArrayReader charArrayReader = new CharArrayReader(chars);</span><br><span class="line">       //字符数组</span><br><span class="line">       char[] ch=new char[4];</span><br><span class="line">       while (charArrayReader.read(ch)!=-1)</span><br><span class="line">       System.out.println(&quot;【字符数组】输入流的内容：&quot;+new String(ch));</span><br><span class="line">       charArrayReader.close();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="文件字节流"><a href="#文件字节流" class="headerlink" title="文件字节流"></a>文件字节流</h2><p>通过调用FileInputStream和FileOutputStream完成文件的读写，读写的单位是【字节】，所以是文件字节流。</p>
+<h3 id="测试代码-4"><a href="#测试代码-4" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 通过文件输出流向文件写入字节</span><br><span class="line">     */</span><br><span class="line">    public static void testFileOutputStream() &#123;</span><br><span class="line">        File file = new File(&quot;a.txt&quot;);</span><br><span class="line">        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) &#123;</span><br><span class="line">            System.out.println(&quot;通过文件输出流向文件中写入数据&quot;);</span><br><span class="line">            fileOutputStream.write(&quot;好1&quot;.getBytes());</span><br><span class="line">            fileOutputStream.write(&quot;好2&quot;.getBytes());</span><br><span class="line">            //fileOutputStream.flush();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过文件输入流从文件读取字节</span><br><span class="line">     */</span><br><span class="line">    public static void testFileInputStream() &#123;</span><br><span class="line">        File file = new File(&quot;a.txt&quot;);</span><br><span class="line">        if (file.exists()) &#123;</span><br><span class="line">            try (FileInputStream fileOutputStream = new FileInputStream(file)) &#123;</span><br><span class="line">                byte[] bytes = new byte[4];</span><br><span class="line">                System.out.println(&quot;通过文件输入流从文件中读取数据&quot;);</span><br><span class="line">                while (fileOutputStream.read(bytes) != -1) &#123;</span><br><span class="line">                    System.out.println(new String(bytes));</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125; catch (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;a.txt文件不存在&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="文件字符流"><a href="#文件字符流" class="headerlink" title="文件字符流"></a>文件字符流</h2><p>通过FileReader直接从文件中读取字符，不必再事先计算目标字符对应几个字节，然后创建对应大小的字节数组来读取。</p>
+<h3 id="测试代码-5"><a href="#测试代码-5" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 文件【字符流】</span><br><span class="line">     */</span><br><span class="line">    public static void testFileReader() &#123;</span><br><span class="line">        testFileOutputStream();</span><br><span class="line">        try (FileReader fileReader = new FileReader(&quot;a.txt&quot;)) &#123;</span><br><span class="line">            char[] chars = new char[2];</span><br><span class="line">            while (fileReader.read(chars) != -1) &#123;</span><br><span class="line">                System.out.println(&quot;使用FileReader读取的字符流：&quot; + new String(chars));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IO/" rel="tag"># IO</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/11/AtomicLong与CAS/" rel="next" title="AtomicLong与CAS">
+                <i class="fa fa-chevron-left"></i> AtomicLong与CAS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/11/Java本地执行Linux命令/" rel="prev" title="Java本地执行Linux命令">
+                Java本地执行Linux命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">刘震</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/lz3018" target="_blank" title="读书时的博客">
+                      
+                        <i class="fa fa-fw fa-globe"></i>读书时的博客</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#管道流"><span class="nav-number">1.</span> <span class="nav-text">管道流</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#字节流"><span class="nav-number">1.1.</span> <span class="nav-text">字节流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PipedOutStream"><span class="nav-number">1.1.1.</span> <span class="nav-text">PipedOutStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PipedInputStream"><span class="nav-number">1.1.2.</span> <span class="nav-text">PipedInputStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码"><span class="nav-number">1.1.3.</span> <span class="nav-text">测试代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符流"><span class="nav-number">1.1.4.</span> <span class="nav-text">字符流</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PipedWriter"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">PipedWriter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PipedReader"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">PipedReader</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试代码-1"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">测试代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字节数组流"><span class="nav-number">1.2.</span> <span class="nav-text">字节数组流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码-2"><span class="nav-number">1.2.1.</span> <span class="nav-text">测试代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符数据流"><span class="nav-number">1.3.</span> <span class="nav-text">字符数据流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码-3"><span class="nav-number">1.3.1.</span> <span class="nav-text">测试代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件字节流"><span class="nav-number">1.4.</span> <span class="nav-text">文件字节流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码-4"><span class="nav-number">1.4.1.</span> <span class="nav-text">测试代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件字符流"><span class="nav-number">1.5.</span> <span class="nav-text">文件字符流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码-5"><span class="nav-number">1.5.1.</span> <span class="nav-text">测试代码</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刘震</span>
+
+  
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共8.7k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"> </script>
+
+  
+    <span class="site-uv">
+      访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

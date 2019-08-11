@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Java提供了在Linux环境下执行命令的接口，其实现原理为：在JVM中fork一个执行命令的子进程，JVM通过管道与子进程通信，获得命令的执行结果。首先了解下Linux下管道通信的原理。 PIPE管道通信1)父进程调用pipe开辟管道，得到执行管道的两个文件描述符，分别是表示读的fd[0]和表示写的fd[1]，简单来说，就是对应管道的读端和写端。读端负责从管道中读取数据，写端向管道中写数据。2）">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java本地执行Linux命令">
+<meta property="og:url" content="http://yoursite.com/2019/08/11/Java本地执行Linux命令/index.html">
+<meta property="og:site_name" content="刘震">
+<meta property="og:description" content="Java提供了在Linux环境下执行命令的接口，其实现原理为：在JVM中fork一个执行命令的子进程，JVM通过管道与子进程通信，获得命令的执行结果。首先了解下Linux下管道通信的原理。 PIPE管道通信1)父进程调用pipe开辟管道，得到执行管道的两个文件描述符，分别是表示读的fd[0]和表示写的fd[1]，简单来说，就是对应管道的读端和写端。读端负责从管道中读取数据，写端向管道中写数据。2）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/pipe/%E7%AE%A1%E9%81%93%E5%9B%BE.png">
+<meta property="og:updated_time" content="2019-08-11T09:37:21.211Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java本地执行Linux命令">
+<meta name="twitter:description" content="Java提供了在Linux环境下执行命令的接口，其实现原理为：在JVM中fork一个执行命令的子进程，JVM通过管道与子进程通信，获得命令的执行结果。首先了解下Linux下管道通信的原理。 PIPE管道通信1)父进程调用pipe开辟管道，得到执行管道的两个文件描述符，分别是表示读的fd[0]和表示写的fd[1]，简单来说，就是对应管道的读端和写端。读端负责从管道中读取数据，写端向管道中写数据。2）">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/pipe/%E7%AE%A1%E9%81%93%E5%9B%BE.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/11/Java本地执行Linux命令/">
+
+
+
+
+
+  <title>Java本地执行Linux命令 | 刘震</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">刘震</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">知上进</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/11/Java本地执行Linux命令/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="刘震">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="刘震">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java本地执行Linux命令</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-11T17:37:21+08:00">
+                2019-08-11 17:37:21
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-08-11T17:37:21+08:00">
+                2019-08-11
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java提供了在Linux环境下执行命令的接口，其实现原理为：在JVM中fork一个执行命令的子进程，JVM通过管道与子进程通信，获得命令的执行结果。首先了解下Linux下管道通信的原理。</p>
+<h1 id="PIPE管道通信"><a href="#PIPE管道通信" class="headerlink" title="PIPE管道通信"></a>PIPE管道通信</h1><p><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/pipe/%E7%AE%A1%E9%81%93%E5%9B%BE.png" alt="avatar"><br>1)父进程调用pipe开辟管道，得到执行管道的两个文件描述符，分别是表示读的fd[0]和表示写的fd[1]，简单来说，就是对应管道的读端和写端。读端负责从管道中读取数据，写端向管道中写数据。<br>2）父进程调用fork创建子进程，子进程复制父进程的两个文件描述符。<br>3）父进程关闭读端，子进程关闭写端（右侧图），这样父进程向管道中写数据，子进程读取数据，完成进程间的通信。<br>管道具有以下特点：</p>
+<ul>
+<li>管道是半双工的，只能有一个读端和一个写端，如果两个进程要实现双向通信，则需要建立两个管道。</li>
+<li>管道其实是内存中的一个环形队列，大小由BUFF_SIZE定义。当队列中已满时，写端会阻塞。读端读出数据之后，写端才可以继续写入。<h2 id="管道读写规则"><a href="#管道读写规则" class="headerlink" title="管道读写规则"></a>管道读写规则</h2><h3 id="读规则"><a href="#读规则" class="headerlink" title="读规则"></a>读规则</h3>1）如果所有指向管道写端的文件描述符都关闭了，但仍然有进程的读端从管道读取数据，那么读端读取过管道中剩余的数据之后，再次读取的话，linux提供的read方法会返回0（相当于读到文件末尾），表示读取已经完成，读取程序返回。<br>2）如果有写端的文件描述符没有关闭，而写端也没有写入数据，则读取过剩余数据之后程序会阻塞。<h3 id="写规则"><a href="#写规则" class="headerlink" title="写规则"></a>写规则</h3>1）如果读端所有文件描述符都已关闭，则写端写入的时候会收到信号SIGPIPE，通常写入的进程会异常终止。<br>2）如果读端的文件描述符没有关闭，并且没有在读数据，那么把管道写满之后，写端进程会阻塞。<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2>应该是管道相关的所有读端和写端的文件描述符都关闭之后，管道生命周期结束。<h1 id="Java进程"><a href="#Java进程" class="headerlink" title="Java进程"></a>Java进程</h1>在Java中调用Linux命令是通过创建一个执行命令的进程来实现的，创建进程有两种方式：使用RunTime.exec()和ProcessBuilder。后者是推荐的使用方式，本节重点讨论这种方式。<h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2>使用ProcessBuilder调用外部进程执行linux命令的一个例子：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//创建进程构造器</span><br><span class="line">       ProcessBuilder processBuilder = new ProcessBuilder();</span><br><span class="line">       //对应的命令</span><br><span class="line">       processBuilder.command(&quot;/bin/bash&quot;, &quot;-c&quot;, &quot;cat test.txt|grep test&quot;);</span><br><span class="line">       //将错误输出流重定向到标准输出流</span><br><span class="line">       processBuilder.redirectErrorStream(true);</span><br><span class="line">       //调用start创建并启动进程</span><br><span class="line">       Process process = processBuilder.start();</span><br><span class="line">       //等待进程退出，获得其退出值，这是一个阻塞方法。</span><br><span class="line">       int exitCode = process.waitFor();</span><br><span class="line">       System.out.println(&quot;exitCode:&quot;+exitCode);</span><br><span class="line">       //启动的子进程已经结束，但是管道的读端仍然存在（就是jvm），因此可以使用BufferedReader读取管道中的数据</span><br><span class="line">       //读取命令的执行结果</span><br><span class="line">       String line;</span><br><span class="line">       try (BufferedReader bf = new BufferedReader(new InputStreamReader(process.getInputStream()))) &#123;</span><br><span class="line">           System.out.println(&quot;开始读取命令的输出结果&quot;);</span><br><span class="line">           while (null != (line = bf.readLine())) &#123;</span><br><span class="line">               System.out.println(line);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>有几点需要注意：</p>
+<ul>
+<li>有些命令需要shell才能解释执行，Java本身不能解释执行。比如“|”管道符号就需要/bin/bash的解释才难执行，因此才有command(“/bin/bash”, “-c”, “ls”)这种使用方式。</li>
+<li>使用redirectErrorStream(true)重定向错误输出到标准输出，便于对命令结果的处理。<h2 id="阻塞问题"><a href="#阻塞问题" class="headerlink" title="阻塞问题"></a>阻塞问题</h2>管道中的环形队列大小是有限的,如果子进程的输出结果比较多，就会导致管道被写满，进程因写入而阻塞。而父进程（JVM）中的waitFor一直阻塞等待子进程退出，进而导致父进程阻塞，产生互相等待的死锁现象。<h3 id="waitFor之前读取管道数据"><a href="#waitFor之前读取管道数据" class="headerlink" title="waitFor之前读取管道数据"></a>waitFor之前读取管道数据</h3>可以在调用waitFor之前读取管道中的数据，如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//创建进程构造器</span><br><span class="line">ProcessBuilder processBuilder = new ProcessBuilder();</span><br><span class="line">//对应的命令</span><br><span class="line">processBuilder.command(&quot;/bin/bash&quot;, &quot;-c&quot;, &quot;ls&quot;);</span><br><span class="line">//将错误输出流重定向到标准输出流</span><br><span class="line">processBuilder.redirectErrorStream(true);</span><br><span class="line">//调用start创建并启动进程</span><br><span class="line">Process process = processBuilder.start();</span><br><span class="line">//读取命令的执行结果</span><br><span class="line">String line;</span><br><span class="line">try (BufferedReader bf = new BufferedReader(new InputStreamReader(process.getInputStream()))) &#123;</span><br><span class="line">    System.out.println(&quot;开始读取命令的输出结果&quot;);</span><br><span class="line">    while (null != (line = bf.readLine())) &#123;</span><br><span class="line">        System.out.println(line);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//等待进程退出，获得其退出值，这是一个阻塞方法。</span><br><span class="line">int exitCode = process.waitFor();</span><br><span class="line">System.out.println(&quot;exitCode:&quot;+exitCode);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="进程超时退出"><a href="#进程超时退出" class="headerlink" title="进程超时退出"></a>进程超时退出</h3><p>readLine也是个阻塞方法，如果标准输出流中没有数据（例如命令只输入“cat”就会一直卡着等待用户输入文件名），就会阻塞等待，这种场景下主进程还是会阻塞。因此有必要引入子进程超时退出的机制。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">//创建进程构造器</span><br><span class="line">        ProcessBuilder processBuilder = new ProcessBuilder();</span><br><span class="line">        //对应的命令</span><br><span class="line">        processBuilder.command(&quot;/bin/bash&quot;, &quot;-c&quot;, &quot;cat&quot;);</span><br><span class="line">        //将错误输出流重定向到标准输出流</span><br><span class="line">        processBuilder.redirectErrorStream(true);</span><br><span class="line">        //调用start创建并启动进程</span><br><span class="line">        Process process = processBuilder.start();</span><br><span class="line"></span><br><span class="line">        //方法不会一直阻塞，最多阻塞时间为timeout。</span><br><span class="line">        //true表示进程执行完成已退出，false表示一定时间内进程还没有退出，</span><br><span class="line">        boolean exitFlag = process.waitFor(10, TimeUnit.SECONDS);</span><br><span class="line">        //进程已结束</span><br><span class="line">        if (exitFlag) &#123;</span><br><span class="line">            String line;</span><br><span class="line">            try (BufferedReader bf = new BufferedReader(new InputStreamReader(process.getInputStream()))) &#123;</span><br><span class="line">                System.out.println(&quot;开始读取命令的输出结果&quot;);</span><br><span class="line">                while (null != (line = bf.readLine())) &#123;</span><br><span class="line">                    System.out.println(line);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            int exitCode = process.exitValue();</span><br><span class="line">            System.out.println(&quot;exitCode:&quot; + exitCode);</span><br><span class="line">        &#125;</span><br><span class="line">        else &#123;</span><br><span class="line">            System.out.println(&quot;进程在指定的时间内没有结束，销毁process&quot;);</span><br><span class="line">            //强制杀死进程,kill -9</span><br><span class="line">            while (process.isAlive()) &#123;</span><br><span class="line">                process.destroyForcibly();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(&quot;process已销毁&quot;);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的几点：</p>
+<ul>
+<li>waitFor(10, TimeUnit.SECONDS)会不断检测进程是否执行完成，执行完成则直接退出，返回false。否则，休眠等待，最多等待一定时间（这里是10s），则退出，并返回false。</li>
+<li>exitValue()方法也是获得进程的退出值，但不是阻塞方法。如果调用时，进程还未结，则抛出异常IllegalThreadStateException。否则，返回进程的退出值。</li>
+<li>isAlive()检测进程是否已执行完成，destroyForcibly()用于强制销毁进程（kill -9）。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/11/Java IO流/" rel="next" title="Java IO流">
+                <i class="fa fa-chevron-left"></i> Java IO流
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">刘震</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/lz3018" target="_blank" title="读书时的博客">
+                      
+                        <i class="fa fa-fw fa-globe"></i>读书时的博客</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PIPE管道通信"><span class="nav-number">1.</span> <span class="nav-text">PIPE管道通信</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#管道读写规则"><span class="nav-number">1.1.</span> <span class="nav-text">管道读写规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读规则"><span class="nav-number">1.1.1.</span> <span class="nav-text">读规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写规则"><span class="nav-number">1.1.2.</span> <span class="nav-text">写规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生命周期"><span class="nav-number">1.2.</span> <span class="nav-text">生命周期</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java进程"><span class="nav-number">2.</span> <span class="nav-text">Java进程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一个例子"><span class="nav-number">2.1.</span> <span class="nav-text">一个例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞问题"><span class="nav-number">2.2.</span> <span class="nav-text">阻塞问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#waitFor之前读取管道数据"><span class="nav-number">2.2.1.</span> <span class="nav-text">waitFor之前读取管道数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程超时退出"><span class="nav-number">2.2.2.</span> <span class="nav-text">进程超时退出</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刘震</span>
+
+  
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共8.7k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"> </script>
+
+  
+    <span class="site-uv">
+      访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
