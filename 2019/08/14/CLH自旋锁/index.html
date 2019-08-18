@@ -84,7 +84,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="CLH自旋锁">
 <meta property="og:url" content="http://yoursite.com/2019/08/14/CLH自旋锁/index.html">
-<meta property="og:site_name" content="刘震">
+<meta property="og:site_name" content="lz">
 <meta property="og:description" content="背景我们可以使用synchronized这种互斥锁实现对共享资源的并发访问，线程如果检测到锁已经被占用就会被挂起，直到锁被释放，唤醒这些挂起的线程重新竞争这把锁，竞争失败的又会被挂起。其中的挂起和唤醒均需要CPU做上下文的切换，即保护现场和恢复现场，是一笔不小的开销。考虑这样一种场景，如果对共享数据的访问仅占用业务中很小的一部分，临界区的运行耗费的时间很短，甚至还没有上下文切换的耗费的时间多，那么">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/spinLock.png">
@@ -129,7 +129,7 @@
 
 
 
-  <title>CLH自旋锁 | 刘震</title>
+  <title>CLH自旋锁 | lz</title>
   
 
 
@@ -159,7 +159,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">刘震</span>
+        <span class="site-title">lz</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -239,13 +239,13 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/CLH自旋锁/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="刘震">
+      <meta itemprop="name" content="lz">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="刘震">
+      <meta itemprop="name" content="lz">
     </span>
 
     
@@ -499,7 +499,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">刘震</p>
+              <p class="site-author-name" itemprop="name">lz</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -599,7 +599,7 @@
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">刘震</span>
+  <span class="author" itemprop="copyrightHolder">lz</span>
 
   
 </div>
