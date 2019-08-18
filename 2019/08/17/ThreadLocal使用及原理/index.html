@@ -83,7 +83,7 @@
 <meta name="keywords" content="并发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ThreadLocal使用及原理">
-<meta property="og:url" content="http://yoursite.com/2019/08/18/ThreadLocal使用及原理/index.html">
+<meta property="og:url" content="http://yoursite.com/2019/08/17/ThreadLocal使用及原理/index.html">
 <meta property="og:site_name" content="lz">
 <meta property="og:description" content="ThreadLocal是什么ThreadLocal直译为线程本地变量，是一个支持泛型的数据结构，其奇特之处在于，同一个threadlocal变量（以下简称tl变量）在线程间是隔离的，即线程A中调用set方法修改了变量值之后不会影响其它线程中的变量值。 ThreadLocal原理 12ThreadLocal&amp;lt;Object&amp;gt; threadLocal1;ThreadLocal&amp;lt;Obje">
 <meta property="og:locale" content="zh-Hans">
@@ -91,7 +91,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/threadLocal2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/threadLocal3.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/threadLocal4.png">
-<meta property="og:updated_time" content="2019-08-18T12:02:22.311Z">
+<meta property="og:updated_time" content="2019-08-18T12:18:20.373Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ThreadLocal使用及原理">
 <meta name="twitter:description" content="ThreadLocal是什么ThreadLocal直译为线程本地变量，是一个支持泛型的数据结构，其奇特之处在于，同一个threadlocal变量（以下简称tl变量）在线程间是隔离的，即线程A中调用set方法修改了变量值之后不会影响其它线程中的变量值。 ThreadLocal原理 12ThreadLocal&amp;lt;Object&amp;gt; threadLocal1;ThreadLocal&amp;lt;Obje">
@@ -125,7 +125,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/08/18/ThreadLocal使用及原理/">
+  <link rel="canonical" href="http://yoursite.com/2019/08/17/ThreadLocal使用及原理/">
 
 
 
@@ -238,7 +238,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/18/ThreadLocal使用及原理/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/17/ThreadLocal使用及原理/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lz">
@@ -267,8 +267,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-18T20:02:22+08:00">
-                2019-08-18 20:02:22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-17T21:35:32+08:00">
+                2019-08-17 21:35:32
               </time>
             
 
@@ -283,7 +283,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-08-18T20:02:22+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-08-18T20:18:20+08:00">
                 2019-08-18
               </time>
             
@@ -320,8 +320,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/08/18/ThreadLocal使用及原理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/08/18/ThreadLocal使用及原理/" itemprop="commentsCount"></span>
+                <a href="/2019/08/17/ThreadLocal使用及原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/08/17/ThreadLocal使用及原理/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -478,8 +478,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/14/AtomicLong与CAS/" rel="next" title="AtomicLong与CAS">
-                <i class="fa fa-chevron-left"></i> AtomicLong与CAS
+              <a href="/2019/08/15/CLH自旋锁/" rel="next" title="CLH自旋锁">
+                <i class="fa fa-chevron-left"></i> CLH自旋锁
               </a>
             
           </div>
@@ -487,10 +487,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/08/18/CLH自旋锁/" rel="prev" title="CLH自旋锁">
-                CLH自旋锁 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

@@ -83,13 +83,13 @@
 <meta name="keywords" content="并发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CLH自旋锁">
-<meta property="og:url" content="http://yoursite.com/2019/08/18/CLH自旋锁/index.html">
+<meta property="og:url" content="http://yoursite.com/2019/08/15/CLH自旋锁/index.html">
 <meta property="og:site_name" content="lz">
 <meta property="og:description" content="背景我们可以使用synchronized这种互斥锁实现对共享资源的并发访问，线程如果检测到锁已经被占用就会被挂起，直到锁被释放，唤醒这些挂起的线程重新竞争这把锁，竞争失败的又会被挂起。其中的挂起和唤醒均需要CPU做上下文的切换，即保护现场和恢复现场，是一笔不小的开销。考虑这样一种场景，如果对共享数据的访问仅占用业务中很小的一部分，临界区的运行耗费的时间很短，甚至还没有上下文切换的耗费的时间多，那么">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/spinLock.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/CLH_LOCK.png">
-<meta property="og:updated_time" content="2019-08-18T12:06:11.530Z">
+<meta property="og:updated_time" content="2019-08-18T12:17:37.929Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CLH自旋锁">
 <meta name="twitter:description" content="背景我们可以使用synchronized这种互斥锁实现对共享资源的并发访问，线程如果检测到锁已经被占用就会被挂起，直到锁被释放，唤醒这些挂起的线程重新竞争这把锁，竞争失败的又会被挂起。其中的挂起和唤醒均需要CPU做上下文的切换，即保护现场和恢复现场，是一笔不小的开销。考虑这样一种场景，如果对共享数据的访问仅占用业务中很小的一部分，临界区的运行耗费的时间很短，甚至还没有上下文切换的耗费的时间多，那么">
@@ -123,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/08/18/CLH自旋锁/">
+  <link rel="canonical" href="http://yoursite.com/2019/08/15/CLH自旋锁/">
 
 
 
@@ -236,7 +236,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/18/CLH自旋锁/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/15/CLH自旋锁/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lz">
@@ -265,8 +265,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-18T20:06:11+08:00">
-                2019-08-18 20:06:11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-15T23:03:17+08:00">
+                2019-08-15 23:03:17
               </time>
             
 
@@ -281,7 +281,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-08-18T20:06:11+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-08-18T20:17:37+08:00">
                 2019-08-18
               </time>
             
@@ -318,8 +318,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/08/18/CLH自旋锁/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/08/18/CLH自旋锁/" itemprop="commentsCount"></span>
+                <a href="/2019/08/15/CLH自旋锁/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/08/15/CLH自旋锁/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -431,8 +431,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/18/ThreadLocal使用及原理/" rel="next" title="ThreadLocal使用及原理">
-                <i class="fa fa-chevron-left"></i> ThreadLocal使用及原理
+              <a href="/2019/07/14/AtomicLong与CAS/" rel="next" title="AtomicLong与CAS">
+                <i class="fa fa-chevron-left"></i> AtomicLong与CAS
               </a>
             
           </div>
@@ -440,6 +440,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/17/ThreadLocal使用及原理/" rel="prev" title="ThreadLocal使用及原理">
+                ThreadLocal使用及原理 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
