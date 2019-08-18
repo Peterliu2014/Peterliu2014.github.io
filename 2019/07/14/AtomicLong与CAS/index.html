@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="lz">
 <meta property="og:description" content="背景并发环境下为了保证对共享资源的正确访问，通常采用对临界区加锁的方式来实现(例如synchronized，ReentrantLock)，这种加锁的方式假设线程每次读取共享资源时，其已经被其它线程做了修改，因此需要对临界区加锁,这种锁也称为悲观锁。 但是，还存在一种更加乐观的假设，即线程更新共享数据时，数据没有被其它线程修改。对数据更新时不加锁，但是会检测数据冲突，如果存在冲突(数据被其它线程修改">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-18T09:24:32.456Z">
+<meta property="og:updated_time" content="2019-08-18T12:05:40.144Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AtomicLong与CAS">
 <meta name="twitter:description" content="背景并发环境下为了保证对共享资源的正确访问，通常采用对临界区加锁的方式来实现(例如synchronized，ReentrantLock)，这种加锁的方式假设线程每次读取共享资源时，其已经被其它线程做了修改，因此需要对临界区加锁,这种锁也称为悲观锁。 但是，还存在一种更加乐观的假设，即线程更新共享数据时，数据没有被其它线程修改。对数据更新时不加锁，但是会检测数据冲突，如果存在冲突(数据被其它线程修改">
@@ -278,7 +278,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-08-18T17:24:32+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-08-18T20:05:40+08:00">
                 2019-08-18
               </time>
             
@@ -309,6 +309,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/07/14/AtomicLong与CAS/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/07/14/AtomicLong与CAS/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -439,8 +449,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/08/14/CLH自旋锁/" rel="prev" title="CLH自旋锁">
-                CLH自旋锁 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/08/18/ThreadLocal使用及原理/" rel="prev" title="ThreadLocal使用及原理">
+                ThreadLocal使用及原理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -469,6 +479,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
 
   
 
@@ -797,6 +814,43 @@
 
 
 
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'Peterliu2014',
+            repo: 'BlogComments',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'd0897defee454dc250ca58f969ff1bfcaf8bd9e4# EITHER this or proxy_gateway, Github access secret token for the Gitment',
+            
+                client_id: 'Iv1.912c0008dfe7f8f3'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
 
 
 
