@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/aqs2.png">
-<meta property="og:updated_time" content="2019-09-02T15:26:31.726Z">
+<meta property="og:updated_time" content="2019-09-03T14:13:59.065Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AQS概述">
 <meta name="twitter:description" content="背景在JDK5之前，synchronized是仅有的同步手段，也称为内置锁。这种锁在JVM层面实现，使用时需要synchronized修饰方法，或者修饰代码块。JDK5之后，引入了用于构建锁或其它同步组件的基本框架–AQS，通过AQS(AbstractQueuedSynchronizer)实现的锁使用起来更加灵活，并且支持更多的功能，例如支持公平、非公平锁，获取锁时的中断机制和超时机制。以下做一个">
@@ -271,19 +271,7 @@
             
 
             
-              <span class="post-meta-divider">|</span>
-            
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2019-09-02T23:26:31+08:00">
-                2019-09-02
-              </time>
             
           </span>
 
@@ -346,7 +334,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2.2k
+                  2.1k
                 </span>
               
 
@@ -362,7 +350,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  8
+                  7
                 </span>
               
             </div>
@@ -526,7 +514,6 @@
 <li>ReentrantLock 是可重入的互斥锁（独占模式），同步状态来保存锁（重复）持有的次数。ReentrantLock 有公平锁和非公平锁两种模式，对应的，ReentrantLock内部有两个AQS的子类。</li>
 <li>Semaphore表示信号量(共享模式)，同步状态来保存信号量的当前计数。它里面定义的acquireShared方法会减少计数，或当计数为非正值时阻塞线程；tryRelease方法会增加计数，可能在计数为正值时还要解除线程的阻塞。</li>
 <li>CountDownLatch类使用AQS同步状态来表示计数。当该计数为0时，所有的acquire操作（acquire操作是从aqs的角度说的，对应到CountDownLatch中就是await方法）才能通过。</li>
-<li>FutureTask类使用AQS同步状态来表示某个异步计算任务的运行状态（初始化、运行中、被取消和完成）。设置（FutureTask的set方法）或取消（FutureTask的cancel方法）一个FutureTask时会调用AQS的release操作，等待计算结果的线程的阻塞解除是通过AQS的acquire操作实现的。</li>
 </ul>
 <p>参考<br>1）<a href="http://gee.cs.oswego.edu/dl/papers/aqs.pdf" target="_blank" rel="noopener">http://gee.cs.oswego.edu/dl/papers/aqs.pdf</a><br>2）<a href="https://leer.moe/2019/04/25/java-concurrent-aqs" target="_blank" rel="noopener">https://leer.moe/2019/04/25/java-concurrent-aqs</a></p>
 
@@ -759,7 +746,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共16.9k字</span>
+  <span class="post-count">博客全站共16.8k字</span>
 </div>
 
         
