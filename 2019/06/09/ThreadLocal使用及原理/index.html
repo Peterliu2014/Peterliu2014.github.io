@@ -231,27 +231,6 @@
       
 
       
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>thx<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
     </div>
     <div class="article-info article-info-index">
       
@@ -321,6 +300,19 @@
             </div>
         </div>
         
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ThreadLocal是什么"><span class="toc-number">1.</span> <span class="toc-text">ThreadLocal是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ThreadLocal原理"><span class="toc-number">2.</span> <span class="toc-text">ThreadLocal原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本API"><span class="toc-number">2.1.</span> <span class="toc-text">基本API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#initialValue方法"><span class="toc-number">2.1.1.</span> <span class="toc-text">initialValue方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#get方法"><span class="toc-number">2.1.2.</span> <span class="toc-text">get方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#set方法"><span class="toc-number">2.1.3.</span> <span class="toc-text">set方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#remove方法"><span class="toc-number">2.1.4.</span> <span class="toc-text">remove方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么使用弱引用"><span class="toc-number">2.2.</span> <span class="toc-text">为什么使用弱引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引用类型"><span class="toc-number">2.2.1.</span> <span class="toc-text">引用类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#强引用"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">强引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#软引用"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">软引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#弱引用"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">弱引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#虚引用"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">虚引用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Entry结构"><span class="toc-number">2.2.2.</span> <span class="toc-text">Entry结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存泄漏"><span class="toc-number">2.3.</span> <span class="toc-text">内存泄漏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#get-set方法"><span class="toc-number">2.3.1.</span> <span class="toc-text">get/set方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#remove方法-1"><span class="toc-number">2.3.2.</span> <span class="toc-text">remove方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个内存泄露的例子"><span class="toc-number">2.3.3.</span> <span class="toc-text">一个内存泄露的例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程复用导致的泄露"><span class="toc-number">2.3.4.</span> <span class="toc-text">线程复用导致的泄露</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ThreadLocal用法"><span class="toc-number">3.</span> <span class="toc-text">ThreadLocal用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#示例代码"><span class="toc-number">3.1.</span> <span class="toc-text">示例代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#示例分析"><span class="toc-number">3.2.</span> <span class="toc-text">示例分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工程实践"><span class="toc-number">3.3.</span> <span class="toc-text">工程实践</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ThreadLocal适用场景"><span class="toc-number">4.</span> <span class="toc-text">ThreadLocal适用场景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
         
     </div>
 </aside>
