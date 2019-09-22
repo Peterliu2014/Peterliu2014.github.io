@@ -136,6 +136,98 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JAVA线程池原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/27/JAVA线程池原理/">JAVA线程池原理</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/27/JAVA线程池原理/" class="archive-article-date">
+  	<time datetime="2019-07-27T12:33:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="为什么需要线程池"><a href="#为什么需要线程池" class="headerlink" title="为什么需要线程池"></a>为什么需要线程池</h1><p>「池」是一种共享技术，引入线程池有以下几点好处：</p>
+<ul>
+<li>复用线程资源。创建一定数量的工作线程负责执行提交的任务，工作线程除了初次创建之外，之后不断地从任务队列中取出任务执行，没有任务则阻塞等待，通过这种方式实现了线程资源的复用（如果不使用线程池，则每个任务都需要创建一个线程来执行）。</li>
+<li>限制线程资源。线程池提供了一个控制最大工作线程数量的参数，限制了创建的线程数，避免消耗过多的系统资源。</li>
+<li>提高响应速度。工作线程直接从任务队列中取出任务来执行，提高了对任务的响应速度（之前是先创建线程，然后执行任务。创建线程需要一些时间）。</li>
+<li>统一管理线程。线程池统一管理、分配、监控线程。
+        
+          <a class="article-more-a" href="/2019/07/27/JAVA线程池原理/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/27/JAVA线程池原理/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-AQS共享模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
