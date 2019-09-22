@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/threadpool_10.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/exception.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/threadpool5.png">
-<meta property="og:updated_time" content="2019-09-22T12:55:28.040Z">
+<meta property="og:updated_time" content="2019-09-22T13:04:08.494Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA线程池原理">
 <meta name="twitter:description" content="为什么需要线程池「池」是一种共享技术，引入线程池有以下几点好处：  复用线程资源。创建一定数量的工作线程负责执行提交的任务，工作线程除了初次创建之外，之后不断地从任务队列中取出任务执行，没有任务则阻塞等待，通过这种方式实现了线程资源的复用（如果不使用线程池，则每个任务都需要创建一个线程来执行）。 限制线程资源。线程池提供了一个控制最大工作线程数量的参数，限制了创建的线程数，避免消耗过多的系统资源。">
@@ -179,7 +179,38 @@ Java线程池是通过ThreadPoolExecutor实现的。接下来分析其实现原�
 <p>只有shutdown方法才会将RUNNING修改为SHUTDOWN状态，没有其它方法可以完成这个操作。</p>
 <h2 id="转换为STOP"><a href="#转换为STOP" class="headerlink" title="转换为STOP"></a>转换为STOP</h2><p>只有shutdwonNow方法才会将线程状态转化为STOP状态。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Runnable&gt; <span class="title">shutdownNow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;Runnable&gt; tasks;   </span><br><span class="line">        <span class="keyword">final</span> ReentrantLock mainLock = <span class="keyword">this</span>.mainLock;</span><br><span class="line">        mainLock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            checkShutdownAccess();</span><br><span class="line">            <span class="comment">//设置stop状态</span></span><br><span class="line">            advanceRunState(STOP);</span><br><span class="line">            interruptWorkers();</span><br><span class="line">            tasks = drainQueue();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            mainLock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//终止线程池</span></span><br><span class="line">        tryTerminate();</span><br><span class="line">        <span class="keyword">return</span> tasks;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="转换为TIDYING"><a href="#转换为TIDYING" class="headerlink" title="转换为TIDYING"></a>转换为TIDYING</h2><p>只有在tryTerminate方法中设置状态为TIDYING状态，并且是先通过CAS设置为「TIDYING」，执行过terminated方法（空方法，子类可以实现）之后设置状态为「TERMINATED」。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">tryTerminate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            <span class="keyword">int</span> c = ctl.get();</span><br><span class="line">            <span class="keyword">if</span> (isRunning(c) ||</span><br><span class="line">                runStateAtLeast(c, TIDYING) ||</span><br><span class="line">                (runStateOf(c) == SHUTDOWN &amp;&amp; ! workQueue.isEmpty()))</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            <span class="keyword">if</span> (workerCountOf(c) != <span class="number">0</span>) &#123; </span><br><span class="line">                interruptIdleWorkers(ONLY_ONE);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> ReentrantLock mainLock = <span class="keyword">this</span>.mainLock;</span><br><span class="line">            mainLock.lock();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//设置为TIDYING状态</span></span><br><span class="line">                <span class="keyword">if</span> (ctl.compareAndSet(c, ctlOf(TIDYING, <span class="number">0</span>))) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        terminated();</span><br><span class="line">                    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                        <span class="comment">//最后设置为TERMINATED状态</span></span><br><span class="line">                        ctl.set(ctlOf(TERMINATED, <span class="number">0</span>));</span><br><span class="line">                        termination.signalAll();</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                mainLock.unlock();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// else retry on failed CAS</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>线程池各状态间的转换如下。<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/threadpool-status.png" alt="Aaron Swartz"><br>对各状态的作用做个总结<br>|状态  | 作用 |<br>| — | — |<br>|RUNNING  |运行状态，线程池创建后的初始状态，最正常的状态，这时没有限制线程池的功能 |<br>|SHUTDOWN  |待关闭状态，用户调用shutdown方法会将状态修改为SHUTDOWN。本状态下不再接收新任务，会继续处理阻塞队列中的任务，正在运行的任务不会被中断  |<br>|STOP  |停止状态，用户调用shutdownNow方法将状态修改为STOP，本状态下不接受新任务，不处理阻塞队列中的任务，并且会尝试中断正在执行的任务  |<br>|TIDYING  |整理状态，在tryTerminate中将状态设置为TIDYING。如果之前是待关闭状态，则必须是任务队列为空并且工作线程数为0才会设置为TIDYING。如果之前是STOP，只需工作线程数为0  |<br>| TERMINATED |调用terminated方法（空方法）之后就转为终止状态  |<br>对应的ctl值是：</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>线程池各状态间的转换如下。<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/threadpool-status.png" alt="Aaron Swartz"><br>对各状态的作用做个总结</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RUNNING</td>
+<td>运行状态，线程池创建后的初始状态，最正常的状态，这时没有限制线程池的功能</td>
+</tr>
+<tr>
+<td>SHUTDOWN</td>
+<td>待关闭状态，用户调用shutdown方法会将状态修改为SHUTDOWN。本状态下不再接收新任务，会继续处理阻塞队列中的任务，正在运行的任务不会被中断</td>
+</tr>
+<tr>
+<td>STOP</td>
+<td>停止状态，用户调用shutdownNow方法将状态修改为STOP，本状态下不接受新任务，不处理阻塞队列中的任务，并且会尝试中断正在执行的任务</td>
+</tr>
+<tr>
+<td>TIDYING</td>
+<td>整理状态，在tryTerminate中将状态设置为TIDYING。如果之前是待关闭状态，则必须是任务队列为空并且工作线程数为0才会设置为TIDYING。如果之前是STOP，只需工作线程数为0</td>
+</tr>
+<tr>
+<td>TERMINATED</td>
+<td>调用terminated方法（空方法）之后就转为终止状态</td>
+</tr>
+</tbody>
+</table>
+<p>对应的ctl值是：</p>
 <ul>
 <li>RUNNING:-536870912</li>
 <li>SHUTDOWN:0</li>
@@ -189,7 +220,31 @@ Java线程池是通过ThreadPoolExecutor实现的。接下来分析其实现原�
 </ul>
 <h2 id="关键属性"><a href="#关键属性" class="headerlink" title="关键属性"></a>关键属性</h2><h3 id="ctl"><a href="#ctl" class="headerlink" title="ctl"></a>ctl</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger ctl = <span class="keyword">new</span> AtomicInteger(ctlOf(RUNNING, <span class="number">0</span>));</span><br></pre></td></tr></table></figure>
 <p>使用一个原子变量ctl保存了两个值：线程池状态和工作线程数量。以高3为保存线程池状态（共5种），低29位保存工作线程数量（2^29-1,大概5亿多个）。<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/ctl.png" alt="Aaron Swartz"><br>再看操作ctl变量的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获得线程池状态</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">runStateOf</span><span class="params">(<span class="keyword">int</span> c)</span>  </span>&#123; <span class="keyword">return</span> c &amp; ~CAPACITY; &#125;</span><br><span class="line"><span class="comment">//获取工作线程数</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">workerCountOf</span><span class="params">(<span class="keyword">int</span> c)</span>  </span>&#123; <span class="keyword">return</span> c &amp; CAPACITY; &#125;</span><br><span class="line"><span class="comment">//根据线程池状态和工作线程数获得对应的ctl</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">ctlOf</span><span class="params">(<span class="keyword">int</span> rs, <span class="keyword">int</span> wc)</span> </span>&#123; <span class="keyword">return</span> rs | wc; &#125;</span><br><span class="line"><span class="comment">//29位</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> COUNT_BITS = Integer.SIZE - <span class="number">3</span>;</span><br><span class="line"><span class="comment">//左移29位值是2^29-1,对应的二进制位是29个1.</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CAPACITY   = (<span class="number">1</span> &lt;&lt; COUNT_BITS) - <span class="number">1</span>;</span><br></pre></td></tr></table></figure></p>
-<p>runStateOf、workerCountOf和ctlOf中均使用位操作完成ctl、线程池状态和工作线程数的转换。<br>CAPACITY的二进制位：<br>| 31位 |30位| 29位 | 28位 | … |  0位|<br>| — | — | — | — | — | — |<br>| 0 | 0 |  0| 1 | 1 |1  |<br>CAPACITY取反的二进制位：</p>
+<p>runStateOf、workerCountOf和ctlOf中均使用位操作完成ctl、线程池状态和工作线程数的转换。</p>
+<p>CAPACITY的二进制位：</p>
+<table>
+<thead>
+<tr>
+<th>31位</th>
+<th>30位</th>
+<th>29位</th>
+<th>28位</th>
+<th>…</th>
+<th>0位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>CAPACITY取反的二进制位：</p>
 <table>
 <thead>
 <tr>
