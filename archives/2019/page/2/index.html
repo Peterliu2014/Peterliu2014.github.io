@@ -6,20 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>AtomicLong与CAS | lz</title>
+  <title>Archives: 2019 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="背景并发环境下为了保证对共享资源的正确访问，通常采用对临界区加锁的方式来实现(例如synchronized，ReentrantLock)，这种加锁的方式假设线程每次读取共享资源时，其已经被其它线程做了修改，因此需要对临界区加锁,这种锁也称为悲观锁。">
-<meta name="keywords" content="并发">
-<meta property="og:type" content="article">
-<meta property="og:title" content="AtomicLong与CAS">
-<meta property="og:url" content="http://yoursite.com/2019/05/04/AtomicLong与CAS/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="lz">
+<meta property="og:url" content="http://yoursite.com/archives/2019/page/2/index.html">
 <meta property="og:site_name" content="lz">
-<meta property="og:description" content="背景并发环境下为了保证对共享资源的正确访问，通常采用对临界区加锁的方式来实现(例如synchronized，ReentrantLock)，这种加锁的方式假设线程每次读取共享资源时，其已经被其它线程做了修改，因此需要对临界区加锁,这种锁也称为悲观锁。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-10T14:46:09.079Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AtomicLong与CAS">
-<meta name="twitter:description" content="背景并发环境下为了保证对共享资源的正确访问，通常采用对临界区加锁的方式来实现(例如synchronized，ReentrantLock)，这种加锁的方式假设线程每次读取共享资源时，其已经被其它线程做了修改，因此需要对临界区加锁,这种锁也称为悲观锁。">
+<meta name="twitter:title" content="lz">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -139,75 +134,48 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-AtomicLong与CAS" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      AtomicLong与CAS
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2019/03/16/深入理解Object类/" class="archive-article-date">
+  	<time datetime="2019-03-16T12:54:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-16</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/03/16/深入理解Object类/">深入理解Object类</a>
     </h1>
   
 
-        
-        <a href="/2019/05/04/AtomicLong与CAS/" class="archive-article-date">
-  	<time datetime="2019-05-04T11:54:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>并发环境下为了保证对共享资源的正确访问，通常采用对临界区加锁的方式来实现(例如synchronized，ReentrantLock)，这种加锁的方式假设线程每次读取共享资源时，其已经被其它线程做了修改，因此需要对临界区加锁,这种锁也称为<strong>悲观锁</strong>。<a id="more"></a></p>
-<p>但是，还存在一种更加乐观的假设，即线程更新共享数据时，数据没有被其它线程修改。对数据更新时不加锁，但是会检测数据冲突，如果存在冲突(数据被其它线程修改过)，则采取相应的策略(例如直接报错或者重试)。这种思想可以称为<strong>乐观锁</strong>。java.util.concurrent下的atomic包中定义的一些类就是基于这种假设实现的一些线程安全类。</p>
-<p>悲观锁会锁住共享资源，而乐观锁则不然，通过比较-交换(CAS)实现共享资源的并发访问。<br>悲观锁会导致死锁以及线程调度的开销（阻塞-唤醒），乐观锁本身没有加锁，自然不会产生死锁。</p>
-<h1 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h1><p>选择AtomicLong来介绍原子类。AtomicLong是线程安全的，通过一种无锁的方式实现的线程安全，底层基于CAS实现。</p>
-<h1 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h1><p>AtomicLong可以实现并发环境下的计数器,一个简陋的例子(LongAdder用作计数器的性能更好，<a href="https://www.cnkirito.moe/java-concurrent-counter/)。" target="_blank" rel="noopener">https://www.cnkirito.moe/java-concurrent-counter/)。</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import java.util.concurrent.*;</span><br><span class="line">import java.util.concurrent.atomic.AtomicLong;</span><br><span class="line"></span><br><span class="line">public class AtomicTest &#123;</span><br><span class="line">    private static AtomicLong atomicLong = new AtomicLong(0);</span><br><span class="line">    private static int counts = 10;</span><br><span class="line">    private static CountDownLatch countDownLatch = new CountDownLatch(counts);</span><br><span class="line">    </span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        for (int i = 0; i &lt;counts ; i++) &#123;</span><br><span class="line">            new Thread(() -&gt; &#123;</span><br><span class="line">                atomicLong.incrementAndGet();</span><br><span class="line">                countDownLatch.countDown();</span><br><span class="line">            &#125;).start();</span><br><span class="line">        &#125;</span><br><span class="line">        countDownLatch.await();</span><br><span class="line">        System.out.println(&quot;counter:&quot;+atomicLong.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>通过直接调用incrementAndGet完成自增，进而实现计数器的功能。不必使用锁做线程间同步，其实atomic原子类是使用CPU的CAS原子指令实现的线程同步。</p>
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><h2 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// setup to use Unsafe.compareAndSwapLong for updates</span><br><span class="line">private static final Unsafe unsafe = Unsafe.getUnsafe();</span><br><span class="line">private static final long valueOffset;</span><br><span class="line">static &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        valueOffset = unsafe.objectFieldOffset</span><br><span class="line">            (AtomicLong.class.getDeclaredField(&quot;value&quot;));</span><br><span class="line">    &#125; catch (Exception ex) &#123; throw new Error(ex); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private volatile long value;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>通过魔法类Unsafe调用CAS算法。</li>
-<li>value就是存储的long值，使用volatile保证可见性。</li>
-<li>valueOffset是value值在atomiclong对象中的内存地址，unsafe可以通过这个地址获取value值。</li>
-</ul>
-<h2 id="incrementAndGet方法"><a href="#incrementAndGet方法" class="headerlink" title="incrementAndGet方法"></a>incrementAndGet方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Atomically increments by one the current value.</span><br><span class="line">     *</span><br><span class="line">     * @return the updated value</span><br><span class="line">     */</span><br><span class="line">    public final long incrementAndGet() &#123;</span><br><span class="line">        return unsafe.getAndAddLong(this, valueOffset, 1L) + 1L;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>调用unsafe的getAndAddLong方法</p>
-<h2 id="getAndAddLong方法"><a href="#getAndAddLong方法" class="headerlink" title="getAndAddLong方法"></a>getAndAddLong方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Atomically adds the given value to the current value of a field</span><br><span class="line">     * or array element within the given object &lt;code&gt;o&lt;/code&gt;</span><br><span class="line">     * at the given &lt;code&gt;offset&lt;/code&gt;.</span><br><span class="line">     *</span><br><span class="line">     * @param o object/array to update the field/element in</span><br><span class="line">     * @param offset field/element offset</span><br><span class="line">     * @param delta the value to add</span><br><span class="line">     * @return the previous value</span><br><span class="line">     * @since 1.8</span><br><span class="line">     */</span><br><span class="line">    public final long getAndAddLong(Object o, long offset, long delta) &#123;</span><br><span class="line">        long v;</span><br><span class="line">        do &#123;</span><br><span class="line">*             v = getLongVolatile(o, offset);  1⃣️</span><br><span class="line">        &#125; while (!compareAndSwapLong(o, offset, v, v + delta));                                     2⃣️</span><br><span class="line">        return v;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Object o就是atomicLong对象，offset就是valueoffset，delta就是<br>要增加的值。</li>
-<li>v = getLongVolatile(o, offset)，读取最新value值(volatile)。</li>
-<li>compareAndSwapLong(o, offset, v, v + delta)，如果对象o在offset处的值和v相等，那么修改这个值为v+delta并返回true。否则不修改，返回false，继续循环。这个方法底层基于CPU的原子指令CAS完成，是一个原子操作。这也是类名称Atomic的来源</li>
-</ul>
-<p>考虑这样一种场景，线程A运行至1⃣️处，读取了最新的value值之后，时间片用完，线程被挂起。然后另外一个线程B修改了value值，最后线程A被调度继续运行，进入2⃣️，这时最新的value值与之前读取的value不相等，修改value值失败，返回false，进入循环体，继续运行。通过CAS这种不加锁的方式实现了并发访问的安全性。</p>
-<h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2><p>CAS算法的过程：CAS(V,E,N)，其中V表示最新的内存值，E表示期望值，N表示最新值。如果V和E相等，那么可以将V设置为最新值N，此次CAS操作成功。否则，表示已经有线程对值进行了修改，此次操作失败。<br>多个线程同时使用CAS操作一个变量时，只有一个线程会成功，其余均会失败，失败的线程不会被挂起，可以允许继续重试。基于这个原理，CAS通过无锁的方式也可以发现其它线程对当前线程的干扰，并进行恰当的处理。<br>compareAndSwapLong是一个本地方法，对应的C++代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UNSAFE_ENTRY(jboolean, Unsafe_CompareAndSwapInt(JNIEnv *env, jobject unsafe, jobject obj, jlong offset, jint e, jint x))</span><br><span class="line">  UnsafeWrapper(&quot;Unsafe_CompareAndSwapInt&quot;);</span><br><span class="line">  oop p = JNIHandles::resolve(obj);</span><br><span class="line">  jint* addr = (jint *) index_oop_from_field_offset_long(p, offset);</span><br><span class="line">  return (jint)(Atomic::cmpxchg(x, addr, e)) == e;</span><br><span class="line">UNSAFE_END</span><br></pre></td></tr></table></figure></p>
-<p>可以看到它通过 Atomic::cmpxchg 来实现比较和替换操作。其中参数x是即将更新的值，参数e是原内存的值。</p>
-<p>如果是Linux的x86，Atomic::cmpxchg方法的实现如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">inline jint Atomic::cmpxchg (jint exchange_value, volatile jint* dest, jint compare_value) &#123;</span><br><span class="line">  int mp = os::is_MP(); //如果是多核</span><br><span class="line">  __asm__ volatile (LOCK_IF_MP(%4) &quot;cmpxchgl %1,(%3)&quot;</span><br><span class="line">                    : &quot;=a&quot; (exchange_value)</span><br><span class="line">                    : &quot;r&quot; (exchange_value), &quot;a&quot; (compare_value), &quot;r&quot; (dest), &quot;r&quot; (mp)</span><br><span class="line">                    : &quot;cc&quot;, &quot;memory&quot;);</span><br><span class="line">  return exchange_value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>cmpxchg时一个比较-交换的CPU指令,如果是多处理器，为cmpxchg指令添加lock前缀。反之，就省略lock前缀（单处理器会不需要lock前缀提供的内存屏障效果）。这里的lock前缀就是使用了处理器的总线锁（最新的处理器都使用缓存锁代替总线锁来提高性能）。</p>
-<h2 id="CAS存在的问题"><a href="#CAS存在的问题" class="headerlink" title="CAS存在的问题"></a>CAS存在的问题</h2><h3 id="ABA"><a href="#ABA" class="headerlink" title="ABA"></a>ABA</h3><p>CAS只是检查对象的值有没有变化，例如值由A-&gt;B-&gt;A,CAS是感知不到中间的变化过程的，认为没有线程修改过对象的状态。ABA问题的解决可以通过添加版本号来解决，例如1A-&gt;1B-&gt;2A,1A和2A并不同。JDK的Atomic包里提供了一个类AtomicStampedReference来解决ABA问题。</p>
-<h3 id="自旋问题"><a href="#自旋问题" class="headerlink" title="自旋问题"></a>自旋问题</h3><p>如果比较-交换一直不成功，线程就会一直自旋，这会导致不小的CPU开销。</p>
-<p>参考：<br>1)<br><a href="http://benjaminwhx.com/2018/05/03/%E3%80%90%E7%BB%86%E8%B0%88Java%E5%B9%B6%E5%8F%91%E3%80%91%E8%B0%88%E8%B0%88CAS/" target="_blank" rel="noopener">http://benjaminwhx.com/2018/05/03/%E3%80%90%E7%BB%86%E8%B0%88Java%E5%B9%B6%E5%8F%91%E3%80%91%E8%B0%88%E8%B0%88CAS/</a><br>2）<br><a href="http://objcoding.com/2018/11/29/cas/" target="_blank" rel="noopener">http://objcoding.com/2018/11/29/cas/</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -220,74 +188,20 @@
 	</div>
 
 
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
+        </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2019/05/19/CLH自旋锁/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          CLH自旋锁
-        
-      </div>
-    </a>
   
   
-    <a href="/2019/04/13/线程安全和JMM/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">线程安全和JMM</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#是什么"><span class="toc-number">2.</span> <span class="toc-text">是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一个例子"><span class="toc-number">3.</span> <span class="toc-text">一个例子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#原理"><span class="toc-number">4.</span> <span class="toc-text">原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员变量"><span class="toc-number">4.1.</span> <span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#incrementAndGet方法"><span class="toc-number">4.2.</span> <span class="toc-text">incrementAndGet方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getAndAddLong方法"><span class="toc-number">4.3.</span> <span class="toc-text">getAndAddLong方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAS"><span class="toc-number">4.4.</span> <span class="toc-text">CAS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAS存在的问题"><span class="toc-number">4.5.</span> <span class="toc-text">CAS存在的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ABA"><span class="toc-number">4.5.1.</span> <span class="toc-text">ABA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自旋问题"><span class="toc-number">4.5.2.</span> <span class="toc-text">自旋问题</span></a></li></ol></li></ol></li></ol>
-                    </div>
-                </span>
-            </div>
-        </div>
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
+    
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/archives/2019/">&laquo; Prev</a><a class="page-number" href="/archives/2019/">1</a><span class="page-number current">2</span>
+    </nav>
   
 
 
@@ -311,8 +225,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
