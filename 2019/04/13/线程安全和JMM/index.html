@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>线程安全和JMM | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="多个线程访问「共享变量」的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
+  <meta name="description" content="多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
 <meta name="keywords" content="并发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线程安全和JMM">
 <meta property="og:url" content="http://yoursite.com/2019/04/13/线程安全和JMM/index.html">
 <meta property="og:site_name" content="lz">
-<meta property="og:description" content="多个线程访问「共享变量」的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
+<meta property="og:description" content="多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/time.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/atomic.png">
@@ -23,10 +23,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/reorder.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/jmm.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/java-memory-model-5.png">
-<meta property="og:updated_time" content="2019-10-11T14:57:36.873Z">
+<meta property="og:updated_time" content="2019-10-13T03:12:09.884Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程安全和JMM">
-<meta name="twitter:description" content="多个线程访问「共享变量」的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
+<meta name="twitter:description" content="多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/time.png">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
@@ -167,7 +167,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>多个线程访问「共享变量」的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。<a id="more"></a></p>
+        <p>多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。<a id="more"></a></p>
 <h1 id="并发问题"><a href="#并发问题" class="headerlink" title="并发问题"></a>并发问题</h1><h2 id="原子性问题由来"><a href="#原子性问题由来" class="headerlink" title="原子性问题由来"></a>原子性问题由来</h2><p>首先解释什么是原子操作：原子操作一旦开始运行，就不应该被打断，直到其运行结束（成功/失败）。</p>
 <p>早期的操作系统是单道程序处理系统，每次将一个程序载入内存，这个程序执行完成之后再将其它程序装入内存，每次装入一个程序。这种单道程序系统的缺点在于：当程序有IO操作时，CPU、内存都要停下来等到IO操作完成之后，才能继续运行。这就造成了CPU、内存资源的浪费，系统吞吐量也不高。</p>
 <p>为了解决这种单个程序独占硬件资源的情况，提高系统的吞吐量，发展了多道程序处理系统和分时系统，引入了多进程/线程交替执行的方式，每次被调度执行时只能运行「一个时间片」，如果没有完成，则需要等待下次被调度。</p>
