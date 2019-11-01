@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/hashmap4.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/hashmap5.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/hashmap6.png">
-<meta property="og:updated_time" content="2019-10-27T06:41:13.267Z">
+<meta property="og:updated_time" content="2019-11-01T14:31:40.440Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HashMap源码解析">
 <meta name="twitter:description" content="List和Set接口都是存储一组单个元素，有时候我们还需要一组有映射关系的实体，因此就有了Map接口。">
@@ -174,6 +174,64 @@
 <li>如果hash算法不够随机，很容易发生碰撞，那么这个链表就会越来越长，查找性能就会退化为O(n).因此当链表数量达到一定值(默认8个)时，就会将链表转换为红黑树,查找效率为O(logn)。</li>
 </ul>
 <p>最终，hashmap的存储结构是：数组+链表+红黑树。<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/hashmap1.png" alt="Aaron Swartz"></p>
+<h1 id="1-7和1-8的对比"><a href="#1-7和1-8的对比" class="headerlink" title="1.7和1.8的对比"></a>1.7和1.8的对比</h1><p>JDK8中HashMap的实现做了一些优化。</p>
+<h2 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h2><p>1.7中存储结构采用数组+链表的方式，如果hash冲突严重的话，链表会很长，查找效率就会退化为O(n)。因此jdk8中引入了红黑树，当链表长度达到8时就会转化为红黑树。</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>存储结构</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jdk8</td>
+<td>数组+链表+红黑树</td>
+</tr>
+<tr>
+<td>jdk7</td>
+<td>数组+链表</td>
+</tr>
+</tbody>
+</table>
+<h2 id="链表插入方式"><a href="#链表插入方式" class="headerlink" title="链表插入方式"></a>链表插入方式</h2><p>1.7中发生hash冲突时，是采用「头插法」向链表中插入元素，这种方式在并发环境种容易形成环形链表，进而导致调用get方法时造成死循环问题。jdk8<br>种改用了「尾插法」直接将元素插入到链表中。</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>插入方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jdk8</td>
+<td>尾插法：直接插入到链表尾部</td>
+</tr>
+<tr>
+<td>jdk7</td>
+<td>头插法：每次将元素插入到链表头部（table[i]指向的元素）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="扩容方式"><a href="#扩容方式" class="headerlink" title="扩容方式"></a>扩容方式</h2><p>1.7种扩容时，对每个元素重新计算哈希值，然后复制到新的table数组中。而其实扩容时有些元素的索引位置是不会发生变化的（见下面对resize的分析），因此jdk8中在扩容时引入了两个链表：lo和hi，lo表示索引位置不变的元素，hi表示索引后移oldCapacity的元素，没有重新计算哈希值。</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>扩容方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jdk8</td>
+<td>引入了lo和hi链表，o表示索引位置不变的元素，hi表示索引后移oldCapacity的元素，没有重新计算哈希值</td>
+</tr>
+<tr>
+<td>jdk7</td>
+<td>重新计算哈希值，完成元素的复制</td>
+</tr>
+</tbody>
+</table>
 <h1 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//hashmap的默认容量就是16   </span></span><br><span class="line"> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>; </span><br><span class="line"> <span class="comment">//默认的装载因子</span></span><br><span class="line"> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</span><br><span class="line"> <span class="comment">//树化阈值（链表转化为红黑树）</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TREEIFY_THRESHOLD = <span class="number">8</span>;</span><br><span class="line"><span class="comment">//链表还原阈值。扩容时，桶中元素个数小于这个值，就会把树形的桶元素还原为链表</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNTREEIFY_THRESHOLD = <span class="number">6</span>;</span><br><span class="line"><span class="comment">//table数组，核心字段</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</span><br><span class="line"><span class="comment">//键值对数量</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> size;</span><br><span class="line"><span class="comment">//扩容阈值（capacity * load factor）</span></span><br><span class="line"><span class="keyword">int</span> threshold;</span><br><span class="line"><span class="comment">//装载因子</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">float</span> loadFactor;</span><br></pre></td></tr></table></figure>
 <p>核心字段table数组为什么要使用transient修饰？</p>
 <h2 id="transient修饰table数组"><a href="#transient修饰table数组" class="headerlink" title="transient修饰table数组"></a>transient修饰table数组</h2><p>在对象序列化时，被transient修饰的字段会被跳过。为什么这么做呢？两个原因：</p>
@@ -303,7 +361,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#成员变量"><span class="toc-number">1.</span> <span class="toc-text">成员变量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transient修饰table数组"><span class="toc-number">1.1.</span> <span class="toc-text">transient修饰table数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Node"><span class="toc-number">1.2.</span> <span class="toc-text">Node</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#成员方法"><span class="toc-number">2.</span> <span class="toc-text">成员方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#tableForSize方法"><span class="toc-number">2.1.</span> <span class="toc-text">tableForSize方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hash方法"><span class="toc-number">2.2.</span> <span class="toc-text">hash方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#resize扩容方法"><span class="toc-number">2.3.</span> <span class="toc-text">resize扩容方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#put方法"><span class="toc-number">2.4.</span> <span class="toc-text">put方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get方法"><span class="toc-number">2.5.</span> <span class="toc-text">get方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-7和1-8的对比"><span class="toc-number">1.</span> <span class="toc-text">1.7和1.8的对比</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#存储结构"><span class="toc-number">1.1.</span> <span class="toc-text">存储结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#链表插入方式"><span class="toc-number">1.2.</span> <span class="toc-text">链表插入方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩容方式"><span class="toc-number">1.3.</span> <span class="toc-text">扩容方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#成员变量"><span class="toc-number">2.</span> <span class="toc-text">成员变量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transient修饰table数组"><span class="toc-number">2.1.</span> <span class="toc-text">transient修饰table数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Node"><span class="toc-number">2.2.</span> <span class="toc-text">Node</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#成员方法"><span class="toc-number">3.</span> <span class="toc-text">成员方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#tableForSize方法"><span class="toc-number">3.1.</span> <span class="toc-text">tableForSize方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hash方法"><span class="toc-number">3.2.</span> <span class="toc-text">hash方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#resize扩容方法"><span class="toc-number">3.3.</span> <span class="toc-text">resize扩容方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#put方法"><span class="toc-number">3.4.</span> <span class="toc-text">put方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get方法"><span class="toc-number">3.5.</span> <span class="toc-text">get方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
                     </div>
                 </span>
             </div>
