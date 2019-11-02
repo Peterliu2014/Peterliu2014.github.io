@@ -397,29 +397,29 @@
 
 
   
-    <article id="post-HashMap源码解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-ConcurrentHashMap原理简析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/17/HashMap源码解析/">HashMap源码解析</a>
+      <a class="article-title" href="/2019/02/23/ConcurrentHashMap原理简析/">ConcurrentHashMap源码解析</a>
     </h1>
   
 
         
-        <a href="/2019/02/17/HashMap源码解析/" class="archive-article-date">
-  	<time datetime="2019-02-17T11:45:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-17</time>
+        <a href="/2019/02/23/ConcurrentHashMap原理简析/" class="archive-article-date">
+  	<time datetime="2019-02-23T13:13:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-23</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>List和Set接口都是存储一组单个元素，有时候我们还需要一组有映射关系的实体，因此就有了Map接口。
+        <h1 id="线程不安全的HashMap"><a href="#线程不安全的HashMap" class="headerlink" title="线程不安全的HashMap"></a>线程不安全的HashMap</h1><p>HashMap不是线程安全的，如果在多线程中使用HashMap可能会有两个问题：「死循环」和「数据丢失」问题。
         
-          <a class="article-more-a" href="/2019/02/17/HashMap源码解析/#more">more >></a>
+          <a class="article-more-a" href="/2019/02/23/ConcurrentHashMap原理简析/#more">more >></a>
         
       
 
@@ -454,7 +454,94 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/17/HashMap源码解析/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/02/23/ConcurrentHashMap原理简析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-HashMap原理简析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/17/HashMap原理简析/">HashMap原理简析</a>
+    </h1>
+  
+
+        
+        <a href="/2019/02/17/HashMap原理简析/" class="archive-article-date">
+  	<time datetime="2019-02-17T11:45:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>List和Set接口都是存储一组单个元素，有时候我们还需要一组有映射关系的实体，因此就有了Map接口。
+        
+          <a class="article-more-a" href="/2019/02/17/HashMap原理简析/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/02/17/HashMap原理简析/">展开全文 >></a>
         </p>
       
 
