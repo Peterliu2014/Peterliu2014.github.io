@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/006y8mN6gy1g8kuctdoqwj30ha0au74b.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/006y8mN6gy1g8kwbuwkr2j30fm02s3yi.jpg">
-<meta property="og:updated_time" content="2019-11-03T09:03:00.150Z">
+<meta property="og:updated_time" content="2019-11-03T09:04:43.790Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ArrayList原理解析">
 <meta name="twitter:description" content="ArrayList是一个动态数组，还是一个有序、可存储重复元素的容器。数组是一种常用的，存储一组的元素的容器，但是数组长度固定，不够灵活。ArrayList作为一个动态数组，支持随机访问，算是弥补了数组的不足。">
@@ -162,7 +162,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>ArrayList是一个动态数组，还是一个有序、可存储重复元素的容器。数组是一种常用的，存储一组的元素的容器，但是数组长度固定，不够灵活。ArrayList作为一个动态数组，支持随机访问，算是弥补了数组的不足。<a id="more"></a><br>| 容器 |大小  |随机访问  |存储类型  |<br>| — | — | — | — |<br>|ArrayList  |动态扩展和收缩  |支持  |引用类型  |<br>|数组  |固定  |支持  |基本类型和引用类型     |</p>
+        <p>ArrayList是一个动态数组，还是一个有序、可存储重复元素的容器。数组是一种常用的，存储一组的元素的容器，但是数组长度固定，不够灵活。ArrayList作为一个动态数组，支持随机访问，算是弥补了数组的不足。<a id="more"></a></p>
+<table>
+<thead>
+<tr>
+<th>容器</th>
+<th>大小</th>
+<th>随机访问</th>
+<th>存储类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ArrayList</td>
+<td>动态扩展和收缩</td>
+<td>支持</td>
+<td>引用类型</td>
+</tr>
+<tr>
+<td>数组</td>
+<td>固定</td>
+<td>支持</td>
+<td>基本类型和引用类型</td>
+</tr>
+</tbody>
+</table>
 <p>总之，ArrayList有以下几个特点：</p>
 <ul>
 <li>基于数组实现的动态数组，默认容量是10，支持动态扩容。</li>
