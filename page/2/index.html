@@ -745,6 +745,101 @@
 
 
   
+    <article id="post-单例模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/07/单例模式/">单例模式</a>
+    </h1>
+  
+
+        
+        <a href="/2018/07/07/单例模式/" class="archive-article-date">
+  	<time datetime="2018-07-07T12:12:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>考虑一个配置类Config，通过读取配置文件初始化。并且会在很多地方使用，每次使用时都要通过new创建新的对象，这就导致在系统中有多份拷贝，浪费了存储空间。<br>使用单例模式可以保证只创建一个实例，节省了存储空间。并且，由于单例提供了全局访问点，在需要Config时直接调用全局方法，使用起来更加方便。</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>单例模式是一种创建对象的模式（创建型模式），保证某个类只有一个实例对象，并提供一个全局访问点供用户获得这个对象。<br>保证类只有一个实例有两个优点：</p>
+<ol>
+<li>对于频繁使用的对象，可以减少创建对象的时间开销。如果是重量级对象，可以减少占用的内存空间。</li>
+<li>避免多次调用new创建对象，一定程度上减轻了GC的压力。</li>
+</ol>
+<p>为了实现只创建一个实例对象，有两个关键点：</p>
+<ul>
+<li>构造方法的访问权限需要是private，避免在外部通过new运算符创建对象。</li>
+<li>提供一个全局访问点，通过这个入口获得单例对象。</li>
+</ul>
+<h1 id="单例实现"><a href="#单例实现" class="headerlink" title="单例实现"></a>单例实现</h1><h2 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h2><h2 id="懒汉式（非线程安全）"><a href="#懒汉式（非线程安全）" class="headerlink" title="懒汉式（非线程安全）"></a>懒汉式（非线程安全）</h2><h2 id="懒汉式（线程安全）"><a href="#懒汉式（线程安全）" class="headerlink" title="懒汉式（线程安全）"></a>懒汉式（线程安全）</h2><h2 id="双重校验锁（DCL）"><a href="#双重校验锁（DCL）" class="headerlink" title="双重校验锁（DCL）"></a>双重校验锁（DCL）</h2><h2 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h2><h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><h2 id="生成特定数量实例"><a href="#生成特定数量实例" class="headerlink" title="生成特定数量实例"></a>生成特定数量实例</h2><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/07/07/单例模式/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
@@ -856,6 +951,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">IO</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
             
             <div class="clearfix"></div>

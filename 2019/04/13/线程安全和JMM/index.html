@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/reorder.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/jmm.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/java-memory-model-5.png">
-<meta property="og:updated_time" content="2019-10-13T03:12:09.884Z">
+<meta property="og:updated_time" content="2019-11-04T13:53:06.078Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程安全和JMM">
 <meta name="twitter:description" content="多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
@@ -204,6 +204,15 @@
 <p>即调整了步骤2和3的顺序。</p>
 <p><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/reorder.png" alt="Aaron Swartz"></p>
 <p>假设线程A首先启动，运行到步骤2时让出CPU，此时instance其实没有初始化，线程B判断instance已经不为null，于是直接返回了未初始化的instance，后续如果使用instance访问其成员变量时就会触发空指针异常。</p>
+<h1 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h1><p><strong>线程安全的实现一般有三种方式</strong></p>
+<ol>
+<li><p>互斥同步，例如使用Synchronized创建的互斥锁。</p>
+</li>
+<li><p>非阻塞同步，例如CAS。</p>
+</li>
+<li><p>不同步。例如使用ThreadLocal。</p>
+</li>
+</ol>
 <h1 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h1><p>并发模型中线程间通信有两种方式：共享内存模型和消息传递模型。Java中的并发模型采用共享内存的方式，JMM（Java Memory Model，java内存模型）对内存架构进行了抽象，如下：<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/jmm.png" alt="Aaron Swartz"></p>
 <ul>
 <li>主存中存放共享变量，包括对象实例、静态字段、数组对象、常量、类信息等。工作内存中存放共享变量的副本，以及方法中的本地变量。</li>
@@ -315,7 +324,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#并发问题"><span class="toc-number">1.</span> <span class="toc-text">并发问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原子性问题由来"><span class="toc-number">1.1.</span> <span class="toc-text">原子性问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原子性问题实例"><span class="toc-number">1.2.</span> <span class="toc-text">原子性问题实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可见性问题由来"><span class="toc-number">1.3.</span> <span class="toc-text">可见性问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可见性问题实例"><span class="toc-number">1.4.</span> <span class="toc-text">可见性问题实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序性问题由来"><span class="toc-number">1.5.</span> <span class="toc-text">顺序性问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序性问题实例"><span class="toc-number">1.6.</span> <span class="toc-text">顺序性问题实例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JMM"><span class="toc-number">2.</span> <span class="toc-text">JMM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#并发问题解决方法"><span class="toc-number">2.1.</span> <span class="toc-text">并发问题解决方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#happens-before规则"><span class="toc-number">2.2.</span> <span class="toc-text">happens-before规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#volatile规则实例"><span class="toc-number">2.2.1.</span> <span class="toc-text">volatile规则实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#监视器锁规则"><span class="toc-number">2.2.2.</span> <span class="toc-text">监视器锁规则</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#并发问题"><span class="toc-number">1.</span> <span class="toc-text">并发问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原子性问题由来"><span class="toc-number">1.1.</span> <span class="toc-text">原子性问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原子性问题实例"><span class="toc-number">1.2.</span> <span class="toc-text">原子性问题实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可见性问题由来"><span class="toc-number">1.3.</span> <span class="toc-text">可见性问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可见性问题实例"><span class="toc-number">1.4.</span> <span class="toc-text">可见性问题实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序性问题由来"><span class="toc-number">1.5.</span> <span class="toc-text">顺序性问题由来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序性问题实例"><span class="toc-number">1.6.</span> <span class="toc-text">顺序性问题实例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#解决方式"><span class="toc-number">2.</span> <span class="toc-text">解决方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JMM"><span class="toc-number">3.</span> <span class="toc-text">JMM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#并发问题解决方法"><span class="toc-number">3.1.</span> <span class="toc-text">并发问题解决方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#happens-before规则"><span class="toc-number">3.2.</span> <span class="toc-text">happens-before规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#volatile规则实例"><span class="toc-number">3.2.1.</span> <span class="toc-text">volatile规则实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#监视器锁规则"><span class="toc-number">3.2.2.</span> <span class="toc-text">监视器锁规则</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -441,6 +450,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">IO</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
               </li>
             
             <div class="clearfix"></div>
