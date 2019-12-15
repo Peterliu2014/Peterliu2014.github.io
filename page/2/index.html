@@ -922,29 +922,29 @@
 
 
   
-    <article id="post-Zookper的安装" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Zookeeper数据存储" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/06/Zookper的安装/">安装Zookeeper</a>
+      <a class="article-title" href="/2018/01/21/Zookeeper数据存储/">Zookeeper数据存储</a>
     </h1>
   
 
         
-        <a href="/2018/01/06/Zookper的安装/" class="archive-article-date">
-  	<time datetime="2018-01-06T12:19:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
+        <a href="/2018/01/21/Zookeeper数据存储/" class="archive-article-date">
+  	<time datetime="2018-01-21T13:32:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Zookeeper的部署方式分为两种：单机模式和群组模式。单机模式很简单，只需要在一台机器上部署即可，可以验证ZK的基本功能。不过为了可靠性，一般在生产中都是部署多台ZK实例，即群组模式。本文直接说明群组模式下ZK的部署。
+        <p>Zookeeper的数据存储有两种形式：内存存储和磁盘存储。ZK的数据模型是一个树结构，在内存中存储了这颗树的内容。除了zk自身的运行日志之外，还有事务日志和快照日志。事务日志存储了对zk每次“更新”操作，快照日志是某个时刻内存中树结构的“快照”。
         
-          <a class="article-more-a" href="/2018/01/06/Zookper的安装/#more">more >></a>
+          <a class="article-more-a" href="/2018/01/21/Zookeeper数据存储/#more">more >></a>
         
       
 
@@ -979,7 +979,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/06/Zookper的安装/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/21/Zookeeper数据存储/">展开全文 >></a>
         </p>
       
 
@@ -1011,7 +1011,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 

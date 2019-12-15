@@ -6,15 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018 | lz</title>
+  <title>Zookeeper数据存储 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="lz">
-<meta property="og:url" content="http://yoursite.com/archives/2018/index.html">
+  <meta name="description" content="Zookeeper的数据存储有两种形式：内存存储和磁盘存储。ZK的数据模型是一个树结构，在内存中存储了这颗树的内容。除了zk自身的运行日志之外，还有事务日志和快照日志。事务日志存储了对zk每次“更新”操作，快照日志是某个时刻内存中树结构的“快照”。">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zookeeper数据存储">
+<meta property="og:url" content="http://yoursite.com/2018/01/21/Zookeeper数据存储/index.html">
 <meta property="og:site_name" content="lz">
+<meta property="og:description" content="Zookeeper的数据存储有两种形式：内存存储和磁盘存储。ZK的数据模型是一个树结构，在内存中存储了这颗树的内容。除了zk自身的运行日志之外，还有事务日志和快照日志。事务日志存储了对zk每次“更新”操作，快照日志是某个时刻内存中树结构的“快照”。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/006tNbRwgy1g9x9sge6w4j30a907jdg4.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/006tNbRwgy1g9xq6lgrzfj30ur0u0tde.jpg">
+<meta property="og:updated_time" content="2019-12-15T14:01:05.774Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lz">
+<meta name="twitter:title" content="Zookeeper数据存储">
+<meta name="twitter:description" content="Zookeeper的数据存储有两种形式：内存存储和磁盘存储。ZK的数据模型是一个树结构，在内存中存储了这颗树的内容。除了zk自身的运行日志之外，还有事务日志和快照日志。事务日志存储了对zk每次“更新”操作，快照日志是某个时刻内存中树结构的“快照”。">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/006tNbRwgy1g9x9sge6w4j30a907jdg4.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -134,134 +142,122 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Zookeeper数据存储" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/07/08/工厂模式/" class="archive-article-date">
-  	<time datetime="2018-07-08T11:42:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-08</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/07/08/工厂模式/">工厂模式</a>
+    <h1 class="article-title" itemprop="name">
+      Zookeeper数据存储
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/07/07/单例模式/" class="archive-article-date">
-  	<time datetime="2018-07-07T12:12:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/07/07/单例模式/">单例模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/21/Zookeeper数据存储/" class="archive-article-date">
+        
+        <a href="/2018/01/21/Zookeeper数据存储/" class="archive-article-date">
   	<time datetime="2018-01-21T13:32:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/21/Zookeeper数据存储/">Zookeeper数据存储</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Zookeeper的数据存储有两种形式：内存存储和磁盘存储。ZK的数据模型是一个树结构，在内存中存储了这颗树的内容。除了zk自身的运行日志之外，还有事务日志和快照日志。事务日志存储了对zk每次“更新”操作，快照日志是某个时刻内存中树结构的“快照”。<a id="more"></a></p>
+<h2 id="内存存储"><a href="#内存存储" class="headerlink" title="内存存储"></a>内存存储</h2><p>逻辑概念znode表示zk中的一个节点，多个znode就组成了一棵树。在zk的实际实现中，通过DataTree这个数据结构表示“树”这个概念，通过DataNode表示“znode”。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9x9sge6w4j30a907jdg4.jpg" alt="Aaron Swartz"></p>
+<h3 id="DataTree"><a href="#DataTree" class="headerlink" title="DataTree"></a>DataTree</h3><p>DataTree存储树信息的底层数据结构是ConcurrentHashMap</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ConcurrentHashMap&lt;String, DataNode&gt; nodes = <span class="keyword">new</span> ConcurrentHashMap&lt;String, DataNode&gt;();</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li>key是znode的路径</li>
+<li>value就是DataNode</li>
+</ul>
+<h3 id="DataNode"><a href="#DataNode" class="headerlink" title="DataNode"></a>DataNode</h3><p>DataNode是zk中数据存储的最小单位，每个DataNode保存了以下信息：</p>
+<ul>
+<li>节点的值</li>
+<li>节点的ACL信息</li>
+<li>父节点的引用</li>
+<li>子节点列表</li>
+</ul>
+<h3 id="临时节点"><a href="#临时节点" class="headerlink" title="临时节点"></a>临时节点</h3><p>另外，为了便于实现访问和及时清理，DataTree中还存储了临时节点的信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//This hashtable lists the paths of the ephemeral nodes of a session    </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Map&lt;Long, HashSet&lt;String&gt;&gt; ephemerals = <span class="keyword">new</span> ConcurrentHashMap&lt;Long, HashSet&lt;String&gt;&gt;();</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li>key是session id</li>
+<li>value是集合，集中的元素是一个个的临时节点路径。根据这个路径就可以从nodes得到节点相关的信息。</li>
+</ul>
+<h2 id="磁盘存储"><a href="#磁盘存储" class="headerlink" title="磁盘存储"></a>磁盘存储</h2><h3 id="事务日志"><a href="#事务日志" class="headerlink" title="事务日志"></a>事务日志</h3><p>zk的配置文件中有一个dataDir配置项，默认是保存快照日志和事务日志的路径。一般建议在配置文件中显示使用dataLogDir配置项单独配置事务日志的路径（最好使用一块单独的磁盘），这是为了提升zk的写入性能。</p>
+<p>zk的事务日志可以类比于MYSQL的binlog日志，记录了客户端对zk的每次「更新」操作，在返回给客户端「更新」操作完成之前，zk需要确保「更新」事件已经持久化到事务日志中。因此需要为事务日志提供一块单独的硬盘，以提升zk的写入性能。</p>
+<h4 id="日志存储"><a href="#日志存储" class="headerlink" title="日志存储"></a>日志存储</h4><p>完成zk的安装并启动zk集群后，会在dataLogDir下生成version-2目录，表示事务日志的格式版本号。此时在version-2并没有任何日志文件生成，使用zkCli.shu 做以下操作：</p>
+<ul>
+<li>create /test0121 “”   </li>
+<li>set /test0121 “test”</li>
+<li>create /test0121/child “child”</li>
+<li>delete /test0121/child</li>
+</ul>
+<p>其实在创建test0121节点成功之后，事务日志就生成了。可以观察到在version-2下生成了一个文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">64M log.100000001</span><br></pre></td></tr></table></figure>
+<h5 id="预分配"><a href="#预分配" class="headerlink" title="预分配"></a>预分配</h5><p>事务日志记录的是对zk的「更新」操作，当前仅执行了4个操作，但是生成的日志大小却有64M。  使用二进制编辑器打开这个文件可以看到文件中被大量的”0”(\0)填充。</p>
+<p>客户端对zk的每次「更新」操作，在返回给客户端「更新」操作完成之前，zk需要确保「更新」事件已经持久化到事务日志中。也就是说其实每次「更新」操作时，zk都要访问磁盘。对IO设备的访问由两个步骤：寻址+读写。IO设备访问的瓶颈在于磁头寻址的环节。</p>
+<p>通常，一个扇区的大小是0.5KB,「 块」是操作系统读写文件的最小单位，一般是4KB，一个「块」就对应8个「连续」的「扇区」，使用「连续扇区」，访问文件时只需要顺序读写即可，减少了磁盘寻址的次数。</p>
+<p>因此，为了提升zk的写入性能，zk在生成事务日志文件时，直接向OS申请了64MB的空间，这样有更多的「连续扇区」，写入时可以顺序写入，减少了磁盘寻址的次数。初始状态下，文件中的数据使用“0”填充。预分配的大小使用 <strong>zookeeper.preAllocSize</strong>配置，默认是64MB。</p>
+<h5 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h5><p>事务日志的文件名采用log.zxid，其中zxid就是生成这个日志时，写入这个文件的第一个事务id。事务id以16进制的形式表示，高32位表示当前Leader的周期（epoch），集群初次启动时epoch是1，随后每次重新选举Leader之后，epoch自增1。低32位表示事务操作的序列号，初始值是1，每次操作值自增1。这个操作序列号仅在当前Leader周期内生效，如果发生了Leader选举，低16位会清0.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log.100000001</span><br><span class="line">00000001 //8*4=32，操作序列号为1</span><br><span class="line">1				//epoch为1.</span><br></pre></td></tr></table></figure>
+<p>采用这种命名方式的好处：</p>
+<ul>
+<li>文件名就是存储事务id中第一个事务id，便于根据某个事务id查找其前后的事务操作。</li>
+<li>可以直接看出当前Leader的运行周期，可以看出发生过几次Leader选举。</li>
+</ul>
+<h4 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h4><p>二进制形式的事务日志不具备可读性，可以使用LogFormatter将二进制的事务日志转换为文本格式。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用LogFormatter将二进制的事务日志转换为文本格式</span></span><br><span class="line">if [ $# -eq 0 ];then</span><br><span class="line">    echo "egg: $0 &lt;LogFile&gt; [zkDir]"</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line">LogFile=$1</span><br><span class="line">zkDir=$2</span><br><span class="line">JAVA_OPTS="$JAVA_OPTS -Djava.ext.dirs=$zkDir:$zkDir/lib"</span><br><span class="line">java $JAVA_OPTS org.apache.zookeeper.server.LogFormatter "$LogFile"</span><br></pre></td></tr></table></figure>
+<p>脚本的第一个参数是事务日志的路径，第二个参数是zk的安装路径，最后将结果重定向到文本文件中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh log2txt.sh node2/zookeeper-3.4.12/zklog/version-2/log.100000001 node2/zookeeper-3.4.12/ &gt;&gt; log.txt</span><br></pre></td></tr></table></figure>
+<p>转换后的结果是：</p>
+<h3 id="快照日志"><a href="#快照日志" class="headerlink" title="快照日志"></a>快照日志</h3><p>zk提供了数据快照的机制，将某一时刻zk在内存中的全量数据（树结构和会话）dump到磁盘上。</p>
+<p>快照日志并没有采用「预分配」的机制，命名规则与事务日志类似，也是采用了zxid，具体形式是snapshot.zxid</p>
+<p>,其中zxid是dump时「最新」的事务id。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">718  snapshot.10000eaca</span><br></pre></td></tr></table></figure>
+<p>事务操作的序列号是60106（0000eaca），因此是在执行第60106个事务时，dumpzk的全量数据到磁盘上。</p>
+<h4 id="dump时机"><a href="#dump时机" class="headerlink" title="dump时机"></a>dump时机</h4><p>zk提供了参数snapCount（默认100,000）来控制快照的触发。为了避免集群中所有机器在同一时间生成快照，zk采取了「过半随机」的方式，计算公式为：countLog &gt; snapCount/2 + randRoll。</p>
+<ul>
+<li>countLog为累计执行事务个数</li>
+<li>snapCount表示每次做数据快照之前，事务执行的次数。</li>
+<li>randRoll为1~snapCount/2之间的随机数，因此在默认值为100000时，ZK会在50000~100000次事务日志记录后进行一次数据快照。</li>
+</ul>
+<p>可以通过执行以下脚本来触发快照的生成，通过增加事务操作次数来实现。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">zkCliPath=$(find ~ -name zkCli.sh -type f 2&gt;/dev/null | head -1)</span><br><span class="line">for i in &#123;1..100000&#125;</span><br><span class="line">do</span><br><span class="line"><span class="meta">  $</span><span class="bash">zkCliPath <span class="built_in">set</span> /test0121 <span class="string">"<span class="variable">$i</span>"</span> </span></span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>通过shell的方式实现起来简单，但是效率较慢，可以直接使用Java API。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String conn = <span class="string">"127.0.0.1:2181"</span>;</span><br><span class="line">RetryPolicy retryPolicy = <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>);</span><br><span class="line">CuratorFramework client = CuratorFrameworkFactory.newClient(conn, retryPolicy);</span><br><span class="line">client.start();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">328</span>; i &lt;<span class="number">1e5</span> ; i++) &#123;</span><br><span class="line">   client.setData().forPath(<span class="string">"/test0121"</span>, String.valueOf(i).getBytes(Charset.forName(<span class="string">"utf-8"</span>)));</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>ZK会在50000~100000次事务日志记录后进行一次数据快照。</p>
+<h4 id="可视化-1"><a href="#可视化-1" class="headerlink" title="可视化"></a>可视化</h4><p>二进制形式的快照日志不具备可读性，使用SnapshotFormatter将二进制的快照日志转换为文本格式。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用SnapshotFormatter将二进制的快照日志转换为文本格式</span></span><br><span class="line">if [ $# -eq 0 ];then</span><br><span class="line">    echo "egg: $0 &lt;LogFile&gt; [zkDir]"</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line">LogFile=$1</span><br><span class="line">zkDir=$2</span><br><span class="line">JAVA_OPTS="$JAVA_OPTS -Djava.ext.dirs=$zkDir:$zkDir/lib"</span><br><span class="line">java $JAVA_OPTS org.apache.zookeeper.server.SnapshotFormatter "$LogFile"</span><br></pre></td></tr></table></figure>
+<p>转换后的快照日志如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">ZNode Details (count=8):</span><br><span class="line">----</span><br><span class="line">/</span><br><span class="line">  cZxid = 0x00000000000000</span><br><span class="line">  ctime = Thu Jan 01 08:00:00 CST 1970</span><br><span class="line">  mZxid = 0x00000000000000</span><br><span class="line">  mtime = Thu Jan 01 08:00:00 CST 1970</span><br><span class="line">  pZxid = 0x00000100000009</span><br><span class="line">  cversion = 4</span><br><span class="line">  dataVersion = 0</span><br><span class="line">  aclVersion = 0</span><br><span class="line">  ephemeralOwner = 0x00000000000000</span><br><span class="line">  dataLength = 0</span><br><span class="line">----</span><br><span class="line">/test0121-3</span><br><span class="line">  cZxid = 0x00000100000009</span><br><span class="line">  ctime = Sun Dec 15 18:11:27 CST 2019</span><br><span class="line">  mZxid = 0x00000100000009</span><br><span class="line">  mtime = Sun Dec 15 18:11:27 CST 2019</span><br><span class="line">  pZxid = 0x00000100000009</span><br><span class="line">  cversion = 0</span><br><span class="line">  dataVersion = 0</span><br><span class="line">  aclVersion = 0</span><br><span class="line">  ephemeralOwner = 0x00000000000000</span><br><span class="line">  dataLength = 4</span><br><span class="line">----</span><br><span class="line">/zookeeper</span><br><span class="line">  cZxid = 0x00000000000000</span><br><span class="line">  ctime = Thu Jan 01 08:00:00 CST 1970</span><br><span class="line">  mZxid = 0x00000000000000</span><br><span class="line">  mtime = Thu Jan 01 08:00:00 CST 1970</span><br><span class="line">  pZxid = 0x00000000000000</span><br><span class="line">  cversion = 0</span><br><span class="line">  dataVersion = 0</span><br><span class="line">  aclVersion = 0</span><br><span class="line">  ephemeralOwner = 0x00000000000000</span><br><span class="line">  dataLength = 0</span><br><span class="line">----</span><br><span class="line">/zookeeper/quota</span><br><span class="line">  cZxid = 0x00000000000000</span><br><span class="line">  ctime = Thu Jan 01 08:00:00 CST 1970</span><br><span class="line">  mZxid = 0x00000000000000</span><br><span class="line">  mtime = Thu Jan 01 08:00:00 CST 1970</span><br><span class="line">  pZxid = 0x00000000000000</span><br><span class="line">  cversion = 0</span><br><span class="line">  dataVersion = 0</span><br><span class="line">  aclVersion = 0</span><br><span class="line">  ephemeralOwner = 0x00000000000000</span><br><span class="line">  dataLength = 0</span><br><span class="line">----</span><br><span class="line">/test0121-2</span><br><span class="line">  cZxid = 0x00000100000008</span><br><span class="line">  ctime = Sun Dec 15 18:11:03 CST 2019</span><br><span class="line">  mZxid = 0x00000100000008</span><br><span class="line">  mtime = Sun Dec 15 18:11:03 CST 2019</span><br><span class="line">  pZxid = 0x00000100000008</span><br><span class="line">  cversion = 0</span><br><span class="line">  dataVersion = 0</span><br><span class="line">  aclVersion = 0</span><br><span class="line">  ephemeralOwner = 0x00000000000000</span><br><span class="line">  dataLength = 4</span><br><span class="line">----</span><br><span class="line">----</span><br><span class="line">/test0121-1</span><br><span class="line">  cZxid = 0x00000100000007</span><br><span class="line">  ctime = Sun Dec 15 17:46:14 CST 2019</span><br><span class="line">  mZxid = 0x00000100000007</span><br><span class="line">  mtime = Sun Dec 15 17:46:14 CST 2019</span><br><span class="line">  pZxid = 0x00000100000007</span><br><span class="line">  cversion = 0</span><br><span class="line">  dataVersion = 0</span><br><span class="line">  aclVersion = 0</span><br><span class="line">  ephemeralOwner = 0x00000000000000</span><br><span class="line">  dataLength = 4</span><br><span class="line">----</span><br><span class="line">/test0121</span><br><span class="line">  cZxid = 0x00000100000002</span><br><span class="line">  ctime = Sun Dec 15 12:12:11 CST 2019</span><br><span class="line">  mZxid = 0x0000010000eacc</span><br><span class="line">  mtime = Sun Dec 15 20:15:40 CST 2019</span><br><span class="line">  pZxid = 0x00000100000005</span><br><span class="line">  cversion = 1</span><br><span class="line">  dataVersion = 59439</span><br><span class="line">  aclVersion = 0</span><br><span class="line">  ephemeralOwner = 0x00000000000000</span><br><span class="line">  dataLength = 5</span><br><span class="line">----</span><br><span class="line">Session Details (sid, timeout, ephemeralCount):</span><br><span class="line">0x10002a869910149, 30000, 0</span><br><span class="line">0x10002a86991014a, 40000, 0</span><br></pre></td></tr></table></figure>
+<p>从快照日志中可以看出两点：</p>
+<ul>
+<li>快照保存了zk树结构中的所有节点，但是没有节点值，只有节点的所有元数据信息。</li>
+<li>快照除了保存有节点的元数据之外，还保存了此刻的session信息。</li>
+</ul>
+<h2 id="数据加载的初始化"><a href="#数据加载的初始化" class="headerlink" title="数据加载的初始化"></a>数据加载的初始化</h2><p>在zk启动时，会将快照日志和事务日志加载到内存，用于恢复DataTree。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9xq6lgrzfj30ur0u0tde.jpg" alt="Aaron Swartz"></p>
+<ol>
+<li>首先进行内存数据库ZKDatabase的初始化，进行默认节点的初始化和session超时时间记录器sessionWithTimeouts。默认节点包括”/“、”/zookeeper”和”/zookeeper/quota”。</li>
+<li>快照文件中保存了zk内存某个时刻的全量数据，因此接下来就是加载快照文件。获取最新的100个文件，依次解析，并且进行文件的checkSum校验，以确认文件的正确性，如果最新的快照文件校验通过，则不必再解析其它「更旧」的文件，进一步解析事务日志。</li>
+<li>快照是某一时刻的全量数据，但是由于快照是定期触发而生成的，因此快照只是一份「近似全量」的数据。为了获得完整的全量数据，还需要根据事务日志来更新快照之后的增量数据。</li>
+<li>快照的文件名中包含了生成快照时最新的zxid，根据zxid_for_snap查找在这个事务之后的事务日志(事务日志文件名中也包含zxid)，获得所有比zxid_for_snap大的事务。</li>
+<li>获得比zxid_for_snap大的事务之后，将其逐个应用到DataTree和sessionWithTimeouts中。</li>
+<li>最后就是检查Leader的周期。</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1）Paxos到Zookeeper：分布式一致性原理与实践</p>
+<p>2）<a href="https://ningg.top/zookeeper-lesson-9-zookeeper-data-and-storage/" target="_blank" rel="noopener">https://ningg.top/zookeeper-lesson-9-zookeeper-data-and-storage/</a></p>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -273,7 +269,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -286,66 +282,75 @@
 	</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/06/Zookper的安装/" class="archive-article-date">
-  	<time datetime="2018-01-06T12:19:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/07/07/单例模式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          单例模式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/06/Zookper的安装/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">安装Zookeeper</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/06/Zookper的安装/">安装Zookeeper</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">zookeeper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内存存储"><span class="toc-number">1.</span> <span class="toc-text">内存存储</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DataTree"><span class="toc-number">1.1.</span> <span class="toc-text">DataTree</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataNode"><span class="toc-number">1.2.</span> <span class="toc-text">DataNode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#临时节点"><span class="toc-number">1.3.</span> <span class="toc-text">临时节点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#磁盘存储"><span class="toc-number">2.</span> <span class="toc-text">磁盘存储</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#事务日志"><span class="toc-number">2.1.</span> <span class="toc-text">事务日志</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#日志存储"><span class="toc-number">2.1.1.</span> <span class="toc-text">日志存储</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#预分配"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">预分配</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#命名规则"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">命名规则</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可视化"><span class="toc-number">2.1.2.</span> <span class="toc-text">可视化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#快照日志"><span class="toc-number">2.2.</span> <span class="toc-text">快照日志</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dump时机"><span class="toc-number">2.2.1.</span> <span class="toc-text">dump时机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可视化-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">可视化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据加载的初始化"><span class="toc-number">3.</span> <span class="toc-text">数据加载的初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -377,8 +382,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
