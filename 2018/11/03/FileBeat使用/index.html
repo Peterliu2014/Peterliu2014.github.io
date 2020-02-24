@@ -6,15 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019 | lz</title>
+  <title>FileBeat使用 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="lz">
-<meta property="og:url" content="http://yoursite.com/archives/2019/index.html">
+  <meta name="description" content="FileBeat概述Filebeat是一个基于Go语言开发的轻量级日志采集器，监听特定的目录或日志文件，并tail其内容变动，将其「原样」转发到es、logstash、kafka等。Filebeat相对Logstash更加轻量，因此适合部署到生产环境的服务器上，但是功能也更加简单，比如没有提供Logstash的正则功能。">
+<meta name="keywords" content="ELK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FileBeat使用">
+<meta property="og:url" content="http://yoursite.com/2018/11/03/FileBeat使用/index.html">
 <meta property="og:site_name" content="lz">
+<meta property="og:description" content="FileBeat概述Filebeat是一个基于Go语言开发的轻量级日志采集器，监听特定的目录或日志文件，并tail其内容变动，将其「原样」转发到es、logstash、kafka等。Filebeat相对Logstash更加轻量，因此适合部署到生产环境的服务器上，但是功能也更加简单，比如没有提供Logstash的正则功能。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gc7qgl3y65j30qr0kjwgq.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gc7rtgcdyxj308y06ldh7.jpg">
+<meta property="og:updated_time" content="2020-02-24T13:15:23.132Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lz">
+<meta name="twitter:title" content="FileBeat使用">
+<meta name="twitter:description" content="FileBeat概述Filebeat是一个基于Go语言开发的轻量级日志采集器，监听特定的目录或日志文件，并tail其内容变动，将其「原样」转发到es、logstash、kafka等。Filebeat相对Logstash更加轻量，因此适合部署到生产环境的服务器上，但是功能也更加简单，比如没有提供Logstash的正则功能。">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gc7qgl3y65j30qr0kjwgq.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -134,515 +142,151 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-FileBeat使用" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      FileBeat使用
+    </h1>
+  
+
+        
+        <a href="/2018/11/03/FileBeat使用/" class="archive-article-date">
+  	<time datetime="2018-11-03T13:09:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-03</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="FileBeat"><a href="#FileBeat" class="headerlink" title="FileBeat"></a>FileBeat</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Filebeat是一个基于Go语言开发的轻量级日志采集器，监听特定的目录或日志文件，并tail其内容变动，将其「原样」转发到es、logstash、kafka等。Filebeat相对Logstash更加轻量，因此适合部署到生产环境的服务器上，但是功能也更加简单，比如没有提供Logstash的正则功能。<a id="more"></a></p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p><img src="https://tva1.sinaimg.cn/large/0082zybpgy1gc7qgl3y65j30qr0kjwgq.jpg" alt="img"></p>
+<p>FB（FileBeat）主要有两个组件组成：采集器（prospector）和收集器（harvester）。</p>
+<h5 id="收集器"><a href="#收集器" class="headerlink" title="收集器"></a>收集器</h5><p>每个文件都会对应一个收集器，这个收集器监听日志的内容变动，将数据「原样」发送到定义的「output」中。</p>
+<h5 id="采集器"><a href="#采集器" class="headerlink" title="采集器"></a>采集器</h5><p>采集器负责查找读取源，并未每个日志文件分配一个采集器。一个例子：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filebeat.prospectors:</span></span><br><span class="line"><span class="comment"># 采集系统日志</span></span><br><span class="line"><span class="attr">- input_type:</span> <span class="string">log</span></span><br><span class="line"><span class="attr">  paths:</span> <span class="string">/var/log/messages</span></span><br><span class="line"><span class="attr">  paths:</span> <span class="string">/var/log/*.log</span></span><br><span class="line">  <span class="comment"># 指定注册表文件，用于记录上次读取的位置，默认位于filebeat下的data目录</span></span><br><span class="line"><span class="attr">  registry_file:</span> <span class="string">/data/filebeat/data/registry</span></span><br></pre></td></tr></table></figure>
+<p>fb会将每个文件的状态保存在注册表文件中，例如上次读取文件的偏移量。当fb重启时，通过读取注册表文件就可以重建监听文件的状态，收集器就可以接着上次的采集位置继续读取数据。</p>
+<p>fb保证变动的数据至少一次传输到「output」中，这种保证正是基于通过注册表记录文件状态的机制。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>filebeat 6.4.2的压缩包解压后目录结构如下：</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybpgy1gc7rtgcdyxj308y06ldh7.jpg" alt="image-20200224203759718"></p>
+<p>可以直接在filebeat.yml中配置需要采集的日志文件。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filebeat.inputs:</span></span><br><span class="line"><span class="attr">- type:</span> <span class="string">log</span></span><br><span class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  paths:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">/var/log/*.log</span></span><br></pre></td></tr></table></figure>
+<p>如果需要采集的文件比较多，filebeat.yml看起来就会有点乱。因此fb还提供了一种结构比较清晰的配置方式。</p>
+<p>首先是filebeat.yml的配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filebeat.config.inputs:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  path:</span> <span class="string">configs/*.yml</span></span><br><span class="line">  <span class="string">reload.enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="string">reload.period:</span> <span class="number">1</span><span class="string">s</span></span><br><span class="line"><span class="string">filebeat.config.modules:</span></span><br><span class="line"><span class="attr">  path:</span> <span class="string">&#123;path.config&#125;/modules.d/*.yml</span></span><br><span class="line">  <span class="string">reload.enabled:</span> <span class="literal">false</span></span><br><span class="line"><span class="string">output.kafka:</span></span><br><span class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  hosts:</span> <span class="string">["127.0.0.1:9092"]</span></span><br><span class="line"><span class="attr">  topic:</span> <span class="string">'&#123;[log_topics]&#125;'</span></span><br></pre></td></tr></table></figure>
+<p>然后在fb根目录下创建config目，在config目录下创建各类型日志的yaml文件。例如采集主机性能日志的it.yml，还有采集主机系统日志的log.yml。</p>
+<p>it.yml的配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- type:</span> <span class="string">log</span></span><br><span class="line"><span class="attr">  fields_under_root:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  paths:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">/home/dd/hostMetric.log</span></span><br><span class="line">  <span class="string">json.keys_under_root:</span> <span class="literal">true</span></span><br><span class="line">  <span class="string">json.add_error_key:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  scan_frequency:</span> <span class="number">2</span><span class="string">s</span></span><br><span class="line"><span class="attr">  fields:</span></span><br><span class="line"><span class="attr">          log_topics:</span> <span class="string">hostMetric</span></span><br><span class="line"><span class="attr">- type:</span> <span class="string">log</span></span><br><span class="line"><span class="attr">  fields_under_root:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  paths:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">/home/ee/hostInfo.log</span></span><br><span class="line">  <span class="string">json.keys_under_root:</span> <span class="literal">true</span></span><br><span class="line">  <span class="string">json.add_error_key:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  scan_frequency:</span> <span class="number">2</span><span class="string">s</span></span><br><span class="line"><span class="attr">  fields:</span></span><br><span class="line"><span class="attr">          log_topics:</span> <span class="string">hostInfo</span></span><br></pre></td></tr></table></figure>
+<p>其中log_topics字段在filebeat.yml中配置「output」的时候使用。</p>
+<p>log.yml的配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- type:</span> <span class="string">log</span></span><br><span class="line"><span class="attr">  fields_under_root:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  paths:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">/var/log/messages</span></span><br><span class="line">  <span class="string">json.keys_under_root:</span> <span class="literal">true</span></span><br><span class="line">  <span class="string">json.add_error_key:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  scan_frequency:</span> <span class="number">2</span><span class="string">s</span></span><br><span class="line"><span class="attr">  fields:</span></span><br><span class="line"><span class="attr">          log_topics:</span> <span class="string">messagesTopic</span></span><br></pre></td></tr></table></figure>
+<h4 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ./filebeat -e -c filebeat.yml &gt; filebeat.log  2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>1）<a href="http://www.51niux.com/?id=204" target="_blank" rel="noopener">http://www.51niux.com/?id=204</a></p>
+<p>2）<a href="https://cloud.tencent.com/developer/article/1006051" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1006051</a></p>
+<p>3）<a href="https://www.jianshu.com/p/2557bb606e22" target="_blank" rel="noopener">https://www.jianshu.com/p/2557bb606e22</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/27/JAVA线程池原理/" class="archive-article-date">
-  	<time datetime="2019-07-27T12:33:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-27</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/27/JAVA线程池原理/">JAVA线程池原理</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ELK</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/20/AQS共享模式/" class="archive-article-date">
-  	<time datetime="2019-07-20T14:15:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-20</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/02/16/Java集合概述/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Java集合概述
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/08/工厂模式/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">工厂模式</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/20/AQS共享模式/">AQS共享模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#FileBeat"><span class="toc-number">1.</span> <span class="toc-text">FileBeat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概述"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工作原理"><span class="toc-number">1.2.</span> <span class="toc-text">工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#收集器"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">收集器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#采集器"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">采集器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">1.3.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#配置"><span class="toc-number">1.3.1.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启动"><span class="toc-number">1.3.2.</span> <span class="toc-text">启动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">1.4.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/14/AQS独占模式与ReentrantLock/" class="archive-article-date">
-  	<time datetime="2019-07-14T14:45:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/14/AQS独占模式与ReentrantLock/">AQS独占模式与ReentrantLock</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/06/AQS概述/" class="archive-article-date">
-  	<time datetime="2019-07-06T12:39:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/06/AQS概述/">AQS概述</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/23/Java本地执行Linux命令/" class="archive-article-date">
-  	<time datetime="2019-06-23T14:03:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/23/Java本地执行Linux命令/">Java本地执行Linux命令</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/09/ThreadLocal使用及原理/" class="archive-article-date">
-  	<time datetime="2019-06-09T13:35:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/09/ThreadLocal使用及原理/">ThreadLocal使用及原理</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/19/CLH自旋锁/" class="archive-article-date">
-  	<time datetime="2019-05-19T13:33:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/19/CLH自旋锁/">CLH自旋锁</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/04/AtomicLong与CAS/" class="archive-article-date">
-  	<time datetime="2019-05-04T11:54:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/04/AtomicLong与CAS/">AtomicLong与CAS</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/27/Java的Volatile关键字/" class="archive-article-date">
-  	<time datetime="2019-04-27T13:05:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-27</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/27/Java的Volatile关键字/">Java的Volatile关键字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/21/Java Synchronized关键字/" class="archive-article-date">
-  	<time datetime="2019-04-21T12:10:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/21/Java Synchronized关键字/">Java Synchronized关键字</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2019/page/2/">2</a><a class="extend next" rel="next" href="/archives/2019/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -675,8 +319,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
