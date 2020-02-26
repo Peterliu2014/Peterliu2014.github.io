@@ -6,15 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Category: 大数据 | lz</title>
+  <title>Logstash使用 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="lz">
-<meta property="og:url" content="http://yoursite.com/categories/大数据/index.html">
+  <meta name="description" content="概述Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
+<meta name="keywords" content="ELK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Logstash使用">
+<meta property="og:url" content="http://yoursite.com/2018/11/11/Logstash使用/index.html">
 <meta property="og:site_name" content="lz">
+<meta property="og:description" content="概述Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gca32lhjk8j30dv0b8402.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gca3h7s7idj30f30fxjtl.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gca42tsmc2j30ep0c6ta9.jpg">
+<meta property="og:updated_time" content="2020-02-26T13:41:18.505Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lz">
+<meta name="twitter:title" content="Logstash使用">
+<meta name="twitter:description" content="概述Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gca32lhjk8j30dv0b8402.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -134,36 +143,118 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-Logstash使用" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Logstash使用
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/11/11/Logstash使用/" class="archive-article-date">
+
+        
+        <a href="/2018/11/11/Logstash使用/" class="archive-article-date">
   	<time datetime="2018-11-11T11:45:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-11</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/11/11/Logstash使用/">Logstash使用</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。<a id="more"></a></p>
+<p>Logstash作为一个数据管道，对数据的处理分为3个阶段：采集（输入）、转换（过滤，非必须）和输出。与FileBeat相比，提供了强大的过滤功能。例如可以使用grok从数据中提取出关心的字段（比如从格式化的日志中提取出时间）。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><p>采集（在配置文件中配置input来定义）各种格式、大小和来源的数据。通过配置多个input，Logstash可以在同一时间从众多数据源捕捉事件，进而能够以连续的流式传输方式从数据源中采集数据。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybpgy1gca32lhjk8j30dv0b8402.jpg" alt="image-20200226203826967"></p>
+<p>一个配置从kakfa中采集（input）数据的例子：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">input&#123;</span></span><br><span class="line">	<span class="string">kafka&#123;</span></span><br><span class="line">		<span class="string">bootstrap_servers</span> <span class="string">=&gt;</span> <span class="string">"10.2.3.2:9092"</span></span><br><span class="line">		<span class="string">client_id</span> <span class="string">=&gt;</span> <span class="string">"hostInfo"</span><span class="string">,</span></span><br><span class="line">		<span class="string">topics</span> <span class="string">=&gt;</span> <span class="string">"hostInfo"</span><span class="string">,</span></span><br><span class="line">		<span class="string">type</span> <span class="string">=&gt;</span> <span class="string">"hostInfo"</span><span class="string">,</span></span><br><span class="line">		<span class="string">codec</span> <span class="string">=&gt;</span> <span class="string">"json"</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>说明下各个字段的含义：</p>
+<ul>
+<li><p>bootstrap_servers：kafka的连接字符串。</p>
+</li>
+<li><p>client_id:一个字符串标记，broker用它来标记是哪个客户端（这里Logstash会启动consumer）发来的请求。这个属性的好处是可以根据一个有意义的应用名称来追踪请求的源头，而不是通过ip+端口号的形式。</p>
+</li>
+<li><p>topics：订阅的topic列表，默认是[“logstash”]。这里是订阅主机信息hostInfo主题。</p>
+</li>
+<li><p>type：在这个input的所有处理事件上添加1个type字段，后续可以根据这个type字段做一些过滤。举个例子(filter.conf)：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">	<span class="string">if[type]</span> <span class="string">in</span> <span class="string">["hostInfo","hostPerformance"]&#123;</span></span><br><span class="line">		<span class="string">mutate&#123;</span></span><br><span class="line">			<span class="string">removed_field</span> <span class="string">=&gt;</span> <span class="string">"input"</span></span><br><span class="line">			<span class="string">removed_field</span> <span class="string">=&gt;</span> <span class="string">"beat"</span></span><br><span class="line">		 <span class="string">removed_field</span> <span class="string">=&gt;</span> <span class="string">"offset"</span></span><br><span class="line">		 <span class="string">removed_field</span> <span class="string">=&gt;</span> <span class="string">"source"</span></span><br><span class="line">		<span class="string">&#125;</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这个就是根据type的值，对消息中的一些字段做过滤，删除掉“beat”，“offset”等FileBeat自身产生的字段。</p>
+</li>
+<li><p>codec: 对于输入数据的编码解码器。默认值是“plain”，这里设置为“json”。</p>
+</li>
+</ul>
+<p>kafka input组件支持的所有配置可以参考：</p>
+<p><a href="https://www.elastic.co/guide/en/logstash/current/plugins-inputs-kafka.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/logstash/current/plugins-inputs-kafka.html</a></p>
+<h2 id="过滤"><a href="#过滤" class="headerlink" title="过滤"></a>过滤</h2><p>过滤（filter）是从原始数据中进一步提取出数据的一种方法。Logstash提供的过滤插件有：grok、mutate、date、json、geoip。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybpgy1gca3h7s7idj30f30fxjtl.jpg" alt="image-20200226205232776"></p>
+<h4 id="Grok"><a href="#Grok" class="headerlink" title="Grok"></a>Grok</h4><p>grok是一个十分强大的过滤插件，可以通过正则解析任意文本，将非结构化的日志数据转换为结构化和方便查询的结构。也是目前Logstash中解析非结构化日志数据最好的方式。</p>
+<p>语法规则是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%&#123;语法:语义&#125;</span><br></pre></td></tr></table></figure>
+<p>“语法”指的是匹配的模式。例如使用NUMBER可以匹配出数字，DTAE模式可以匹配出日期。“语义”则是为匹配到的文本提供的标识符，简单来说就是将匹配到的文本复制给这个标识符。举个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2018-11-11 18:18:18.222 INFO com.zz.gdb.XXXX - start calculate</span><br></pre></td></tr></table></figure>
+<p>filter的配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">	<span class="string">grok&#123;</span></span><br><span class="line">		<span class="string">match</span> <span class="string">=&gt;</span> <span class="string">&#123;</span></span><br><span class="line">			<span class="string">"message"</span><span class="string">=&gt;</span> <span class="string">"<span class="template-variable">%&#123;DATE:log_date&#125;</span> <span class="template-variable">%&#123;TIME:log_localtime&#125;</span> <span class="template-variable">%&#123;WORD:log_type&#125;</span> <span class="template-variable">%&#123;JAVAFILE:log_file&#125;</span> - <span class="template-variable">%&#123;GREEDYDATA:log_content&#125;</span>"</span></span><br><span class="line">		<span class="string">&#125;</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>过滤出来的数据：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"log_data"</span>:[</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="attr">"2018-11-11"</span></span><br><span class="line">		&#125;</span><br><span class="line">	],</span><br><span class="line">	<span class="attr">"log_localtime"</span>:[</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="attr">"18:18:18.222"</span></span><br><span class="line">		&#125;</span><br><span class="line">	],</span><br><span class="line">	<span class="attr">"log_type"</span>:[</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="attr">"INFO"</span></span><br><span class="line">		&#125;</span><br><span class="line">	],</span><br><span class="line">	<span class="attr">"log_file"</span>:[</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="attr">"com.zz.gdb.XXXX"</span></span><br><span class="line">		&#125;</span><br><span class="line">	],</span><br><span class="line">	<span class="attr">"log_content"</span>:[</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="attr">"start calculate"</span></span><br><span class="line">		&#125;</span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Mutate"><a href="#Mutate" class="headerlink" title="Mutate"></a>Mutate</h4><p>包括类型的转换、字符串处理和字段处理等。</p>
+<h5 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h5><p>可以设置的转换类型包括：”integer“、”float“和”string“。例如将request_time的类型转换为float类型。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">	<span class="string">mutate&#123;</span></span><br><span class="line">		<span class="string">convert</span> <span class="string">=&gt;</span> <span class="string">["request_time","float"]</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<h5 id="字段处理"><a href="#字段处理" class="headerlink" title="字段处理"></a>字段处理</h5><p>对字段进行处理。</p>
+<ul>
+<li><p>rename：重命名某个字段，如果目标字段已经存在，会被覆盖掉。对于的配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">	<span class="string">mutate&#123;</span></span><br><span class="line">		<span class="string">rename</span> <span class="string">=&gt;</span> <span class="string">["machine","host"]</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>将“machine”字段重命名为“host”。</p>
+</li>
+<li><p>删除字段：可以使用remove_field删除字段。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">		<span class="string">mutate&#123;</span></span><br><span class="line">			<span class="string">removed_field</span> <span class="string">=&gt;</span> <span class="string">"input"</span></span><br><span class="line">			<span class="string">removed_field</span> <span class="string">=&gt;</span> <span class="string">"beat"</span></span><br><span class="line">		 <span class="string">removed_field</span> <span class="string">=&gt;</span> <span class="string">"offset"</span></span><br><span class="line">		 <span class="string">removed_field</span> <span class="string">=&gt;</span> <span class="string">"source"</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>update:更新某个字段的值，如果字段不存在，不会新建。</p>
+</li>
+<li><p>replace：作用和update类似，但是当字段不存在的时候，它会起到add_field参数一样的效果，自动添加新的字段。</p>
+</li>
+</ul>
+<h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><p>Logstash提供众多输出选择，用户可以将数据发送到特定的地方，并且能够灵活地解锁众多下游用例。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybpgy1gca42tsmc2j30ep0c6ta9.jpg" alt="image-20200226211319523"></p>
+<p>通过output定义Logstash的输出目的地，一个输出到es的例子：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">output&#123;</span></span><br><span class="line">	<span class="string">if[type]</span> <span class="string">==</span> <span class="string">"hostInfo"</span><span class="string">&#123;</span></span><br><span class="line">			<span class="string">elasticsearch&#123;</span></span><br><span class="line">					<span class="string">hosts</span> <span class="string">=&gt;</span> <span class="string">["http://10.3.2.4:9200"]</span></span><br><span class="line">					<span class="string">index</span> <span class="string">=&gt;</span> <span class="string">"test-<span class="template-variable">%&#123;[type]&#125;</span>"</span></span><br><span class="line">					<span class="string">codec</span> <span class="string">=&gt;</span> <span class="string">"json"</span></span><br><span class="line">					<span class="string">action</span> <span class="string">=&gt;</span> <span class="string">"index"</span></span><br><span class="line">					<span class="string">document_id</span> <span class="string">=&gt;</span> <span class="string">"<span class="template-variable">%&#123;uuid&#125;</span>-<span class="template-variable">%&#123;host_name&#125;</span>"</span></span><br><span class="line">			<span class="string">&#125;</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>type:这个就是input中定义的type字段。通过if+type可以将不同的topic输出到不同的目的端。</li>
+<li>hosts:es的连接字符串，如果串中包含多个es实例，会负载均衡的选择。</li>
+<li>index：写入到es中的索引名称。可以使用%{foo}的语法来实现动态绑定。例如这里使用%s{[type]}来动态指定索引的名称。</li>
+<li>codec:编码解码器。这里使用json。正是这样才可以%{uuid}-%{host_name}这种形式从传递的消息（json格式）中提取出uuid和host_name字段。</li>
+<li>action：先解释es中3个概念：索引、类型和文档。索引对应数据库，类型对应表、文档对应一条记录。这里设置行为是index（动词含义，表示存储数据），表示向es中存储数据。</li>
+<li>document_id:就是索引的文档id，在覆盖索引中的数据时使用（The document ID for the index. Useful for overwriting existing entries in Elasticsearch with the same ID.）这里hostInfo索引只需要保存最新的一条数据就行了，因此这么设置。这个document_id对应es head插件下查看的hits._id。</li>
+</ul>
+<p>可以看下其它不覆盖索引值的配置（注释掉action和document_id就行了）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">output&#123;</span></span><br><span class="line">	<span class="string">if[type]</span> <span class="string">==</span> <span class="string">"hostInfo"</span><span class="string">&#123;</span></span><br><span class="line">			<span class="string">elasticsearch&#123;</span></span><br><span class="line">					<span class="string">hosts</span> <span class="string">=&gt;</span> <span class="string">["http://10.3.2.4:9200"]</span></span><br><span class="line">					<span class="string">index</span> <span class="string">=&gt;</span> <span class="string">"test-<span class="template-variable">%&#123;[type]&#125;</span>"</span></span><br><span class="line">					<span class="string">codec</span> <span class="string">=&gt;</span> <span class="string">"json"</span></span><br><span class="line">		<span class="comment">#			action =&gt; "index"</span></span><br><span class="line">		<span class="comment">#			document_id =&gt; "%&#123;uuid&#125;-%&#123;host_name&#125;"</span></span><br><span class="line">			<span class="string">&#125;</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>更多配置参考：<a href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html</a></p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>下载Logstash 6.4.2版本包并解压，接下来就是创建定义input、filter和output的配置文件。我们可以单独在一个文件中完成这些定义，如果数据源和输出目的端比较多的话，这个文件会很大，不易管理。</p>
+<p>所以，Logstash还支持直接读取目录的方式，即把所有配置文件统一存放在这个目录下，针对不同的数据源（例如kafak的一个topic）单独定义一个配置文件（包含input和output），然后定义一个负责整个系统过滤的配置文件（例如filter.conf）。举个例子，在Logstash根目录下创建一个customer-configs文件夹，然后包含以下这些配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">topic1.conf</span><br><span class="line">topic2.conf</span><br><span class="line">filter.cof</span><br></pre></td></tr></table></figure>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ./logstash -f ./customer-configs --config.reload.automatic &amp;</span><br></pre></td></tr></table></figure>
+<p>解释下启动的参数：</p>
+<ul>
+<li>-f：表示从指定的文件或者目录加载配置文件。如果给定的是一个目录，则该目录下所有文件将以字典顺序连接，然后作为一个配置文件进行解析。</li>
+<li>–config.reload.automatic：表示动态加载配置文件，不必重启Logstash。</li>
+</ul>
+<p>还有个很有用的参数：</p>
+<ul>
+<li><p>-t:这是个检查配置文件是否正确的参数。检查配置语法是否正确并退出。使用方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash -f my.conf --config.test_and_exit</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>参考</p>
+<p>1）<a href="https://www.elastic.co/cn/logstash" target="_blank" rel="noopener">https://www.elastic.co/cn/logstash</a></p>
+<p>2）<a href="https://www.cnblogs.com/cjsblog/p/9459781.html" target="_blank" rel="noopener">https://www.cnblogs.com/cjsblog/p/9459781.html</a></p>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -175,7 +266,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -188,164 +279,75 @@
 	</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/11/03/FileBeat使用/" class="archive-article-date">
-  	<time datetime="2018-11-03T13:09:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-03</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/02/16/Java集合概述/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Java集合概述
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/11/03/FileBeat使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">FileBeat使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/11/03/FileBeat使用/">FileBeat使用</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ELK</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#原理"><span class="toc-number">2.</span> <span class="toc-text">原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#输入"><span class="toc-number">2.1.</span> <span class="toc-text">输入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过滤"><span class="toc-number">2.2.</span> <span class="toc-text">过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Grok"><span class="toc-number">2.2.0.1.</span> <span class="toc-text">Grok</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mutate"><span class="toc-number">2.2.0.2.</span> <span class="toc-text">Mutate</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#类型转换"><span class="toc-number">2.2.0.2.1.</span> <span class="toc-text">类型转换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字段处理"><span class="toc-number">2.2.0.2.2.</span> <span class="toc-text">字段处理</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#输出"><span class="toc-number">2.3.</span> <span class="toc-text">输出</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">3.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动"><span class="toc-number">3.2.</span> <span class="toc-text">启动</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/21/Zookeeper数据存储/" class="archive-article-date">
-  	<time datetime="2018-01-21T13:32:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/21/Zookeeper数据存储/">Zookeeper数据存储</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">zookeeper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/06/Zookper的安装/" class="archive-article-date">
-  	<time datetime="2018-01-06T12:19:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/06/Zookper的安装/">安装Zookeeper</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">zookeeper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -377,10 +379,10 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
-		isCategory: true,
+		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
 		root: "/",
