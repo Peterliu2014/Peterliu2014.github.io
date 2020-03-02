@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Elasticsearch概述 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。 结构化数据结构化数据就是具有一定「模式」的数据，最常见的模式就是二维表模式，也是关系型数据中对记录的存储方式。为了实现对这种数据的查询，可以存入数据库，然后建">
+  <meta name="description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。">
 <meta name="keywords" content="ELK">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Elasticsearch概述">
 <meta property="og:url" content="http://yoursite.com/2018/11/24/Elasticsearch概述/index.html">
 <meta property="og:site_name" content="lz">
-<meta property="og:description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。 结构化数据结构化数据就是具有一定「模式」的数据，最常见的模式就是二维表模式，也是关系型数据中对记录的存储方式。为了实现对这种数据的查询，可以存入数据库，然后建">
+<meta property="og:description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gce7ong39pj30e8065dgr.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcebwvkqlpj30fc0dg765.jpg">
@@ -30,10 +30,10 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcer50byzsj30fa0asdk3.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gceryxdttxj30lc09k40n.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcesl431vqj30p0097gn6.jpg">
-<meta property="og:updated_time" content="2020-03-02T14:11:30.790Z">
+<meta property="og:updated_time" content="2020-03-02T14:17:12.436Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch概述">
-<meta name="twitter:description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。 结构化数据结构化数据就是具有一定「模式」的数据，最常见的模式就是二维表模式，也是关系型数据中对记录的存储方式。为了实现对这种数据的查询，可以存入数据库，然后建">
+<meta name="twitter:description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。">
 <meta name="twitter:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gce7ong39pj30e8065dgr.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
@@ -174,7 +174,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="数据检索"><a href="#数据检索" class="headerlink" title="数据检索"></a>数据检索</h2><p>现实中的数据根据是否具有固定的模式可以分为：<strong>结构化数据</strong>和<strong>非结构化数据</strong>。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。</p>
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="数据检索"><a href="#数据检索" class="headerlink" title="数据检索"></a>数据检索</h2><p>现实中的数据根据是否具有固定的模式可以分为：<strong>结构化数据</strong>和<strong>非结构化数据</strong>。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。<a id="more"></a></p>
 <h3 id="结构化数据"><a href="#结构化数据" class="headerlink" title="结构化数据"></a>结构化数据</h3><p>结构化数据就是具有一定「模式」的数据，最常见的模式就是二维表模式，也是关系型数据中对记录的存储方式。为了实现对这种数据的查询，可以存入数据库，然后建立索引（基于B+树），就可以实现高效的查询（键值查询）。</p>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gce7ong39pj30e8065dgr.jpg" alt="image-20200301102018069"></p>
 <h3 id="非结构化数据"><a href="#非结构化数据" class="headerlink" title="非结构化数据"></a>非结构化数据</h3><p>非结构化数据，例如纯文本、图片、视频不具备「模式」化，不能通过数据库来实现高效的查询。当然，以文本为例，可以基于关键字（键值查询），通过遍历文件的方式来查询，这种方式在小数据量时是可行的，大数据量时完全行不通。因此需要一种方式来实现非结构化数据的高效查询。</p>
