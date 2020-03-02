@@ -6,15 +6,35 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>lz</title>
+  <title>Elasticsearch概述 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="lz">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+  <meta name="description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。 结构化数据结构化数据就是具有一定「模式」的数据，最常见的模式就是二维表模式，也是关系型数据中对记录的存储方式。为了实现对这种数据的查询，可以存入数据库，然后建">
+<meta name="keywords" content="ELK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch概述">
+<meta property="og:url" content="http://yoursite.com/2018/11/24/Elasticsearch概述/index.html">
 <meta property="og:site_name" content="lz">
+<meta property="og:description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。 结构化数据结构化数据就是具有一定「模式」的数据，最常见的模式就是二维表模式，也是关系型数据中对记录的存储方式。为了实现对这种数据的查询，可以存入数据库，然后建">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gce7ong39pj30e8065dgr.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcebwvkqlpj30fc0dg765.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcedcm5tv0j30j308qjxz.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcedfffmmnj30hr04uwib.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcedzz6odvj30f90dltie.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcef2a3dsmj30k80fxwhu.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcef931zjej30e707ddh1.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcesr1sckqj30c509tq43.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcepyz5p3jj30f0089dhh.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gceq6ueezjj307e0gjabf.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gceqb2yganj30ax070q3w.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcer50byzsj30fa0asdk3.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gceryxdttxj30lc09k40n.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gcesl431vqj30p0097gn6.jpg">
+<meta property="og:updated_time" content="2020-03-02T14:11:30.790Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lz">
+<meta name="twitter:title" content="Elasticsearch概述">
+<meta name="twitter:description" content="背景数据检索现实中的数据根据是否具有固定的模式可以分为：结构化数据和非结构化数据。其实，还可以进一步拆分出半结构化数据，这种数据有一定的结构(例如xml、json、html)，，可能因为可以伸缩又不能完全模式化，所以也归类为非结构化数据吧。 结构化数据结构化数据就是具有一定「模式」的数据，最常见的模式就是二维表模式，也是关系型数据中对记录的存储方式。为了实现对这种数据的查询，可以存入数据库，然后建">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gce7ong39pj30e8065dgr.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -134,625 +154,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-线程安全和JMM" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-Elasticsearch概述" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/13/线程安全和JMM/">线程安全和JMM</a>
-    </h1>
-  
-
-        
-        <a href="/2019/04/13/线程安全和JMM/" class="archive-article-date">
-  	<time datetime="2019-04-13T13:51:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。
-        
-          <a class="article-more-a" href="/2019/04/13/线程安全和JMM/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/04/13/线程安全和JMM/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java IO流" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/07/Java IO流/">Java IO流</a>
-    </h1>
-  
-
-        
-        <a href="/2019/04/07/Java IO流/" class="archive-article-date">
-  	<time datetime="2019-04-07T13:23:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>流是【传输数据】的一种方式，传输的数据基本单位是字节，为了处理的方便，在字节的基础上引入了字符的概念（一个字符包含多个字节），所以按照处理单位的不同，有字节流和字符流的说法。
-        
-          <a class="article-more-a" href="/2019/04/07/Java IO流/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">IO</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/04/07/Java IO流/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-深入理解Object类" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/16/深入理解Object类/">深入理解Object类</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/16/深入理解Object类/" class="archive-article-date">
-  	<time datetime="2019-03-16T12:54:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Object类作为Java中所有类的基类，提供了一些通用的方法。
-        
-          <a class="article-more-a" href="/2019/03/16/深入理解Object类/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/16/深入理解Object类/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ArrayList原理解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/24/ArrayList原理解析/">ArrayList原理解析</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/24/ArrayList原理解析/" class="archive-article-date">
-  	<time datetime="2019-02-24T11:34:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>ArrayList是一个动态数组，还是一个有序、可存储重复元素的容器。数组是一种常用的，存储一组的元素的容器，但是数组长度固定，不够灵活。ArrayList作为一个动态数组，支持随机访问，算是弥补了数组的不足。
-        
-          <a class="article-more-a" href="/2019/02/24/ArrayList原理解析/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/24/ArrayList原理解析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ConcurrentHashMap原理简析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/23/ConcurrentHashMap原理简析/">ConcurrentHashMap原理简析</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/23/ConcurrentHashMap原理简析/" class="archive-article-date">
-  	<time datetime="2019-02-23T13:13:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="线程不安全的HashMap"><a href="#线程不安全的HashMap" class="headerlink" title="线程不安全的HashMap"></a>线程不安全的HashMap</h1><p>HashMap不是线程安全的，如果在多线程中使用HashMap可能会有两个问题：「死循环」和「数据丢失」问题。
-        
-          <a class="article-more-a" href="/2019/02/23/ConcurrentHashMap原理简析/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/23/ConcurrentHashMap原理简析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-HashMap原理简析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/17/HashMap原理简析/">HashMap原理简析</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/17/HashMap原理简析/" class="archive-article-date">
-  	<time datetime="2019-02-17T11:45:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>List和Set接口都是存储一组单个元素，有时候我们还需要一组有映射关系的实体，因此就有了Map接口。
-        
-          <a class="article-more-a" href="/2019/02/17/HashMap原理简析/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/17/HashMap原理简析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java集合概述" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/16/Java集合概述/">Java集合概述</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/16/Java集合概述/" class="archive-article-date">
-  	<time datetime="2019-02-16T12:24:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在JCF(Java Collection FrameWork)之前，我们使用数组来存储多个相似的对象（存储的元素可以是基本类型和引用类型），但是数组有个明显的缺点，即大小固定，使用起来不是很灵活。而JCF中定义的“容器”可以自动增长和收缩，使用起来更加灵活，并且提供了多类容器（有序可重复的List，无序不可重复的set，key-value的map），只是这些容器中的元素不能是基本类型，必须是引用类型（int等的包装类型也可以）。
-        
-          <a class="article-more-a" href="/2019/02/16/Java集合概述/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/16/Java集合概述/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Elasticsearch概述" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/24/Elasticsearch概述/">Elasticsearch概述</a>
+    <h1 class="article-title" itemprop="name">
+      Elasticsearch概述
     </h1>
   
 
@@ -1015,16 +424,33 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/11/24/Elasticsearch概述/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2019/02/16/Java集合概述/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Java集合概述
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/11/11/Logstash使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Logstash使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -1039,191 +465,32 @@
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Logstash使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/11/Logstash使用/">Logstash使用</a>
-    </h1>
-  
-
-        
-        <a href="/2018/11/11/Logstash使用/" class="archive-article-date">
-  	<time datetime="2018-11-11T11:45:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。
-        
-          <a class="article-more-a" href="/2018/11/11/Logstash使用/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ELK</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/11/11/Logstash使用/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据检索"><span class="toc-number">1.1.</span> <span class="toc-text">数据检索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#结构化数据"><span class="toc-number">1.1.1.</span> <span class="toc-text">结构化数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非结构化数据"><span class="toc-number">1.1.2.</span> <span class="toc-text">非结构化数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全文检索"><span class="toc-number">1.1.3.</span> <span class="toc-text">全文检索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#倒排索引"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">倒排索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#词条构造"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">词条构造</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#分词"><span class="toc-number">1.1.3.2.1.</span> <span class="toc-text">分词</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#语义处理"><span class="toc-number">1.1.3.2.2.</span> <span class="toc-text">语义处理</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#构建倒排索引"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">构建倒排索引</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#搜索语法"><span class="toc-number">1.1.3.3.1.</span> <span class="toc-text">搜索语法</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Luence"><span class="toc-number">1.2.</span> <span class="toc-text">Luence</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch"><span class="toc-number">1.3.</span> <span class="toc-text">Elasticsearch</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本原理"><span class="toc-number">2.</span> <span class="toc-text">基本原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.1.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#物理模型"><span class="toc-number">2.2.</span> <span class="toc-text">物理模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写入流程"><span class="toc-number">2.3.</span> <span class="toc-text">写入流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读取流程"><span class="toc-number">2.4.</span> <span class="toc-text">读取流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#部署"><span class="toc-number">3.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">3.1.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动"><span class="toc-number">3.2.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#踩坑记录"><span class="toc-number">3.3.</span> <span class="toc-text">踩坑记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#root用户启动"><span class="toc-number">3.3.1.</span> <span class="toc-text">root用户启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件句柄和线程数"><span class="toc-number">3.3.2.</span> <span class="toc-text">文件句柄和线程数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VMA数量"><span class="toc-number">3.3.3.</span> <span class="toc-text">VMA数量</span></a></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
-  
-    <article id="post-FileBeat使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/03/FileBeat使用/">FileBeat使用</a>
-    </h1>
-  
-
-        
-        <a href="/2018/11/03/FileBeat使用/" class="archive-article-date">
-  	<time datetime="2018-11-03T13:09:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="FileBeat"><a href="#FileBeat" class="headerlink" title="FileBeat"></a>FileBeat</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Filebeat是一个基于Go语言开发的轻量级日志采集器，监听特定的目录或日志文件，并tail其内容变动，将其「原样」转发到es、logstash、kafka等。Filebeat相对Logstash更加轻量，因此适合部署到生产环境的服务器上，但是功能也更加简单，比如没有提供Logstash的正则功能。
-        
-          <a class="article-more-a" href="/2018/11/03/FileBeat使用/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ELK</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/11/03/FileBeat使用/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1255,8 +522,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
