@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/1 | lz</title>
+  <title>shell基础 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="lz">
-<meta property="og:url" content="http://yoursite.com/archives/2018/01/index.html">
+  <meta name="description" content="主要介绍工作中遇到的shell知识">
+<meta name="keywords" content="shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell基础">
+<meta property="og:url" content="http://yoursite.com/2018/01/22/shell基础/index.html">
 <meta property="og:site_name" content="lz">
+<meta property="og:description" content="主要介绍工作中遇到的shell知识">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-22T03:19:48.445Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lz">
+<meta name="twitter:title" content="shell基础">
+<meta name="twitter:description" content="主要介绍工作中遇到的shell知识">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -134,36 +139,272 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-shell基础" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/22/shell基础/" class="archive-article-date">
-  	<time datetime="2018-01-22T12:21:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-22</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/22/shell基础/">shell基础</a>
+    <h1 class="article-title" itemprop="name">
+      shell基础
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/01/22/shell基础/" class="archive-article-date">
+  	<time datetime="2018-01-22T12:21:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>主要介绍工作中遇到的shell知识<a id="more"></a></p>
+<h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><ul>
+<li><p>表示用户名的$USER</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $USER</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>表示用户主目录的$HOME</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $HOME</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h3><h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><ul>
+<li><p>kill命令：根据pid终止进程，如果要立即终止，使用-9参数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -9 12332</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>killall命令：根据进程名称终止进程（使用ps  aux | grep bash 确认哪些进程名称是bash），如果给出的进程名称不完整会报错。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">killall bash</span><br></pre></td></tr></table></figure>
+<p>kill掉test用户的所有进程。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">killall -u test</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pgrep命令：根据进程名搜索对应的进程id，pgrep（process grep）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pgrep bash</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pkill命令：也是通过进程名来终止进程的，但是可以只给出进程的部分名称即可，弥补了killall的缺陷。可以认为是pgrep + killall。pkill后的进程名可以认为是正则的，提供了 -f 参数表示完全匹配进程名。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pkill -9 -f logstash</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="用户"><a href="#用户" class="headerlink" title="用户"></a>用户</h4><ul>
+<li><p>useradd命令：创建用户，-m参数表示创建用户的主目录，-p表示用户加密后的密码，-g表示用户组名称。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd -m -p test_pwd -g test_group test_user</span><br></pre></td></tr></table></figure>
+<p>通过chpasswd修改密码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">  　echo "test_user:test_pwd" | chpasswd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>userdel命令:删除用户，-f表示强制删除（即使用户已登录），-r表示删除用户相关的文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">userdel -rf test_user</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><ul>
+<li><p>lsof：查看端口是否被占用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsof -i:8080 | grep LISTEN |wc -l</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h4><ul>
+<li><p>远程连接到服务器ip上，以用户$user，执行命令ls</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh $user@$ip "ls"</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成ssh公钥和密钥。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -f ~/.ssh/id_rsa -P ""</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>远程调用脚本时，可能会在本机的控制台打印相关信息，可以将标准输出和错误输出重定向到null设备中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh $user@$Server "/home/test/test.sh &gt;&gt; /dev/null 2&gt;&amp;1"</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h4><p>打包是将多个文件或目录组织到一个文件中，linux下的压缩只是针对单个文件的，所以如果要压缩多个文件，需要先将其打包。</p>
+<p>tar命令首先是一个打包命令，-f参数表示文档名，只能放在多个参数的最后一个位置，其后紧接包名称。</p>
+<ul>
+<li><p>-c表示create新的包，-f指定包的文件名，以下命令将多个.jpg文件打包为all.tar的包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -cf all.tar *.jpg</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-r参数表示增加文件到包中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -rf all.tar *.gif</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-u表示更新文件的意思，更新包中的logo.gif。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -uf all.tar logo.gif</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-t表示列出包中的文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -tf all.tar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按照约定，后缀名tar表示这是一个tar包，没有压缩。添加-z参数表示使用gzip算法压缩，后缀名就是gz了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zcf all.tar.gz *.jpg</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-x 参数表示解压，-z表示使用gzip算法。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf all.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h4><p>sed是面向行的流编辑器（stream editor -&gt; sed），是一个强大的文本处理工具。从输入流或者文件中读取文本到内部缓冲区（模式空间），每读取一行执行一次sed内部的主循环，在这行进行sed脚本（用户编写的）之后，输出处理结果。</p>
+<h5 id="替换参数"><a href="#替换参数" class="headerlink" title="替换参数"></a>替换参数</h5><p>s参数在sed中表示替换，使用语法如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed 's/regexp/replacement/g' test.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>s表示替换，每读取一行执行替换。</li>
+<li>斜杠/是分隔符，其实在regexp和replacement中都未出现的单个字符都可以作为分隔符，例如#。</li>
+<li>regexp表示搜索的模式，即需要替换的内容。</li>
+<li>replacement表示替换后的值</li>
+<li>g表示全局替换，即行中每个匹配项都会被替换，不然只会替换行中第一个匹配项。</li>
+</ul>
+<p>使用-i参数就地编辑文件，即直接修改文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i 's/abc/def/' test.txt</span><br></pre></td></tr></table></figure>
+<p>某个范围内的替换，将label1:行和label2:行之间的useername替换为lzy。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i "/label1:/,/label2:/s#username:.*#username: lzy#" test.txt</span><br></pre></td></tr></table></figure>
+<h5 id="追加参数"><a href="#追加参数" class="headerlink" title="追加参数"></a>追加参数</h5><p>使用a\参数在行的末尾追加信息。</p>
+<ul>
+<li><p>从第1行到最后1行所有行后追加”add one”字符串</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed '1,$a\add one' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在匹配到first的行追加“add one”</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed '/first/a\add one' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="替换参数-1"><a href="#替换参数-1" class="headerlink" title="替换参数"></a>替换参数</h5><p>使用c\参数替换行。</p>
+<ul>
+<li><p>从第1行到最后1行，所有行替换为”add one”</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed "1,$c\add one" test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在匹配到first的行替换为”add one”</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed '/first/c\add one' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="删除参数"><a href="#删除参数" class="headerlink" title="删除参数"></a>删除参数</h5><p>使用d参数匹配的行。</p>
+<ul>
+<li><p>删除空行（*表示出现0次或多次）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed '/^ *$/d' test.txt</span><br></pre></td></tr></table></figure>
+<p>结合替换参数，可以将/{regex}/理解为是一个匹配模式的正则，是一个整体。</p>
+</li>
+<li><p>从第4行到最后一行全部删除。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed '4,$d' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h4><p>awk也是一个文本处理工具，与sed类型，也是以行为单位来处理文本。使用print命令打印文本，这个文本可以是整行内容，也可以是行中的某些字段。默认字段间的分隔符是空格或制表符，字段使用${number}表示。例如\$1就是第1个字段，\$2就是第2个字段，\$0表示整行内容。</p>
+<ul>
+<li><p>打印第1个和第2个字段。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo "a b cww" | awk '&#123;print $1,$2&#125;'</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印整行内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">awk '&#123;print&#125;' test.txt   #方式1</span><br><span class="line">awk '&#123;print $0&#125;' test.txt  #方式2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>-F参数指定字段分隔符。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F':' '&#123;print $1&#125;' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>内置函数toupper将字符串转换为大写。还有其它的内置函数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F':' '&#123;print toupper($1)&#125;' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>print命令前是一个正则表达式，只输出包含usr的行的第1个字段。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F':' '/usr/ &#123;print $1&#125;' test.txt</span><br></pre></td></tr></table></figure>
+<p>与sed类似，也是使用两个斜杠包括字符串的形式表示正则匹配。</p>
+</li>
+<li><p>输出奇数行，NR是一个内置变量，表示行号。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F ':' 'NR % 2 ==1 &#123;print $0&#125;' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>输出第3行之后的行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F ':' 'NR &gt; 3 &#123;print $0&#125;' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>输出第1个字段是root的行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F ':' '$1 == "root" &#123;print $0&#125;' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>输出第1个字段是root或bin的行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F ':' '$1 == "root" || $1 == "bin" &#123;print $0&#125;' test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>if-else语句，输出第一个字段的第一个字符大于m的行</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F ':' '&#123;if ($1 &gt; "m")  print $0;else print "---"&#125;' test.txt</span><br></pre></td></tr></table></figure>
+<h3 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h3><p>添加-p参数，目录已存在不会报错，父目录不存在会自动创建。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /test/doc</span><br></pre></td></tr></table></figure>
+<h3 id="shell数组"><a href="#shell数组" class="headerlink" title="shell数组"></a>shell数组</h3><p>shell中数组使用「一对括号」定义，元素之间使用空格分隔。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">空数组</span></span><br><span class="line">aa=()</span><br><span class="line"><span class="meta">#</span><span class="bash">有初始值的数组</span></span><br><span class="line">aa=(1 2)</span><br></pre></td></tr></table></figure>
+<p>shell中的数组又分为两种类型：索引数组和关联数组（bash 4.0开始被引入）。</p>
+<ul>
+<li>索引数组：类似于Java中的数组，使用整数值作为下标，通过这个下标访问。</li>
+<li>关联数组：shell中没有map类型，通过提供关联数组提供相同的功能，使用字符串作为下标。</li>
+</ul>
+<p>数组的默认类型是索引数组，为了使用关联数组需要使用declare声明变量类型。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">declare -a indexArr  #索引数组</span><br><span class="line">declare -A dicArr    #关联数组</span><br></pre></td></tr></table></figure>
+<h4 id="遍历数组"><a href="#遍历数组" class="headerlink" title="遍历数组"></a>遍历数组</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for((i=0;i&lt;$&#123;#ips[*]&#125;;i++))</span><br><span class="line">do</span><br><span class="line">		echo $&#123;ip[$i]&#125;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<h4 id="拼接数组"><a href="#拼接数组" class="headerlink" title="拼接数组"></a>拼接数组</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ipAddr=()</span><br><span class="line">for((i=0;i&lt;$&#123;#ips[*]&#125;;i++))</span><br><span class="line">do</span><br><span class="line">		ipAddr=($&#123;ipAddr[*]&#125; $&#123;ip[$i]&#125;)</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<h4 id="数组的访问"><a href="#数组的访问" class="headerlink" title="数组的访问"></a>数组的访问</h4><p>获得数组长度：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">&#123;<span class="comment">#a[@]&#125;</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="索引数组"><a href="#索引数组" class="headerlink" title="索引数组"></a>索引数组</h5><h6 id="赋值"><a href="#赋值" class="headerlink" title="赋值"></a>赋值</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a[0]=100</span><br><span class="line">a[1]=200</span><br></pre></td></tr></table></figure>
+<h6 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $&#123;aa[0]&#125;  #得到单个值</span><br><span class="line">echo $&#123;aa[*]&#125;  #获得所有值</span><br></pre></td></tr></table></figure>
+<h5 id="关联数组"><a href="#关联数组" class="headerlink" title="关联数组"></a>关联数组</h5><h6 id="赋值-1"><a href="#赋值-1" class="headerlink" title="赋值"></a>赋值</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">declare -A color</span><br><span class="line">color["red"]="#ff0000"</span><br><span class="line">colro["green"]="#00ff00"</span><br></pre></td></tr></table></figure>
+<h6 id="读取-1"><a href="#读取-1" class="headerlink" title="读取"></a>读取</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $&#123;color["red"]&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="执行shell"><a href="#执行shell" class="headerlink" title="执行shell"></a>执行shell</h3><p>执行shell脚本有3种方式</p>
+<ol>
+<li>source filename：通过source的方式执行，这种方式是在当前shell中依次读取filename中的每条命令并执行，没有创建子shell。因此filename中定义的「全局变量」在当前shell中是可以读取的。</li>
+<li>sh filename：使用sh的方式执行shell，不要求filename具备可执行权限。会创建子shell执行filename，子shell可以继承父shell中定义的环境变量，但是子shell中创建的变量不会带回到父shell。</li>
+<li>./filename:通过”.”的方式执行shell，这种方式要求filename具备可执行权限。也会创建子shell。</li>
+</ol>
+<h3 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h3><p>read命令可以从终端中读取数据被赋值给相应的变量。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read line # 从终端读取数据（读取到回车\r表示读取结束），并存储到line变量中</span><br></pre></td></tr></table></figure>
+<p>将read命令和while循环组合可以从文件中读取数据。从1.txt中以「行」为单位读取数据，line就是每行的内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">while read line ;</span><br><span class="line">do</span><br><span class="line">	echo $line</span><br><span class="line">done &lt; "1.txt"</span><br></pre></td></tr></table></figure>
+<h3 id="字符串操作"><a href="#字符串操作" class="headerlink" title="字符串操作"></a>字符串操作</h3><p>判断字符串中是否包含每个字符：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if [[ "$line" =~ "jdbc"]] #包含的话，则表达式的值是true</span><br></pre></td></tr></table></figure>
+<h3 id="整型自增"><a href="#整型自增" class="headerlink" title="整型自增"></a>整型自增</h3><p>使用索引数组时一般会使用到索引值自增，使用2种最简洁的方式可以达到这个目的。</p>
+<ol>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">index=0</span><br><span class="line">index=$(($index + 1))</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">declare -i x=1 #声明x为整型值</span><br><span class="line">x+=1           #使用类似java的写法完成自增</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="ssh-keygen"><a href="#ssh-keygen" class="headerlink" title="ssh-keygen"></a>ssh-keygen</h3><p>ssh公钥认证是ssh认证的方式之一，通过公钥认证可以实现ssh的免密登录。ssh-keygen可用来生成ssh公钥认证所需的公钥id_rsa.pub和私钥id_rsa，这些文件都是存储在~/.ssh(目录不存在需要创建)目录下，支持RSA和DSA两种认证密钥。使用以下命令创建公钥和私钥：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -f ~/.ssh/id_rsa -P ""</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-t：指定要创建密钥的类型，这里使用rsa的方式。</li>
+<li>-f ：指定要保存密钥的文件名（如果执行为test，结果就是test.pub和test）。</li>
+<li>-P：提供（旧）密语。</li>
+</ul>
+<h3 id="expect"><a href="#expect" class="headerlink" title="expect"></a>expect</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>Linux中有些交互式命令中经常需要输入yes/no或者password操作（例如ssh命令），这些交互式的命令不利于通过脚本实现自动化，可以使用expect包模拟这些手动输入，通过expect包提供的命令可以在脚本里实现交互式操作的自动化，例如ssh远程登录。</p>
+<h4 id="调用方式"><a href="#调用方式" class="headerlink" title="调用方式"></a>调用方式</h4><ol>
+<li><p>先编写expect脚本，然后在shell里调用。如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">!#/bin/bash</span><br><span class="line">sh ssh-copy-id.exp</span><br></pre></td></tr></table></figure>
+<p>ssh-copy-id.exp的内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/expect -f</span></span><br><span class="line">set timeout 5</span><br><span class="line">spawn ....</span><br><span class="line">expect&#123;</span><br><span class="line">	.....</span><br><span class="line">&#125;</span><br><span class="line">expect eof</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p>可以在shell中通过expect -c “…”来自动化执行交互式命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">！/bin/bash</span></span><br><span class="line">expect -c 'expect "hi" &#123;send "hello\n"&#125;'</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="expect的命令"><a href="#expect的命令" class="headerlink" title="expect的命令"></a>expect的命令</h4><p>expect是一个自动化工具，提供了一些命令来达到自动化的目的。</p>
+<ol>
+<li>spawn：首先是spawn ${cmd}，用于启动一个shell进程执行命令${cmd}，。就类似我们手动打开了一个命令行窗口，输入命令后终端会打印相关信息。</li>
+<li>expect(模式)：spawn启动进程执行命令后，终端会打印相关信息，expect命令用来接收读取这些信息。</li>
+<li>send（动作）：使用exepct接收到终端信息后，根据字符串的内容，需要发送一些信息（类似于用户手工输入），因此提供了send命令来发送信息。</li>
+<li>eof：交互完成后，通过eof表示不再读取终端信息。与spawn对应，表示捕获终端输出信息终止，进一步调用send “eof”或者exit退出。</li>
+<li>set：设置变量值，例如超时时间。set timeout 30,设置超时时间是30s，默认是10s。</li>
+</ol>
+<p>总之，expect就是使用模式-动作完成交互式命令的自动化。</p>
+</li>
+</ol>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><ul>
+<li><p>单分支语法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expect -c 'expect "hi" &#123;send "hello\n"&#125;'</span><br></pre></td></tr></table></figure>
+<p>在终端执行上述命令后，用户可以依次输入1\r   2\r  hi\r<br>直到输入hi时，会在屏幕上打印“hello”。</p>
+</li>
+<li><p>多分支语法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">expect&#123;</span><br><span class="line">	"lilei" &#123;send "hi lilei";exp_continue&#125;	</span><br><span class="line">	"liuyi" &#123;send "hi liuyi";exp_continue&#125;	</span><br><span class="line">	"over" &#123;send "disconnect"&#125;		</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="ssh-copy-id"><a href="#ssh-copy-id" class="headerlink" title="ssh-copy-id"></a>ssh-copy-id</h3><p>ssh-copy-id将本地的公钥发送到远程主机的authorized_keys中，这样可以实现远程免密登录主机。如果不传入-i参数，ssh-copy-id使用默认的~/.ssh/identity.pub作为默认的公钥。如果多次运行ssh-copy-id，该命令不会检查重复，会在远程主机中多次写入到authorized_keys中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id username@serverIp</span><br><span class="line">ssh-copy-id -i ~/.ssh/id_rsa.pub username@serverIp</span><br></pre></td></tr></table></figure>
+<p>命令结束后，本机当前用户可以免密登录到serverIp的username用户下。</p>
+<p>看一个通过expect和ssh-copy-id命令实现免密的脚本。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">～！/bin/bash</span></span><br><span class="line">func ssh()</span><br><span class="line">&#123;</span><br><span class="line">  local user="test"</span><br><span class="line">	expect -c "set timeout -1;</span><br><span class="line">							spawn ssh-copy-id $user@$1;</span><br><span class="line">							expect&#123;</span><br><span class="line">											*(yes/no)* &#123;send -- yes\r;exp_continue;&#125;</span><br><span class="line">											*password* &#123;send -- $2\r;exp_continue;&#125;</span><br><span class="line">											eof &#123;exit 0;&#125;</span><br><span class="line">							&#125;";</span><br><span class="line">&#125;</span><br><span class="line">ssh "10.2.3.1" "1234"</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-c表示从命令行执行expect脚本，默认expect是交互式执行的。类似hive -e和mysql -e。</li>
+<li>set timeout -1，表示不超时，一直等待。</li>
+<li>使用了expect的多分支语法，\r表示回车符，默认用户输入后，敲回车。</li>
+<li>exp_continue表示继续匹配下一个语句。</li>
+<li>expect脚本必须以interact或eof结束，eof与spawn相对应，表示终止捕获终端输出信息。</li>
+</ul>
+<p>## </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -175,7 +416,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -188,115 +429,75 @@
 	</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/21/Zookeeper数据存储/" class="archive-article-date">
-  	<time datetime="2018-01-21T13:32:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-21</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/07/07/单例模式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          单例模式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/21/Zookeeper数据存储/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Zookeeper数据存储</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/21/Zookeeper数据存储/">Zookeeper数据存储</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">zookeeper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境变量"><span class="toc-number">1.</span> <span class="toc-text">环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令"><span class="toc-number">2.</span> <span class="toc-text">命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#进程"><span class="toc-number">2.1.</span> <span class="toc-text">进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用户"><span class="toc-number">2.2.</span> <span class="toc-text">用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络"><span class="toc-number">2.3.</span> <span class="toc-text">网络</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ssh"><span class="toc-number">2.4.</span> <span class="toc-text">ssh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tar"><span class="toc-number">2.5.</span> <span class="toc-text">tar</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sed"><span class="toc-number">2.6.</span> <span class="toc-text">sed</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#替换参数"><span class="toc-number">2.6.1.</span> <span class="toc-text">替换参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#追加参数"><span class="toc-number">2.6.2.</span> <span class="toc-text">追加参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#替换参数-1"><span class="toc-number">2.6.3.</span> <span class="toc-text">替换参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#删除参数"><span class="toc-number">2.6.4.</span> <span class="toc-text">删除参数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#awk"><span class="toc-number">2.7.</span> <span class="toc-text">awk</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mkdir"><span class="toc-number">3.</span> <span class="toc-text">mkdir</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell数组"><span class="toc-number">4.</span> <span class="toc-text">shell数组</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#遍历数组"><span class="toc-number">4.1.</span> <span class="toc-text">遍历数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拼接数组"><span class="toc-number">4.2.</span> <span class="toc-text">拼接数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数组的访问"><span class="toc-number">4.3.</span> <span class="toc-text">数组的访问</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#索引数组"><span class="toc-number">4.3.1.</span> <span class="toc-text">索引数组</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#赋值"><span class="toc-number">4.3.1.1.</span> <span class="toc-text">赋值</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#读取"><span class="toc-number">4.3.1.2.</span> <span class="toc-text">读取</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#关联数组"><span class="toc-number">4.3.2.</span> <span class="toc-text">关联数组</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#赋值-1"><span class="toc-number">4.3.2.1.</span> <span class="toc-text">赋值</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#读取-1"><span class="toc-number">4.3.2.2.</span> <span class="toc-text">读取</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行shell"><span class="toc-number">5.</span> <span class="toc-text">执行shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读文件"><span class="toc-number">6.</span> <span class="toc-text">读文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串操作"><span class="toc-number">7.</span> <span class="toc-text">字符串操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#整型自增"><span class="toc-number">8.</span> <span class="toc-text">整型自增</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh-keygen"><span class="toc-number">9.</span> <span class="toc-text">ssh-keygen</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#expect"><span class="toc-number">10.</span> <span class="toc-text">expect</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#概述"><span class="toc-number">10.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调用方式"><span class="toc-number">10.2.</span> <span class="toc-text">调用方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#expect的命令"><span class="toc-number">10.3.</span> <span class="toc-text">expect的命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#语法"><span class="toc-number">10.4.</span> <span class="toc-text">语法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ssh-copy-id"><span class="toc-number">11.</span> <span class="toc-text">ssh-copy-id</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/06/Zookper的安装/" class="archive-article-date">
-  	<time datetime="2018-01-06T12:19:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/06/Zookper的安装/">安装Zookeeper</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">zookeeper</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/大数据//" class="article-tag-list-link color4">大数据</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -328,8 +529,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
