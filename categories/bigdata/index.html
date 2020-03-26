@@ -6,24 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>AQS共享模式 | lz</title>
+  <title>Category: bigdata | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="从一个BUG说起在JDK6(具体来说是6u11,6u17)中对Semaphore的使用中存在这么一个可能会导致线程夯住的bug，bug编号是JDK-6801020。">
-<meta name="keywords" content="并发">
-<meta property="og:type" content="article">
-<meta property="og:title" content="AQS共享模式">
-<meta property="og:url" content="http://yoursite.com/2019/07/20/AQS共享模式/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="lz">
+<meta property="og:url" content="http://yoursite.com/categories/bigdata/index.html">
 <meta property="og:site_name" content="lz">
-<meta property="og:description" content="从一个BUG说起在JDK6(具体来说是6u11,6u17)中对Semaphore的使用中存在这么一个可能会导致线程夯住的bug，bug编号是JDK-6801020。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS-bug.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/PROPAGATE.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS-setPROPAGATE.png">
-<meta property="og:updated_time" content="2019-09-10T14:42:33.315Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AQS共享模式">
-<meta name="twitter:description" content="从一个BUG说起在JDK6(具体来说是6u11,6u17)中对Semaphore的使用中存在这么一个可能会导致线程夯住的bug，bug编号是JDK-6801020。">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS-bug.png">
+<meta name="twitter:title" content="lz">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -143,157 +134,71 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-AQS共享模式" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      AQS共享模式
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2019/08/04/Kafka概述/" class="archive-article-date">
+  	<time datetime="2019-08-04T13:13:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-04</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/08/04/Kafka概述/">消息队列概述</a>
     </h1>
   
 
-        
-        <a href="/2019/07/20/AQS共享模式/" class="archive-article-date">
-  	<time datetime="2019-07-20T14:15:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="从一个BUG说起"><a href="#从一个BUG说起" class="headerlink" title="从一个BUG说起"></a>从一个BUG说起</h1><p>在JDK6(具体来说是6u11,6u17)中对Semaphore的使用中存在这么一个可能会导致线程夯住的bug，bug编号是<a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6801020" target="_blank" rel="noopener">JDK-6801020</a>。<a id="more"></a>复现代码是：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.Semaphore;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSemaphore</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Semaphore sem = <span class="keyword">new</span> Semaphore(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread1</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 申请信号量，会阻塞</span></span><br><span class="line">            sem.acquireUninterruptibly();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread2</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">//释放信号量，应该唤醒阻塞线程</span></span><br><span class="line">            sem.release();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000000</span>; i++) &#123;</span><br><span class="line">            Thread t1 = <span class="keyword">new</span> Thread1();</span><br><span class="line">            Thread t2 = <span class="keyword">new</span> Thread1();</span><br><span class="line">            Thread t3 = <span class="keyword">new</span> Thread2();</span><br><span class="line">            Thread t4 = <span class="keyword">new</span> Thread2();</span><br><span class="line">            t1.start();</span><br><span class="line">            t2.start();</span><br><span class="line">            t3.start();</span><br><span class="line">            t4.start();</span><br><span class="line">            t1.join();</span><br><span class="line">            t2.join();</span><br><span class="line">            t3.join();</span><br><span class="line">            t4.join();</span><br><span class="line">            System.out.println(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这段看似正常的代码，在实际运行过程中会夯住,原因会在下面分析。</p>
-<h2 id="BUG分析"><a href="#BUG分析" class="headerlink" title="BUG分析"></a>BUG分析</h2><p>我们再来看一下发现这个bug时，AQS的实现。Doug  Lea的个人网站上保存有AQS的<a href="http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/locks/AbstractQueuedSynchronizer.java?view=log" target="_blank" rel="noopener">提交记录</a>，可以找到修复<strong>JDK-6801020</strong>的提交记录：<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS-bug.png" alt="Aaron Swartz"><br>查看Revision 1.73中AQS的具体实现。</p>
-<h3 id="Revision-1-73-acquireShared"><a href="#Revision-1-73-acquireShared" class="headerlink" title="Revision 1.73 acquireShared"></a>Revision 1.73 acquireShared</h3><p>共享模式中允许多个线程「同时获取」同步状态，即某一时刻允许「多个线程从acquireShared返回」,看下acquireShared具体实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquireShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">   <span class="comment">//返回可用资源数量</span></span><br><span class="line">   <span class="keyword">if</span> (tryAcquireShared(arg) &lt; <span class="number">0</span>)</span><br><span class="line">    doAcquireShared(arg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//与独占模式中acquireQueued功能类似</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doAcquireShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node node = addWaiter(Node.SHARED);</span><br><span class="line">    <span class="keyword">boolean</span> failed = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">boolean</span> interrupted = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            <span class="keyword">final</span> Node p = node.predecessor();</span><br><span class="line">            <span class="keyword">if</span> (p == head) &#123;</span><br><span class="line">                <span class="keyword">int</span> r = tryAcquireShared(arg);</span><br><span class="line">                <span class="comment">//获取资源成功</span></span><br><span class="line">                <span class="keyword">if</span> (r &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                    setHeadAndPropagate(node, r);</span><br><span class="line">                    p.next = <span class="keyword">null</span>; <span class="comment">// help GC</span></span><br><span class="line">                    <span class="keyword">if</span> (interrupted)</span><br><span class="line">                        selfInterrupt();</span><br><span class="line">                    failed = <span class="keyword">false</span>;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;</span><br><span class="line">                parkAndCheckInterrupt())</span><br><span class="line">                interrupted = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (failed)</span><br><span class="line">            cancelAcquire(node);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//设置头节点，并传播式唤醒</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setHeadAndPropagate</span><span class="params">(Node node, <span class="keyword">int</span> propagate)</span> </span>&#123;</span><br><span class="line">    setHead(node);</span><br><span class="line">    <span class="comment">//propagate是传播式唤醒，加快了线程的唤醒速度，是一个优化</span></span><br><span class="line">    <span class="keyword">if</span> (propagate &gt; <span class="number">0</span> &amp;&amp; node.waitStatus != <span class="number">0</span>) &#123;</span><br><span class="line">        Node s = node.next;</span><br><span class="line">        <span class="keyword">if</span> (s == <span class="keyword">null</span> || s.isShared())</span><br><span class="line">            unparkSuccessor(node);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在独占模式中，只允许一个线程获得同步状态，在同步状态已经被占用时，其它线程调用tryAcquire一定会失败。<br>而在共享模式中，允许多个线程获得同步状态，如果当前线程tryAcquireShared成功，那么其它线程如果有机会，或许也能获取到资源。因此与独占模式中acquire的一个不同点就是，在共享模式tryAcquireShared中，获取到资源并设置了head之后，根据tryAcquireShared「返回值」决定是否可以「唤醒」后继节点。与仅在release中「唤醒」相比，这样可以加快同步队列中线程的唤醒速度，这是一个「优化」。<br>除了直接在tryAcquireShared中唤醒后继线程之后，共享模式中acquire的实现与独占模式的逻辑基本相同。</p>
-<h3 id="Revision-1-73-releaseShared"><a href="#Revision-1-73-releaseShared" class="headerlink" title="Revision 1.73 releaseShared"></a>Revision 1.73 releaseShared</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">releaseShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (tryReleaseShared(arg)) &#123;</span><br><span class="line">	   Node h = head;</span><br><span class="line">	   <span class="keyword">if</span> (h != <span class="keyword">null</span> &amp;&amp; h.waitStatus != <span class="number">0</span>) &#123;</span><br><span class="line">	       unparkSuccessor(h);</span><br><span class="line">	       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	    &#125;</span><br><span class="line">	   <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看到，共享模式释放资源的逻辑与独占模式完全相同。文章开头提到的bug就是因为线程并发释放资源导致的。假设有4个线程，t1-t4,其中t1和t2已经获取到资源，t3-t4阻塞在同步队列中。</p>
-<ul>
-<li>时刻1:  t1调用releaseShared释放资源，发现waitStatus为-1，因此唤醒t3，并将head的waitStatus设置为0，此时head是t3的前驱节点。</li>
-<li>时刻2:  t3被唤醒，通过tryAcquireShared获取到资源，返回值是0（propagate），此时head仍然是t3的前驱节点。</li>
-<li>时刻3:  t2调用releaseShared释放资源，读取到waitStatus为0，不满足唤醒条件，直接退出。这里「丢失了一次唤醒」。此时head仍然是t3的前驱节点。</li>
-<li>时刻4:  t3调用setHeadAndPropagate，设置了新的head节点为t3。由于不满足「    if (propagate &gt; 0 &amp;&amp; node.waitStatus != 0) 」条件，不会唤醒后继节点。</li>
-</ul>
-<p>可以发现，线程t4最终没有被唤醒，一直处于阻塞的状态。这就是文章开头提到的bug发生的原因。有同学可能会说t3调用releaseShared的时候不就把t4唤醒了吗？其实，在共享模式中，acquire和release两个操作不一定是成对出现在一个线程中的，可以参考复现bug的例子。</p>
-<h1 id="引入PROPAGATE状态"><a href="#引入PROPAGATE状态" class="headerlink" title="引入PROPAGATE状态"></a>引入PROPAGATE状态</h1><p>既然bug的原因是并发调用releaseShared，「丢失了唤醒」导致线程夯住的。那么解决办法应该就是这么防止唤醒丢失。<br>首先在Revision 1.74版本中引入了新的等待状态：PROPAGATE。<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/PROPAGATE.png" alt="Aaron Swartz"></p>
-<p>setHeadAndPropagate也做了修改：<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS-setPROPAGATE.png" alt="Aaron Swartz"><br>图中右侧是修改后的内容。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setHeadAndPropagate</span><span class="params">(Node node, <span class="keyword">int</span> propagate)</span> </span>&#123;</span><br><span class="line">    Node h = head; <span class="comment">// Record old head for check below</span></span><br><span class="line">    setHead(node);</span><br><span class="line">    <span class="keyword">if</span> (propagate &gt; <span class="number">0</span> || h == <span class="keyword">null</span> || h.waitStatus &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        Node s = node.next;</span><br><span class="line">        <span class="keyword">if</span> (s == <span class="keyword">null</span> || s.isShared())</span><br><span class="line">            unparkSuccessor(node);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>如上节所述，判断条件中propagate &gt; 0是一个「优化」，用来加快唤醒速度。</li>
-<li>而h.waitStatus &lt; 0则是用于修复我们一直提到的bug。这里的小于0包含了SIGNAL和PROPAGATE两种情况。</li>
-</ul>
-<p>我们看看PROPAGATE是在哪里设置的。relaseShared方法也做了修改，修改后的实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">releaseShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tryReleaseShared(arg)) &#123;</span><br><span class="line">        doReleaseShared();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doReleaseShared</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * Ensure that a release propagates, even if there are other</span></span><br><span class="line"><span class="comment">     * in-progress acquires/releases.  This proceeds in the usual</span></span><br><span class="line"><span class="comment">     * way of trying to unparkSuccessor of head if it needs</span></span><br><span class="line"><span class="comment">     * signal. But if it does not, status is set to PROPAGATE to</span></span><br><span class="line"><span class="comment">     * ensure that upon release, propagation continues.</span></span><br><span class="line"><span class="comment">     * Additionally, we must loop in case a new node is added</span></span><br><span class="line"><span class="comment">     * while we are doing this. Also, unlike other uses of</span></span><br><span class="line"><span class="comment">     * unparkSuccessor, we need to know if CAS to reset status</span></span><br><span class="line"><span class="comment">     * fails, if so rechecking.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        Node h = head;</span><br><span class="line">        <span class="keyword">if</span> (h != <span class="keyword">null</span> &amp;&amp; h != tail) &#123;</span><br><span class="line">            <span class="keyword">int</span> ws = h.waitStatus;</span><br><span class="line">            <span class="keyword">if</span> (ws == Node.SIGNAL) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!compareAndSetWaitStatus(h, Node.SIGNAL, <span class="number">0</span>))</span><br><span class="line">                    <span class="keyword">continue</span>;  <span class="comment">// loop to recheck cases</span></span><br><span class="line">                unparkSuccessor(h);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//设置PROPAGATE状态，避免了「唤醒丢失」</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (ws == <span class="number">0</span> &amp;&amp;</span><br><span class="line">                     !compareAndSetWaitStatus(h, <span class="number">0</span>, Node.PROPAGATE))</span><br><span class="line">                <span class="keyword">continue</span>;      <span class="comment">// loop on failed CAS</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (h == head)         <span class="comment">// loop if head changed</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>为了解决并发release时可能导致的「唤醒丢失」，在doReleaseShared中有一个设置head为PROPAGATE的分支。现在我们再来看看之前的场景下是否还存在「唤醒丢失」的问题。</p>
-<ul>
-<li>时刻1:  t1调用releaseShared释放资源，发现waitStatus为-1，因此唤醒t3，并将head的waitStatus设置为0，此时head是t3的前驱节点。</li>
-<li>时刻2:  t3被唤醒，通过tryAcquireShared获取到资源，返回值是0（propagate），此时head仍然是t3的前驱节点。</li>
-<li>时刻3:  t2调用releaseShared释放资源，读取到waitStatus为0，使用CAS将其设置为PROPAGATE(-2)。此时head仍然是t3的前驱节点。</li>
-<li>时刻4:  t3调用setHeadAndPropagate，设置了新的head节点为t3。满足「propagate &gt; 0 || h == null || h.waitStatus &lt; 0」条件，唤醒后继节点t4。</li>
-</ul>
-<p>由此可见，引入了PROPAGATE状态并修改相应代码之后，解决了并发调用releaseShared导致的「唤醒丢失」问题。</p>
-<p>参考：<br><a href="https://www.cnblogs.com/micrari/p/6937995.html" target="_blank" rel="noopener">https://www.cnblogs.com/micrari/p/6937995.html</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">middleware</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        			<a href="/categories/bigdata//" class="article-tag-list-link color3">bigdata</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
+        </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2019/07/27/JAVA线程池原理/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          JAVA线程池原理
-        
-      </div>
-    </a>
   
   
-    <a href="/2019/07/14/AQS独占模式与ReentrantLock/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">AQS独占模式与ReentrantLock</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-        <div class="toc-container tooltip-left">
-            <i class="icon-font icon-category"></i>
-            <div class="tooltip tooltip-east">
-                <span class="tooltip-item">
-                </span>
-                <span class="tooltip-content">
-                    <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#从一个BUG说起"><span class="toc-number">1.</span> <span class="toc-text">从一个BUG说起</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#BUG分析"><span class="toc-number">1.1.</span> <span class="toc-text">BUG分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Revision-1-73-acquireShared"><span class="toc-number">1.1.1.</span> <span class="toc-text">Revision 1.73 acquireShared</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Revision-1-73-releaseShared"><span class="toc-number">1.1.2.</span> <span class="toc-text">Revision 1.73 releaseShared</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#引入PROPAGATE状态"><span class="toc-number">2.</span> <span class="toc-text">引入PROPAGATE状态</span></a></li></ol>
-                    </div>
-                </span>
-            </div>
-        </div>
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -325,10 +230,10 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
-		isCategory: false,
+		isCategory: true,
 		open_in_new: false,
 		toc_hide_index: true,
 		root: "/",
