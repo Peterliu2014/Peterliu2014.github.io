@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gd7nx8n155j308308u0vl.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gd7ob4rpu2j30tz0bkad3.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gd7p7rnuj0j30ja05raao.jpg">
-<meta property="og:updated_time" content="2020-03-26T14:49:10.327Z">
+<meta property="og:updated_time" content="2020-03-27T12:59:32.700Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="消息队列概述">
 <meta name="twitter:description" content="消息队列是一个存储消息的容器，还是一种用于进程间或者同一进程内不同线程间的通信方式。消息队列不要求消息的发送者和接收者同时在线，消息会保存在队列中，直到接收者取走消息。">
@@ -265,6 +265,7 @@
 </table>
 <ul>
 <li>就拿吞吐量来说，ActiveMQ 和RabbitMQ较弱，RocketMQ和Kafka都是高吞吐量，因此在大数据领域应用更广泛。</li>
+<li>topic数量增加到几百个时，Kafka的吞吐量会大幅下降，可以通过增加机器来解决。而RocketMQ只会有小幅度的下降。</li>
 <li>消息的可靠性方面，RocketMQ和Kafka都可以做到0丢失。Kafka虽然是定时刷盘，但是通过配置log.flush.interval.messages（多少条消息刷写磁盘，默认是9223372036854775807，配置为1可以实现0丢失），log.flush.interval.ms（表示间隔多久刷写磁盘，默认值是null）可以实现0丢失。</li>
 </ul>
 
