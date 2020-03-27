@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gd7nx8n155j308308u0vl.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gd7ob4rpu2j30tz0bkad3.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gd7p7rnuj0j30ja05raao.jpg">
-<meta property="og:updated_time" content="2020-03-27T13:04:23.226Z">
+<meta property="og:updated_time" content="2020-03-27T13:39:22.581Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="消息队列概述">
 <meta name="twitter:description" content="消息队列是一个存储消息的容器，还是一种用于进程间或者同一进程内不同线程间的通信方式。消息队列不要求消息的发送者和接收者同时在线，消息会保存在队列中，直到接收者取走消息。">
@@ -195,7 +195,7 @@
 <li>ES是一个分布式的搜索和分析引擎，还提供了实时存储的功能。</li>
 <li>Kibana：一个强大的，基于ES的可视化组件，这个组件是很多人选择ELK架构做日志处理的重要原因。</li>
 </ul>
-<h3 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h3><p>就像消息队列的定义一样，消息队列可以实现跨系统的进程间「异步通信」的功能。通信的双方就对应消息队列中消息的发送者和接受者，由于消息队列不要两者同时在线，所以可以实现异步通信的功能。</p>
+<h3 id="异步通信"><a href="#异步通信" class="headerlink" title="异步通信"></a>异步通信</h3><p>就像消息队列的定义一样，消息队列可以实现跨系统的进程间「异步通信」的功能。通信的双方就对应消息队列中消息的发送者和接受者，由于消息队列不要两者同时在线，所以可以实现异步通信的功能。</p>
 <h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><h3 id="可用性"><a href="#可用性" class="headerlink" title="可用性"></a>可用性</h3><p>引入了消息队列之后，就需要对其进行维护。如果消息队列挂了，整个系统可能也就挂了，积分加不了了，短信不能发了。所以，一般消息队列实现了高可用，例如Kafka的多副本机制，即使一台broker宕机，还可以从其它broker上读取消息。但是极端情况下，所以broker宕机还是会导致业务系统不可用。</p>
 <h3 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h3><p>引入了消息队列之后，在业务代码中就需要处理消息丢失、重复消费和顺序消费问题，增加了系统的复杂度。</p>
 <h3 id="数据不一致性"><a href="#数据不一致性" class="headerlink" title="数据不一致性"></a>数据不一致性</h3><p>通过引入消息队列，将「非核心功能」做了异步改造，这可能会导致数据的不一致。例如虽然下单成功了，但是增加积分、发放消费券、减少库存数量等流程却失败了，这就造成了数据的不一致。可以将这些流程放到一个分布式事务中，这样就解决了数据不一致的问题。</p>
@@ -311,6 +311,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2019/08/10/Kafka概述/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Kakfa概述
+        
+      </div>
+    </a>
+  
   
     <a href="/2019/07/27/JAVA线程池原理/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">JAVA线程池原理</div>
@@ -340,7 +349,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#作用"><span class="toc-number">1.</span> <span class="toc-text">作用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解耦"><span class="toc-number">1.1.</span> <span class="toc-text">解耦</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异步"><span class="toc-number">1.2.</span> <span class="toc-text">异步</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#线程异步"><span class="toc-number">1.2.1.</span> <span class="toc-text">线程异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#消息队列异步"><span class="toc-number">1.2.2.</span> <span class="toc-text">消息队列异步</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#削峰"><span class="toc-number">1.3.</span> <span class="toc-text">削峰</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志处理"><span class="toc-number">1.4.</span> <span class="toc-text">日志处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通信"><span class="toc-number">1.5.</span> <span class="toc-text">通信</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缺点"><span class="toc-number">2.</span> <span class="toc-text">缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可用性"><span class="toc-number">2.1.</span> <span class="toc-text">可用性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复杂度"><span class="toc-number">2.2.</span> <span class="toc-text">复杂度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据不一致性"><span class="toc-number">2.3.</span> <span class="toc-text">数据不一致性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Push和Pull"><span class="toc-number">3.</span> <span class="toc-text">Push和Pull</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#慢消费"><span class="toc-number">3.1.</span> <span class="toc-text">慢消费</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息延迟"><span class="toc-number">3.2.</span> <span class="toc-text">消息延迟</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列对比"><span class="toc-number">4.</span> <span class="toc-text">消息队列对比</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#作用"><span class="toc-number">1.</span> <span class="toc-text">作用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解耦"><span class="toc-number">1.1.</span> <span class="toc-text">解耦</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异步"><span class="toc-number">1.2.</span> <span class="toc-text">异步</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#线程异步"><span class="toc-number">1.2.1.</span> <span class="toc-text">线程异步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#消息队列异步"><span class="toc-number">1.2.2.</span> <span class="toc-text">消息队列异步</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#削峰"><span class="toc-number">1.3.</span> <span class="toc-text">削峰</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志处理"><span class="toc-number">1.4.</span> <span class="toc-text">日志处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异步通信"><span class="toc-number">1.5.</span> <span class="toc-text">异步通信</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缺点"><span class="toc-number">2.</span> <span class="toc-text">缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可用性"><span class="toc-number">2.1.</span> <span class="toc-text">可用性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复杂度"><span class="toc-number">2.2.</span> <span class="toc-text">复杂度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据不一致性"><span class="toc-number">2.3.</span> <span class="toc-text">数据不一致性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Push和Pull"><span class="toc-number">3.</span> <span class="toc-text">Push和Pull</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#慢消费"><span class="toc-number">3.1.</span> <span class="toc-text">慢消费</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息延迟"><span class="toc-number">3.2.</span> <span class="toc-text">消息延迟</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列对比"><span class="toc-number">4.</span> <span class="toc-text">消息队列对比</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -490,6 +499,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">middleware</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">kafka</a>
               </li>
             
             <div class="clearfix"></div>
