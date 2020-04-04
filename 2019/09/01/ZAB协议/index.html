@@ -6,15 +6,31 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>lz</title>
+  <title>ZAB协议 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="lz">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+  <meta name="description" content="ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZAB协议">
+<meta property="og:url" content="http://yoursite.com/2019/09/01/ZAB协议/index.html">
 <meta property="og:site_name" content="lz">
+<meta property="og:description" content="ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhjyok07lj30du05wab3.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhoz9fo4vj30e304yac2.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhp2id8psj30e305rmzj.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhp80hxflj30e50aygqd.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhpj40fr1j30gt0e6gre.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhq2gnkxaj30e006i0t7.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhqezhkacj30je02wglu.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhths0hh8j30dx07tdh7.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhuisny7vj30fc09s417.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhutbf2uhj30fa09uacr.jpg">
+<meta property="og:updated_time" content="2020-04-04T09:34:50.152Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lz">
+<meta name="twitter:title" content="ZAB协议">
+<meta name="twitter:description" content="ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhjyok07lj30du05wab3.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -134,32 +150,187 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-AtomicLong与CAS" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-ZAB协议" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/04/AtomicLong与CAS/">AtomicLong与CAS</a>
+    <h1 class="article-title" itemprop="name">
+      ZAB协议
     </h1>
   
 
         
-        <a href="/2019/05/04/AtomicLong与CAS/" class="archive-article-date">
-  	<time datetime="2019-05-04T11:54:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-04</time>
+        <a href="/2019/09/01/ZAB协议/" class="archive-article-date">
+  	<time datetime="2019-09-01T13:18:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>并发环境下为了保证对共享资源的正确访问，通常采用对临界区加锁的方式来实现(例如synchronized，ReentrantLock)，这种加锁的方式假设线程每次读取共享资源时，其已经被其它线程做了修改，因此需要对临界区加锁,这种锁也称为<strong>悲观锁</strong>。
-        
-          <a class="article-more-a" href="/2019/05/04/AtomicLong与CAS/#more">more >></a>
-        
+        <p>ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。<a id="more"></a></p>
+<h1 id="ZAB协议介绍"><a href="#ZAB协议介绍" class="headerlink" title="ZAB协议介绍"></a>ZAB协议介绍</h1><p>ZAB协议提供以下两个核心功能：</p>
+<ol>
+<li>只能通过leader进程（主进程）来处理客户端的变更类请求（增、删、改），follower（副进程）接收到的变更类请求需要转发给Leader处理。采用ZAB协议，将数据的变更请求以事务proposal（提案）的形式广播到follower进程。</li>
+<li>如果主进程宕机，整个集群就不能处理变更请求（事务请求），为了解决这个单点问题，ZAB协议还需要解决leader的选举，以及新leader选举后，与各follower的数据同步问题，完成数据同步之后，才能继续对外提供服务。</li>
+</ol>
+<p>前者对应ZAB协议的「消息广播模式」，后者则是ZAB协议的「崩溃恢复模式」，是ZAB协议的两种基本模式。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhjyok07lj30du05wab3.jpg" alt="image-20200404110210723"></p>
+<h1 id="消息广播"><a href="#消息广播" class="headerlink" title="消息广播"></a>消息广播</h1><p>在Zookeeper集群的正常运行过程中，一直都处于消息广播模式。在这个模式中，Leader接收客户端的变更请求，然后将变更请求消息广播到follower，保证数据的一致性。这个广播的过程，与2PC（两阶段提交，一种一致性协议）有相同之处，因此先介绍下2PC。</p>
+<h2 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h2><p>两阶段提交协议，常应用于数据库和网路领域，用于解决分布式环境下，保持各节点事务提交的一致性问题。每个节点都可以知道本地事务是否执行成功，但是却不能获取其它节点的执行结果，因此2PC的基本思路是：引入协调者角色，参与者将本地事务执行结果通知协调者，由协调者根据反馈结果确定提交事务还是回滚事务。</p>
+<h3 id="提交请求阶段"><a href="#提交请求阶段" class="headerlink" title="提交请求阶段"></a>提交请求阶段</h3><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhoz9fo4vj30e304yac2.jpg" alt="image-20200404135546306"></p>
+<p>2PC的第一个阶段是提交请求阶段（执行事务阶段），流程如下：</p>
+<ol>
+<li>协调者向各参与者发送事务请求。</li>
+<li>参与者接收到事务请求后，执行事务，但是「不提交事务」。</li>
+<li>参与者执行完成后，返回执行成功的消息给协调者。</li>
+</ol>
+<h3 id="提交执行阶段"><a href="#提交执行阶段" class="headerlink" title="提交执行阶段"></a>提交执行阶段</h3><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhp2id8psj30e305rmzj.jpg" alt="image-20200404135853714"></p>
+<p>2PC的第二个阶段是提交执行阶段（提交事务阶段），在这个阶段里，确定是否要提交事务。以全部参与者都执行成功的场景为例，流程如下：</p>
+<ol>
+<li>协调者如果接收到所有参与者的成功反馈，则向所有参与者发送commit请求。</li>
+<li>参与者执行commit请求，这时正式「提交」事务，操作完成后释放事务资源。</li>
+<li>协调者收到参与者的ack消息，就知道事务已经commit。</li>
+</ol>
+<p>接下来看下事务回滚的场景。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhp80hxflj30e50aygqd.jpg" alt="image-20200404140410700"></p>
+<p>如果在第一个阶段，有些参与者执行事务失败，返回了“失败”的消息给协调者。那么在第二阶段，协调者就会发送回滚的请求给参与者，要求事务回滚。</p>
+<p>2PC存在单点问题，同步阻塞，无限期等待等问题。</p>
+<h2 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h2><p>3PC是对2PC的一个改进，将2PC的「执行事务过程」（第一阶段）一分为二，形成canCommit、preCommit，然后doCommit还是原先的「提交事务」过程。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhpj40fr1j30gt0e6gre.jpg" alt="image-20200404141450946"></p>
+<p>解决了单点问题，添加preCommit过程，避免2PC提交协议的无限期等待问题。</p>
+<h2 id="原子广播"><a href="#原子广播" class="headerlink" title="原子广播"></a>原子广播</h2><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhq2gnkxaj30e006i0t7.jpg" alt="image-20200404143326470"></p>
+<p>消息广播的流程如下：</p>
+<ol>
+<li>Leader接收到变更类的请求后，将其包装为事务Proposal（提案），每个提案对应一个全局递增的编号，称为事务ID（即zxid）。</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhqezhkacj30je02wglu.jpg" alt="image-20200404144527782"></p>
+<p>ZXID是一个64位的整数，高32位表示Leader的任期，每次leader发生崩溃，重选选举之后，新leader就会将epoch加1。</p>
+<p>低32位是一个计数器，每次有客户端发送的变更请求后，这个计数器就会加1，这个计数器仅在一个leader任期内递增，更换leader时，会将其重置为0。</p>
+<ol start="2">
+<li>leader 和抹每个follower之前都有一个队列，leader将需要广播的Proposal放入到这些队列中。</li>
+<li>follower收到Proposal之后，将其写入本地磁盘的「事务日志」中，写入完成后，向leader返回ack，表示写入成功。</li>
+<li>leader收到「大多数」follower的ack之后，发送commit消息，要求follower提交事务Proposal，将其应用到内存数据库DataTree中（就是zk的树状结构）。同时，leader自己也会commit这个Proposal。</li>
+</ol>
+<p>ZAB的消息广播和2PC的不同之处在于：</p>
+<ol>
+<li>leader和follower之间，通过队列传递消息，解决了同步阻塞的问题。</li>
+<li>leader只需要「过半」follower回复ack即可，提高了响应速度。而2PC需要所有参与者回复ack。</li>
+</ol>
+<p>不难看出，消息广播模式存在单点问题，即如果leader崩溃，整个zookeeper集群将不能提供变更类服务，因此ZAB协议中还提供了崩溃恢复模式。</p>
+<h1 id="崩溃恢复"><a href="#崩溃恢复" class="headerlink" title="崩溃恢复"></a>崩溃恢复</h1><p>崩溃恢复有两个关键过程：Leader选举和数据同步。</p>
+<h2 id="Leader选举"><a href="#Leader选举" class="headerlink" title="Leader选举"></a>Leader选举</h2><p>从zookeeper 3.4.10版本开始，默认值的选举算法时基于TCP的FastLeaderElection。另外三种算法已经被弃用，分别是</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">基于UDP的LeaderElection</span></span><br><span class="line"><span class="attr">基于UDP的FastLeaderElection</span></span><br><span class="line"><span class="attr">基于UDP和认证的FastLeaderElection</span></span><br></pre></td></tr></table></figure>
+<p> 集群初次启动和leader崩溃时都会触发leader的选举，以下分别介绍两种场景下的选举过程。选举算法有两个关键指标：</p>
+<ul>
+<li>持有的疏数据最新，即zxid最大。</li>
+<li>服务器的id最大，即sid（这个是配置在zoo.cfg里的）最大。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">术语</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">SID</td>
+<td style="text-align:left">Server ID，用来唯一标识一台Zookeeper集群中的机器，全局唯一，与myid一致</td>
+</tr>
+<tr>
+<td style="text-align:left">ZXID</td>
+<td style="text-align:left">事务ID，用来唯一标识一次服务器状态的变更，在同一时刻，集群中每一台机器的ZXID不一定完全一致</td>
+</tr>
+<tr>
+<td style="text-align:left">Quorum</td>
+<td style="text-align:left"><code>半数以上</code>机器，<code>quorum &gt;= (n/2+1)</code></td>
+</tr>
+</tbody>
+</table>
+<p>选举过程可以分为：发出投票、接收投票、处理投票、统计投票和改变服务器状态。</p>
+<p>选举过程中主要是比较服务器自身的投票和接收到的投票。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">术语</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">vote_sid</td>
+<td style="text-align:left">接收到的投票中所推举Leader服务器的SID</td>
+</tr>
+<tr>
+<td style="text-align:left">vote_zxid</td>
+<td style="text-align:left">接收到的投票中所推举Leader服务器的ZXID</td>
+</tr>
+<tr>
+<td style="text-align:left">self_sid</td>
+<td style="text-align:left">当前服务器自己的SID</td>
+</tr>
+<tr>
+<td style="text-align:left">self_zxid</td>
+<td style="text-align:left">当前服务器自己的ZXID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="初次选举"><a href="#初次选举" class="headerlink" title="初次选举"></a>初次选举</h3><p>集群处理启动时，还没有开始处理事务，因此所有服务器上zxid都是0。以3台服务器为例说明选举过程，sid分别是0，1，2。投票的内容是(sid,zxid)，当然还有表示投票次数的logicClock，这里暂不考虑。</p>
+<ol>
+<li><p>发出投票：每个服务器第一轮投票都会投给自己，因此第一轮的投票是：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server0</span>: <span class="string">(0,0)</span></span><br><span class="line"><span class="attr">server1</span>: <span class="string">(1,0)</span></span><br><span class="line"><span class="attr">server2</span>: <span class="string">(2,0)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接收投票：每个服务器都会接收到其它服务器发来的投票：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server0</span>: <span class="string">(0,0)    接收投票:(1,0),(2,0)</span></span><br><span class="line"><span class="attr">server1</span>: <span class="string">(1,0)    接收投票:(0,0),(2,0)</span></span><br><span class="line"><span class="attr">server2</span>: <span class="string">(2,0)    接收投票:(0,0),(1,0)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>处理投票：将自身的投票和接收到的投票做比较，首先比较zxid，保留zxid最大的投票，如果zxid相同，保留sid最大的投票。因此更新后的投票是：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server0</span>:<span class="string">(2,0)</span></span><br><span class="line"><span class="attr">server1</span>:<span class="string">(2,0)</span></span><br><span class="line"><span class="attr">server2</span>:<span class="string">(2,0)</span></span><br></pre></td></tr></table></figure>
+<p>再将更新的投票重新发出。</p>
+</li>
+<li><p>统计投票：每次投票后，都会统计每个服务器获得票数，如果有过半的机器都投了相同的内容，表示已经达成了共识，这里所有机器都投出了(2,0)，因此选择sid位2的服务器位leader。</p>
+</li>
+<li><p>改变服务器状态：确定leader之后，服务器就会改变自己的状态，follower状态变为FOLLOWING，leader状态变为LEADING。</p>
+</li>
+</ol>
+<h3 id="运行期间选举"><a href="#运行期间选举" class="headerlink" title="运行期间选举"></a>运行期间选举</h3><p>运行期间的选举也是类似的，就是选出zxid最新的服务器（zxid相同则选择sid最大的）。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhths0hh8j30dx07tdh7.jpg" alt="image-20200404163157999"></p>
+<ul>
+<li>Server1和Server2都宕机了，只有Server3、Server4和Server5参与选举。</li>
+<li>由于Server3具有最新的zxid，因此最终选它为主。</li>
+</ul>
+<h2 id="基本特性"><a href="#基本特性" class="headerlink" title="基本特性"></a>基本特性</h2><p>为了避免在崩溃恢复模式中，数据出现不一致性，ZAB协议必须具备两个特性：</p>
+<ol>
+<li>保证已在leader上「提交」的事务，最终会在所有服务器上完成提交。–这种场景，应该会向客户端返回操作成功的消息。</li>
+<li>丢弃只在leader上提出的事务Proposal。—-这种场景下，应该会向客户端返回操作失败的消息。</li>
+</ol>
+<p>通过一个例子说明这两个特性。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhuisny7vj30fc09s417.jpg" alt="image-20200404170732321"></p>
+<p>P1表示Proposal1，C1表示Commit 1，即提交P1的消息。A是原leader，并且提交了C2之后就宕机了，怎么保证P2最终会在所有机器上完成提交呢？</p>
+<ol>
+<li>A宕机之后，集群进入崩溃恢复模式，选举具备最新zxid的服务器位置，这个最新的zxid就是服务器「最近处理过」的Proposal，B机具有最新的zxid —&gt;P3，因此选择B机为准leader。</li>
+<li>B机检查自身没有Commit的消息，只有P3，进一步检查集群中是否有过半的服务器上包含P3（包含就表示在旧leader上提交了这个Proposal），结果是只有B机上有P3，因此B会丢弃P3。这就是「丢弃只在leader上提出的事务Proposal」特性。</li>
+<li>选举完成后，follower会向leader发送最新的zxid，leader根据各folower的zxid，发送相应的同步数据。<img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhutbf2uhj30fa09uacr.jpg" alt="image-20200404171738960"></li>
+</ol>
+<p>可以看到，向所有follower都发送了C2消息，而C2正是旧主A上提交的数据，这就是「保证leader上提交的事务最终在所有服务器上提交」。</p>
+<h2 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h2><p>数据同步其实在「基本特征」中已经讲过了，这里简单说下细节。数据同步的过程其实就是leader将那些没有在folower上提交的事务同步给follower。</p>
+<p>Leader中有一个提议缓存队列committedLog，会保存最近一段时间内执行的事务请求议案，个数限制默认为500个议案。根据这个队列可以计算出两个值：</p>
+<ul>
+<li>minCommittedLog：Leader服务器提议缓存队列committedLog中的最小ZXID。</li>
+<li>maxCommittedLog：Leader服务器提议缓存队列committedLog中的最大ZXID。</li>
+</ul>
+<p>同步开始时，每个folower会发送本机的最新zxid，即peerLastZxid，leader根据peerLastZxid、minCommittedLog和maxCommittedLog三者之间的大小关系，决定同步那哪些数据给各个follower，也就是采用哪种同步类型。</p>
+<ul>
+<li>差异化同步(DIFF同步)：minCommittedLog<code>&lt;=</code>peerListZxid<code>&lt;=</code>maxCommittedLog</li>
+<li>回滚同步(TRUNC同步)：当peerLastZxid比Leader中maxCommittedLog大时，Leader会要求Learner回滚到ZXID值为maxCommittedLog对应的事务操作。</li>
+<li>先回滚再差异化同步(TRUNC + DIFF同步)：当Leader服务器发现某个Learner「包含一条」自己没有的事务记录，就需要让该Learner进行事务回滚，回滚到Leader服务器上存在的，最接近peerLastZxid的ZXID，然后在进行差异化同步。</li>
+<li>全量同步(SNAP同步)：当peerLastZxid小于minCommittedLog时，或者Leader服务器上没有提议缓存队列时，无法直接使用提议缓存队列和Learner进行数据同步，只能进行全量同步，本机上的全量内存数据都发送给Learner。</li>
+</ul>
+<p>参考</p>
+<p><a href="http://www.jasongj.com/zookeeper/fastleaderelection/" target="_blank" rel="noopener">http://www.jasongj.com/zookeeper/fastleaderelection/</a></p>
+
       
 
       
@@ -172,7 +343,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">zookeeper</a>
         		</li>
       		
 		</ul>
@@ -184,7 +355,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        			<a href="/categories/bigdata//" class="article-tag-list-link color3">bigdata</a>
         		</li>
       		
 		</ul>
@@ -192,16 +363,24 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/04/AtomicLong与CAS/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2019/08/10/Kafka架构与设计/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Kakfa架构与设计</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -216,800 +395,32 @@
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java的Volatile关键字" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/27/Java的Volatile关键字/">Java的Volatile关键字</a>
-    </h1>
-  
-
-        
-        <a href="/2019/04/27/Java的Volatile关键字/" class="archive-article-date">
-  	<time datetime="2019-04-27T13:05:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>volatile解决了并发编程中的顺序性和可见性问题，不会引起线程的阻塞，是一种轻量级的synchronized。这两个问题的解决依赖于内存屏障和缓存一致性协议。
-        
-          <a class="article-more-a" href="/2019/04/27/Java的Volatile关键字/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/04/27/Java的Volatile关键字/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ZAB协议介绍"><span class="toc-number">1.</span> <span class="toc-text">ZAB协议介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#消息广播"><span class="toc-number">2.</span> <span class="toc-text">消息广播</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2PC"><span class="toc-number">2.1.</span> <span class="toc-text">2PC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#提交请求阶段"><span class="toc-number">2.1.1.</span> <span class="toc-text">提交请求阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#提交执行阶段"><span class="toc-number">2.1.2.</span> <span class="toc-text">提交执行阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3PC"><span class="toc-number">2.2.</span> <span class="toc-text">3PC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原子广播"><span class="toc-number">2.3.</span> <span class="toc-text">原子广播</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#崩溃恢复"><span class="toc-number">3.</span> <span class="toc-text">崩溃恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Leader选举"><span class="toc-number">3.1.</span> <span class="toc-text">Leader选举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初次选举"><span class="toc-number">3.1.1.</span> <span class="toc-text">初次选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行期间选举"><span class="toc-number">3.1.2.</span> <span class="toc-text">运行期间选举</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本特性"><span class="toc-number">3.2.</span> <span class="toc-text">基本特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据同步"><span class="toc-number">3.3.</span> <span class="toc-text">数据同步</span></a></li></ol></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
-  
-    <article id="post-Java Synchronized关键字" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/21/Java Synchronized关键字/">Java Synchronized关键字</a>
-    </h1>
-  
-
-        
-        <a href="/2019/04/21/Java Synchronized关键字/" class="archive-article-date">
-  	<time datetime="2019-04-21T12:10:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h1><p>在计算机科学中，锁是在多线程并发中用于限制「共享资源」访问的同步机制，即用于在并发控制中保证对互斥要求的满足。<br>「互斥锁」是一种防止两条线程同时访问「同一共享资源」的锁，对共享资源访问的代码片段称为「临界区」。
-        
-          <a class="article-more-a" href="/2019/04/21/Java Synchronized关键字/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/04/21/Java Synchronized关键字/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-线程安全和JMM" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/13/线程安全和JMM/">线程安全和JMM</a>
-    </h1>
-  
-
-        
-        <a href="/2019/04/13/线程安全和JMM/" class="archive-article-date">
-  	<time datetime="2019-04-13T13:51:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。
-        
-          <a class="article-more-a" href="/2019/04/13/线程安全和JMM/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/04/13/线程安全和JMM/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java IO流" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/07/Java IO流/">Java IO流</a>
-    </h1>
-  
-
-        
-        <a href="/2019/04/07/Java IO流/" class="archive-article-date">
-  	<time datetime="2019-04-07T13:23:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>流是【传输数据】的一种方式，传输的数据基本单位是字节，为了处理的方便，在字节的基础上引入了字符的概念（一个字符包含多个字节），所以按照处理单位的不同，有字节流和字符流的说法。
-        
-          <a class="article-more-a" href="/2019/04/07/Java IO流/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">IO</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/04/07/Java IO流/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-深入理解Object类" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/16/深入理解Object类/">深入理解Object类</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/16/深入理解Object类/" class="archive-article-date">
-  	<time datetime="2019-03-16T12:54:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Object类作为Java中所有类的基类，提供了一些通用的方法。
-        
-          <a class="article-more-a" href="/2019/03/16/深入理解Object类/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/16/深入理解Object类/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ArrayList原理解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/24/ArrayList原理解析/">ArrayList原理解析</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/24/ArrayList原理解析/" class="archive-article-date">
-  	<time datetime="2019-02-24T11:34:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>ArrayList是一个动态数组，还是一个有序、可存储重复元素的容器。数组是一种常用的，存储一组的元素的容器，但是数组长度固定，不够灵活。ArrayList作为一个动态数组，支持随机访问，算是弥补了数组的不足。
-        
-          <a class="article-more-a" href="/2019/02/24/ArrayList原理解析/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/24/ArrayList原理解析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ConcurrentHashMap原理简析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/23/ConcurrentHashMap原理简析/">ConcurrentHashMap原理简析</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/23/ConcurrentHashMap原理简析/" class="archive-article-date">
-  	<time datetime="2019-02-23T13:13:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="线程不安全的HashMap"><a href="#线程不安全的HashMap" class="headerlink" title="线程不安全的HashMap"></a>线程不安全的HashMap</h1><p>HashMap不是线程安全的，如果在多线程中使用HashMap可能会有两个问题：「死循环」和「数据丢失」问题。
-        
-          <a class="article-more-a" href="/2019/02/23/ConcurrentHashMap原理简析/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/23/ConcurrentHashMap原理简析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-HashMap原理简析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/17/HashMap原理简析/">HashMap原理简析</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/17/HashMap原理简析/" class="archive-article-date">
-  	<time datetime="2019-02-17T11:45:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>List和Set接口都是存储一组单个元素，有时候我们还需要一组有映射关系的实体，因此就有了Map接口。
-        
-          <a class="article-more-a" href="/2019/02/17/HashMap原理简析/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/17/HashMap原理简析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java集合概述" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/16/Java集合概述/">Java集合概述</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/16/Java集合概述/" class="archive-article-date">
-  	<time datetime="2019-02-16T12:24:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在JCF(Java Collection FrameWork)之前，我们使用数组来存储多个相似的对象（存储的元素可以是基本类型和引用类型），但是数组有个明显的缺点，即大小固定，使用起来不是很灵活。而JCF中定义的“容器”可以自动增长和收缩，使用起来更加灵活，并且提供了多类容器（有序可重复的List，无序不可重复的set，key-value的map），只是这些容器中的元素不能是基本类型，必须是引用类型（int等的包装类型也可以）。
-        
-          <a class="article-more-a" href="/2019/02/16/Java集合概述/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集合</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/16/Java集合概述/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1041,8 +452,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
