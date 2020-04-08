@@ -22,7 +22,8 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmoxh2bolj30jh051aar.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmp87znjyj30l909eq73.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpbgsn2tj30ht0bgada.jpg">
-<meta property="og:updated_time" content="2020-04-08T14:10:05.681Z">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpxppxx5j30e908lq3d.jpg">
+<meta property="og:updated_time" content="2020-04-08T14:21:11.185Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zookeeper架构与原理">
 <meta name="twitter:description" content="Zookeeper是一个高性能、具有严格顺序访问控制（更新操作的严格顺序性）的分布式协调系统，具有高吞吐和低延迟的特性，能够很好的在高并发的环境中完成分布式数据的一致性处理，同时能够优雅的处理运行时故障，并具备快速从故障中恢复的能力。Zookeeper拥有广泛的使用场景，包括数据的发布/订阅、命名服务、负载均衡、master选举、生成唯一ID、分布式锁和分布式队列。">
@@ -278,7 +279,10 @@
 <li>众多大数据组件都使用了zk作为分布式协调服务，例如Hadoop、HBase、Hive、Spark、Kafka等，zk已经经受了大规模应用的考验。</li>
 <li>zk是开源的，可以免费使用，并且社区活跃，可以和众多开发者一起交流使用经验，共同解决问题。</li>
 </ol>
-<h1 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h1><h2 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h2><h2 id="命名服务"><a href="#命名服务" class="headerlink" title="命名服务"></a>命名服务</h2><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><h2 id="生成分布式唯一ID"><a href="#生成分布式唯一ID" class="headerlink" title="生成分布式唯一ID"></a>生成分布式唯一ID</h2><h2 id="master选举"><a href="#master选举" class="headerlink" title="master选举"></a>master选举</h2><h2 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h2><h2 id="分布式队列"><a href="#分布式队列" class="headerlink" title="分布式队列"></a>分布式队列</h2>
+<h1 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h1><h2 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h2><p>即所谓的配置中心，zk允许多个客户端同时订阅某个节点的变更，并在变更时执行预定义的回调函数。利用这个特性，可以实现配置的集中化管理和动态更新。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpxppxx5j30e908lq3d.jpg" alt="image-20200408221641913"></p>
+<p>client启动后注册对节点/Configuration的监听，一旦配置信息发生变动，client就会收到server端的通知，随后调用相应的回调函数就可以实现动态更新应用的配置。</p>
+<h2 id="命名服务"><a href="#命名服务" class="headerlink" title="命名服务"></a>命名服务</h2><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><h2 id="生成分布式唯一ID"><a href="#生成分布式唯一ID" class="headerlink" title="生成分布式唯一ID"></a>生成分布式唯一ID</h2><h2 id="master选举"><a href="#master选举" class="headerlink" title="master选举"></a>master选举</h2><h2 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h2><h2 id="分布式队列"><a href="#分布式队列" class="headerlink" title="分布式队列"></a>分布式队列</h2>
       
 
       
