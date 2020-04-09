@@ -23,7 +23,14 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmp87znjyj30l909eq73.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpbgsn2tj30ht0bgada.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpxppxx5j30e908lq3d.jpg">
-<meta property="og:updated_time" content="2020-04-08T14:21:11.185Z">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdntzl7mltj30ji08udh7.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnu8z2se1j30dz08egls.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnuelse2vj30et09gdg0.jpg">
+<meta property="og:image" content="http://yoursite.com/Users/liuyi/Library/Application%20Support/typora-user-images/image-20200409213942132.png">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnv2mv82tj30g30ermy4.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvb6fzaqj30b108yq3x.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvmfzvtpj30er092mxb.jpg">
+<meta property="og:updated_time" content="2020-04-09T14:19:11.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zookeeper架构与原理">
 <meta name="twitter:description" content="Zookeeper是一个高性能、具有严格顺序访问控制（更新操作的严格顺序性）的分布式协调系统，具有高吞吐和低延迟的特性，能够很好的在高并发的环境中完成分布式数据的一致性处理，同时能够优雅的处理运行时故障，并具备快速从故障中恢复的能力。Zookeeper拥有广泛的使用场景，包括数据的发布/订阅、命名服务、负载均衡、master选举、生成唯一ID、分布式锁和分布式队列。">
@@ -171,7 +178,7 @@
 <ul>
 <li>zookeeper将全量数据保存在内存中(DataTree)，因此在读多写少的场景下，具有高性能、高吞吐和低延迟的特点。这也是限制ZNode保存数据量为1MB的原因。</li>
 <li>对于客户端的每个更新类的请求，Leader会将其包装为一个事务请求，分配一个全局递增的事务编号，也就是zxid，根据zxid的大小依次执行事务，保证更新操作的严格顺序性。</li>
-<li>ZAB协议的崩溃恢复模式，使Zookeeper具备了快速从故障中恢复的能力。</li>
+<li><a href="http://go4ward.top/2019/09/01/ZAB%E5%8D%8F%E8%AE%AE/" target="_blank" rel="noopener">ZAB协议</a>的崩溃恢复模式，使Zookeeper具备了快速从故障中恢复的能力。</li>
 </ul>
 <h1 id="从何而来"><a href="#从何而来" class="headerlink" title="从何而来"></a>从何而来</h1><p>Zookeeper最早起源于雅虎研究院的一个小组。在当时，研究人员发现内部很多大型分布式系统都依赖一个相似的分布式系统来协调，并且这些系统往往都存在单点问题。因此，研究人员后来开发了通用的、解决了单点问题的分布式系统—Zookeeper。Zookeeper将那些复杂的、容易出错的分布式一致性服务封装起来，提供可靠、易用的原语集，这样，开发人员就可以将精力集中在业务逻辑上。</p>
 <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h2><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmn7edig4j30hf08wjty.jpg" alt="image-20200408204212961"></p>
@@ -230,7 +237,7 @@
 <td>添加或删除子节点的znode更改的事务ID</td>
 </tr>
 <tr>
-<td>version</td>
+<td>dataVersion</td>
 <td>对该znode的数据所做的更改次数（初始值是0）</td>
 </tr>
 <tr>
@@ -261,6 +268,7 @@
 <li>顺序节点：每次创建这类节点时，在client给定的节点名称node之后，zk会添加一个全局唯一递增的编号（10位），与node一起组成实际的节点名称，编号的范围是整型的最大值(2147483647)。持久节点、临时节点都可以和顺序节点组合，就有了持久顺序节点和临时顺序节点。</li>
 </ul>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmoxh2bolj30jh051aar.jpg" alt="image-20200408214153052"></p>
+<p>顺序节点的编号在每一层都是从1开始的，在这层的内部的任意顺序节点共享这个唯一递增的编号，例如/app1下的顺序节点/app1/t0000000001，然后/app1/p0000000002。</p>
 <h2 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h2><p>每个znode都有一个版本号（stat结构中的version），表示znode被修改的次数，会随着每次修改而递增。当有多个client对同一个znode做修改操作时，可以通过版本号达到“CAS”的效果。例如，在读取节点node值时获得Stat中的lastVersion，然后进入业务处理，处理完成准备更新node节点值时，获得此时的版本号currentVersion，如果与lastVersion相同，表示期间没有其它client更新node值。</p>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmp87znjyj30l909eq73.jpg" alt="image-20200408215212529"></p>
 <h2 id="watcher"><a href="#watcher" class="headerlink" title="watcher"></a>watcher</h2><p><strong>Watcher</strong>（事件监听器）是 Zookeeper 提供的一种 发布/订阅的机制。Zookeeper 允许用户在指定节点上注册一些 Watcher，并且在一些特定事件触发的时候，Zookeeper 服务端会将事件通知给订阅的客户端。该机制是 Zookeeper 实现分布式协调的重要特性。</p>
@@ -279,10 +287,50 @@
 <li>众多大数据组件都使用了zk作为分布式协调服务，例如Hadoop、HBase、Hive、Spark、Kafka等，zk已经经受了大规模应用的考验。</li>
 <li>zk是开源的，可以免费使用，并且社区活跃，可以和众多开发者一起交流使用经验，共同解决问题。</li>
 </ol>
+<h1 id="ZAB协议"><a href="#ZAB协议" class="headerlink" title="ZAB协议"></a>ZAB协议</h1><p>Zookeeper使用ZAB协议实现集群的数据一致性，更多细节见：<a href="http://go4ward.top/2019/09/01/ZAB协议/" target="_blank" rel="noopener">http://go4ward.top/2019/09/01/ZAB%E5%8D%8F%E8%AE%AE/</a></p>
 <h1 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h1><h2 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h2><p>即所谓的配置中心，zk允许多个客户端同时订阅某个节点的变更，并在变更时执行预定义的回调函数。利用这个特性，可以实现配置的集中化管理和动态更新。</p>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpxppxx5j30e908lq3d.jpg" alt="image-20200408221641913"></p>
 <p>client启动后注册对节点/Configuration的监听，一旦配置信息发生变动，client就会收到server端的通知，随后调用相应的回调函数就可以实现动态更新应用的配置。</p>
-<h2 id="命名服务"><a href="#命名服务" class="headerlink" title="命名服务"></a>命名服务</h2><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><h2 id="生成分布式唯一ID"><a href="#生成分布式唯一ID" class="headerlink" title="生成分布式唯一ID"></a>生成分布式唯一ID</h2><h2 id="master选举"><a href="#master选举" class="headerlink" title="master选举"></a>master选举</h2><h2 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h2><h2 id="分布式队列"><a href="#分布式队列" class="headerlink" title="分布式队列"></a>分布式队列</h2>
+<h2 id="命名服务"><a href="#命名服务" class="headerlink" title="命名服务"></a>命名服务</h2><p>在分布式系统中存在这种场景：client根据服务名称获得服务器的地址或者其他信息，这就要求服务名称「唯一」，这种场景称为命名服务。作为分布式协调系统，Zookeeper也提供了命名服务。命名服务中可能存在以下两个问题：</p>
+<ol>
+<li>在同一套分布式系统中，可能存在相同的服务名称。</li>
+<li>同一个服务，可能会部署多个实例。</li>
+</ol>
+<p>第一个名称重复的问题，可以通过zk的命名空间解决，第二个名称重复问题，可以通过顺序节点解决。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdntzl7mltj30ji08udh7.jpg" alt="image-20200409212226495"></p>
+<p>例如架构部和商业部都有名称为「metric」的服务，通过创建/infrastructure<code>和</code>/business两个命名空间解决部门间名称重复的问题。而商业部内部，metric服务又需要部署多个实例，通过顺序节点解决部门内部名称重复的问题。</p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>通过Zookeeper可以实现集群中服务的负载均衡。集群中各服务启动时，向zk注册临时节点，节点值中包含ip、端口等信息。client启动后，获得这些临时节点，根据一定的负载均衡算法，选择连接哪台服务器。常见的负载均衡算法有：</p>
+<ol>
+<li>随机算法：把新的连接请求，随机分配到N个服务器中的一个。</li>
+<li>轮询算法：把新的连接请求，依次分配到第1个、第2个、直至第N个服务器上（可以循环分配）。</li>
+<li>最少连接算法。把新的连接请求，分配到当前连接数最少（负载最小）的服务器上。</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnu8z2se1j30dz08egls.jpg" alt="image-20200409213129012"></p>
+<h2 id="生成分布式唯一ID"><a href="#生成分布式唯一ID" class="headerlink" title="生成分布式唯一ID"></a>生成分布式唯一ID</h2><p>利用zk顺序节点的特性，每次调用create方法创建顺序节点时，zk会在路径名称后追加一个10位的全局（当前层）递增的整数值，create方法会返回创建的节点名称，解析节点名称就能获得分布式唯一ID。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnuelse2vj30et09gdg0.jpg" alt="image-20200409213655055"></p>
+<h2 id="master选举"><a href="#master选举" class="headerlink" title="master选举"></a>master选举</h2><p>采用master/slave架构的分布式系统中，master角色具有一些特殊的功能，例如只能通过master写入数据，或者完成一些管理功能。利用zk不能「创建重复节点」的特性，可以实现master的选举。</p>
+<p><img src="/Users/liuyi/Library/Application Support/typora-user-images/image-20200409213942132.png" alt="image-20200409213942132"></p>
+<ul>
+<li>多个client启动时，都会尝试创建/master临时节点，由于zk不能重复创建节点的特性，所以，最终只有一个client会创建成功，其它client会创建失败。</li>
+<li>创建失败的client，添加/master节点的监听，一般/master被删除（客户端A崩溃），重新竞争创建/master节点。</li>
+</ul>
+<h2 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h2><p>通过zk实现分布式锁有两种方法：临时节点和临时顺序节点。</p>
+<h3 id="临时节点实现"><a href="#临时节点实现" class="headerlink" title="临时节点实现"></a>临时节点实现</h3><ul>
+<li>利用zk不能重复创建相同节点的特性，所有client尝试在/exclusive_lock下创建lock临时节点，创建成功的client就获取到了锁，执行过业务处理后，删除lock节点，表示释放锁。</li>
+<li>其它client创建对lock节点的监听器，一旦监听到lock节点被删除，表示锁已释放，重新竞争锁。</li>
+<li>释放锁的场景有两个：client主动删除lock节点和client宕机。</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnv2mv82tj30g30ermy4.jpg" alt="image-20200409215959739"></p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>如果竞争锁的client数量巨大，每次释放锁之后，就会触发大量的watcher线程被调用，造成集群的不稳定性，这种现象称为“羊群效应”，</p>
+<h2 id="临时顺序节点"><a href="#临时顺序节点" class="headerlink" title="临时顺序节点"></a>临时顺序节点</h2><ul>
+<li>所有client在/lockPath下创建临时顺序节点，并且获得/lockPath下的所有子节点，如果创建的节点就是/lockPath下序号最小的，那么client就获得了锁。序号最小的client就获取到了锁，执行过业务处理后，删除创建的临时节点，表示释放锁。</li>
+<li>未获取到锁的client，也是要读取/lockPath下的所有子节点，根据编号，添加对「相邻」节点的变更监听。当相邻的节点被删除时，表示这个client就获取到了锁。</li>
+<li>释放锁的场景有两个：client主动删除lock节点和client宕机。每次释放锁只会触发一个watcher线程。</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvb6fzaqj30b108yq3x.jpg" alt="image-20200409220813039"></p>
+<h2 id="分布式队列"><a href="#分布式队列" class="headerlink" title="分布式队列"></a>分布式队列</h2><p>利用顺序节点编号的递增性，可以实现分布式队列。创建/queue作为一个队列，然后在其下创建msg顺序节点，由于顺序节点的递增性，生产者先创建的顺序节点编号比后来的生产者创建的要小，消费者只需要监听/queue下子节点的变动，每次取最小的节点，读取其保存的消息，处理完成后，删除这个节点即可。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvmfzvtpj30er092mxb.jpg" alt="image-20200409221902436"></p>
+
       
 
       
@@ -354,7 +402,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#从何而来"><span class="toc-number">1.</span> <span class="toc-text">从何而来</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">2.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#角色"><span class="toc-number">2.1.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#会话"><span class="toc-number">2.2.</span> <span class="toc-text">会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.3.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#节点特性"><span class="toc-number">2.4.</span> <span class="toc-text">节点特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#版本"><span class="toc-number">2.5.</span> <span class="toc-text">版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#watcher"><span class="toc-number">2.6.</span> <span class="toc-text">watcher</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ACL"><span class="toc-number">2.7.</span> <span class="toc-text">ACL</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#为什么选择Zookeeper"><span class="toc-number">3.</span> <span class="toc-text">为什么选择Zookeeper</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#典型应用"><span class="toc-number">4.</span> <span class="toc-text">典型应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#发布订阅"><span class="toc-number">4.1.</span> <span class="toc-text">发布订阅</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命名服务"><span class="toc-number">4.2.</span> <span class="toc-text">命名服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">4.3.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生成分布式唯一ID"><span class="toc-number">4.4.</span> <span class="toc-text">生成分布式唯一ID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#master选举"><span class="toc-number">4.5.</span> <span class="toc-text">master选举</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式锁"><span class="toc-number">4.6.</span> <span class="toc-text">分布式锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式队列"><span class="toc-number">4.7.</span> <span class="toc-text">分布式队列</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#从何而来"><span class="toc-number">1.</span> <span class="toc-text">从何而来</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">2.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#角色"><span class="toc-number">2.1.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#会话"><span class="toc-number">2.2.</span> <span class="toc-text">会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.3.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#节点特性"><span class="toc-number">2.4.</span> <span class="toc-text">节点特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#版本"><span class="toc-number">2.5.</span> <span class="toc-text">版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#watcher"><span class="toc-number">2.6.</span> <span class="toc-text">watcher</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ACL"><span class="toc-number">2.7.</span> <span class="toc-text">ACL</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#为什么选择Zookeeper"><span class="toc-number">3.</span> <span class="toc-text">为什么选择Zookeeper</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ZAB协议"><span class="toc-number">4.</span> <span class="toc-text">ZAB协议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#典型应用"><span class="toc-number">5.</span> <span class="toc-text">典型应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#发布订阅"><span class="toc-number">5.1.</span> <span class="toc-text">发布订阅</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命名服务"><span class="toc-number">5.2.</span> <span class="toc-text">命名服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">5.3.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生成分布式唯一ID"><span class="toc-number">5.4.</span> <span class="toc-text">生成分布式唯一ID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#master选举"><span class="toc-number">5.5.</span> <span class="toc-text">master选举</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式锁"><span class="toc-number">5.6.</span> <span class="toc-text">分布式锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#临时节点实现"><span class="toc-number">5.6.1.</span> <span class="toc-text">临时节点实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缺点"><span class="toc-number">5.6.1.1.</span> <span class="toc-text">缺点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#临时顺序节点"><span class="toc-number">5.7.</span> <span class="toc-text">临时顺序节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式队列"><span class="toc-number">5.8.</span> <span class="toc-text">分布式队列</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
