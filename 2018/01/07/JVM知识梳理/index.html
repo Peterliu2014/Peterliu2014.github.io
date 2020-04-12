@@ -19,7 +19,8 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdq3gsj482j30g10cegnq.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdq3la21jxj30l00d448f.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdq3popkr0j30i10hcwin.jpg">
-<meta property="og:updated_time" content="2020-04-11T12:39:54.199Z">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqpoydivwj30do0e10vh.jpg">
+<meta property="og:updated_time" content="2020-04-12T01:39:28.048Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM知识梳理">
 <meta name="twitter:description" content="JVM（Java Virtual Machine）是一个能够运行Java字节码的进程，通过软件模拟了一套完整的计算机系统（硬件+软件）。">
@@ -163,7 +164,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>JVM（Java Virtual Machine）是一个能够运行Java字节码的进程，通过软件模拟了一套完整的计算机系统（硬件+软件）。<a id="more"></a>JVM有一套完善的硬件架构，如处理器、堆、栈、寄存器、指令系统等。</p>
+        <p>JVM（Java Virtual Machine）是一个能够运行Java字节码的进程，通过软件模拟了一套完整的计算机系统（硬件+软件）。<a id="more"></a></p>
+<h1 id="JVM体系架构"><a href="#JVM体系架构" class="headerlink" title="JVM体系架构"></a>JVM体系架构</h1><p>JVM有一套完善的硬件架构，如处理器、堆、栈、寄存器、指令系统等。</p>
 <ul>
 <li>JVM屏蔽了与具体操作系统相关的信息，Java程序编译为字节码之后，在任意部署有JVM环境的操作系统之上就可以「不加修改的」直接运行了，即“一次编译、多处运行”。这是JVM的平台无关性。</li>
 <li>不只是Java语言，只要编译后能生成符合JVM规范的字节码，任何语言（例如scala）都可以通过JVM来运行。这是JVM的语言无关性。</li>
@@ -178,6 +180,36 @@
 </ul>
 <p>JVM由三个部分组成：类加载器、运行时数据区和执行引擎。</p>
 <p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdq3popkr0j30i10hcwin.jpg" alt="image-20200411203004478"></p>
+<ul>
+<li>类加载器将class文件加载到运行时数据区。</li>
+<li>运行时数据区中的方法区用来存储类的元数据。例如类名、类的字段、类的方法等。另外，其中的堆和栈用于存放运行时的数据。</li>
+<li>执行引擎读取运行时数据区的字节码并解析，然后调用本地接口执行指令。</li>
+</ul>
+<h1 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h1><p>类的加载指的是将类的.class文件中的二进制数据读入到内存中，将其放在运行时数据区的方法区内，然后在堆区创建一个java.lang.Class对象，用来封装类在方法区内的数据结构。类的加载的最终产品是位于堆区中的Class对象，Class对象封装了类在方法区内的数据结构，并且向Java程序员提供了访问方法区内的数据结构的接口。</p>
+<p>JVM 中内置了三个重要的 ClassLoader，除了 C++实现的BootstrapClassLoader，其他类加载器均由Java实现且全部继承自<code>java.lang.ClassLoader</code>：</p>
+<ul>
+<li>启动类加载器（BootstrapClassLoader）：最顶层的加载类，由C++实现，负责加载 <code>%JAVA_HOME%/lib</code>目录下的jar包和类（核心类，例如rt.jar）或者或被 <code>-Xbootclasspath</code>参数指定的路径中的所有类。</li>
+<li>扩展类加载器（ExtensionClassLoader）：由sun.misc.Launcher$ExtClassLoader实现，负责加载目录 <code>%JRE_HOME%/lib/ext</code> 目录下的jar包和类(扩展类)，或被 <code>java.ext.dirs</code> 系统变量所指定的路径下的jar包。开发者可以直接使用该类加载器。</li>
+<li>应用程序类加载器（AppClassLoader）：由sun.misc.Launcher$AppClassLoader来实现，面向用户的加载器，负责加载当前应用classpath下的所有jar包和类。开发者可以直接使用该类加载器。</li>
+</ul>
+<h2 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h2><p>每个类都对应一个加载它的类加载器，通过双亲（指的是父母那一辈人，不是“两个”的含义）委派模型完成类的加载有两个好处。</p>
+<ul>
+<li>避免类（类名包含全限定名）的重复加载。</li>
+<li>避免Java的核心API被篡改（例如虽然用户故意修改了java.lang.Object类，但是JVM不会加载这个类）。</li>
+</ul>
+<p>双亲委派模型的类加载机制简单来讲就是</p>
+<ul>
+<li>自底向上检查类是否已加载（避免类的重复加载）。</li>
+<li>自顶向下加载类（避免核心类被篡改）。</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqpoydivwj30do0e10vh.jpg" alt="image-20200412091033550"></p>
+<p>在进行类的加载时，首先检查类是否已经被加载，如果类已经被加载，则直接返回。否则，尝试对类进行加载。加载的时候，会把请求委托给父类加载器的loadClass()来处理，所以，最终的加载请求被传递给启动类加载器，如果父类加载器不能处理，才能自己来加载。当父加载器为null时，使用启动类加载器作为父加载器。</p>
+<p>处理尝试加载的时候这么确定对应哪个加载器及其父加载器呢？</p>
+<ul>
+<li><code>%JAVA_HOME%/lib</code>目录下的jar包和类（核心类，例如rt.jar）或者或被 <code>-Xbootclasspath</code>参数指定的路径中的所有类对应启动类加载器。</li>
+<li><code>%JRE_HOME%/lib/ext</code> 目录下的jar包和类(扩展类)，或被 <code>java.ext.dirs</code> 系统变量所指定的路径下的jar包，对应扩展类加载器。</li>
+<li>当前应用classpath下的所有jar包和类，对应应用程序类加载器。</li>
+</ul>
 
       
 
@@ -259,7 +291,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM体系架构"><span class="toc-number">1.</span> <span class="toc-text">JVM体系架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#类加载器"><span class="toc-number">2.</span> <span class="toc-text">类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派模型"><span class="toc-number">2.1.</span> <span class="toc-text">双亲委派模型</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
