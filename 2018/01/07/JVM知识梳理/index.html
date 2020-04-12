@@ -20,7 +20,9 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdq3la21jxj30l00d448f.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdq3popkr0j30i10hcwin.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqpoydivwj30do0e10vh.jpg">
-<meta property="og:updated_time" content="2020-04-12T01:39:28.048Z">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqqsuopk8j30j205rgnw.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqr37til5j30hg0b10uo.jpg">
+<meta property="og:updated_time" content="2020-04-12T02:20:07.289Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM知识梳理">
 <meta name="twitter:description" content="JVM（Java Virtual Machine）是一个能够运行Java字节码的进程，通过软件模拟了一套完整的计算机系统（硬件+软件）。">
@@ -210,6 +212,89 @@
 <li><code>%JRE_HOME%/lib/ext</code> 目录下的jar包和类(扩展类)，或被 <code>java.ext.dirs</code> 系统变量所指定的路径下的jar包，对应扩展类加载器。</li>
 <li>当前应用classpath下的所有jar包和类，对应应用程序类加载器。</li>
 </ul>
+<p>通过一个demo验证下类的加载机制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoaderDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"ClassLodarDemo's ClassLoader is "</span> + ClassLoaderDemo.class.getClassLoader());</span><br><span class="line">        System.out.println(<span class="string">"The Parent of ClassLodarDemo's ClassLoader is "</span> + ClassLoaderDemo.class.getClassLoader().getParent());</span><br><span class="line">        System.out.println(<span class="string">"The GrandParent of ClassLodarDemo's ClassLoader is "</span> + ClassLoaderDemo.class.getClassLoader().getParent().getParent());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>output：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ClassLodarDemo&apos;s ClassLoader is sun.misc.Launcher$AppClassLoader@18b4aac2</span><br><span class="line">The Parent of ClassLodarDemo&apos;s ClassLoader is sun.misc.Launcher$ExtClassLoader@2c7b84de</span><br><span class="line">The GrandParent of ClassLodarDemo&apos;s ClassLoader is null</span><br></pre></td></tr></table></figure>
+<p> AppClassLoader的父类是ExtClassLoader，ExtClassLoader的父类为null，并不是没有父类，而是其父类是BootstrapClassLoader（不是通过Java实现的，而是通过本地代码实现的）。</p>
+<h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><p>类从被加载到虚拟机内存，到从内存中卸载，整个「生命周期」包括以下7个阶段：</p>
+<ul>
+<li>加载</li>
+<li>验证</li>
+<li>准备</li>
+<li>解析</li>
+<li>初始化</li>
+<li>使用</li>
+<li>卸载</li>
+</ul>
+<p>前五个阶段即为类加载的全过程。其中的验证、准备、解析3个部分统称为连接。因此类的加载过程可以进一步简化为：加载、连接和初始化三个阶段。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqqsuopk8j30j205rgnw.jpg" alt="image-20200412094853954"></p>
+<h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><p>加载阶段主要作三件事情，如下：</p>
+<ol>
+<li>通过一个类的全限定名来获取定义此类的<strong>二进制字节流</strong>。</li>
+<li>将这个字节流所代表的静态存储结构转化为<strong>方法区的运行时存储结构</strong>。</li>
+<li>在堆中生成一个代表这个类的<code>java.lang.Class</code>对象，Class对象封装了类在方法区内的数据结构，并且向Java程序员提供了访问方法区内的数据结构的接口。</li>
+</ol>
+<p>数组类本身不通过类加载器创建，它是由jvm直接创建的。</p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>验证阶段的目的是确保<strong>输入的Class文件的字节流能正确地解析并存储于方法区之内</strong>，可以继续细分为4个阶段：文件格式验证、元数据验证、字节码验证、符号引用验证。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqr37til5j30hg0b10uo.jpg" alt="image-20200412095852048"></p>
+<ol>
+<li>文件格式验证：本阶段的工作是验证字节流是否符合Class文件的规范，并且能被当前版本的虚拟机处理。</li>
+<li>元数据验证：本阶段的工作是对类的元数据信息进行<strong>语义检验</strong>，保证不存在不符合Java语言规范的元数据信息。例如如果某个类有父类，是否实现了父类中或者接口中的所有方法。</li>
+<li>字节码验证：本阶段是确认程序的「语义」是合法的，符合逻辑的。例如，子类对象可以赋值给父类数据类型，但父类对象赋值给子类数据类型是不合法的。</li>
+<li>符号应用验证：本阶段的工作是将<strong>符号引用</strong>转化为<strong>直接引用</strong>。符号引用是一个包含足够信息的字符串，比如方法的符号引用：“java/io/PrintStream.println:(Ljava/lang/String;)V”，这里有类的全限定名，方法名，方法参数等信息。直接引用就是偏移量，通过偏移量JVM可以直接在类的方法区找到方法字节码的起始位置。当第一次运行时，要根据字符串的内容，到该类的方法表中搜索这个方法。运行一次之后，符号引用会被替换为直接引用，下次就不用搜索了。</li>
+</ol>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>这个阶段为类变量（static）分配内存（在方法区），并赋予类型对应的「零值」。这个阶段只是完成类变量的内存分配，而实例变量（对象）是在对象实例化时在堆上分配的。另外一点，这个阶段赋予的是类变量的「零值」。各基本类型零值如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>数据类型</strong></th>
+<th><strong>默认值</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>byte</td>
+<td>0</td>
+</tr>
+<tr>
+<td>short</td>
+<td>0</td>
+</tr>
+<tr>
+<td>int</td>
+<td>0</td>
+</tr>
+<tr>
+<td>long</td>
+<td>0L</td>
+</tr>
+<tr>
+<td>float</td>
+<td>0.0f</td>
+</tr>
+<tr>
+<td>double</td>
+<td>0.0d</td>
+</tr>
+<tr>
+<td>char</td>
+<td>‘u0000’</td>
+</tr>
+<tr>
+<td>String (or any object)</td>
+<td>null</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+<p>举个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> value = <span class="number">721</span>;</span><br></pre></td></tr></table></figure>
+<p>在准备阶段，类变量value的值是0.</p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>本阶段的工作是将<strong>常量池</strong>内的<strong>符号引用</strong>替换为<strong>直接引用</strong>。</p>
 
       
 
@@ -291,7 +376,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM体系架构"><span class="toc-number">1.</span> <span class="toc-text">JVM体系架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#类加载器"><span class="toc-number">2.</span> <span class="toc-text">类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派模型"><span class="toc-number">2.1.</span> <span class="toc-text">双亲委派模型</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM体系架构"><span class="toc-number">1.</span> <span class="toc-text">JVM体系架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#类加载器"><span class="toc-number">2.</span> <span class="toc-text">类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派模型"><span class="toc-number">2.1.</span> <span class="toc-text">双亲委派模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类加载过程"><span class="toc-number">2.2.</span> <span class="toc-text">类加载过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加载"><span class="toc-number">2.3.</span> <span class="toc-text">加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#验证"><span class="toc-number">2.4.</span> <span class="toc-text">验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#准备"><span class="toc-number">2.5.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-number">2.6.</span> <span class="toc-text">解析</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
