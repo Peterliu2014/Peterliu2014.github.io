@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqpoydivwj30do0e10vh.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqqsuopk8j30j205rgnw.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdqr37til5j30hg0b10uo.jpg">
-<meta property="og:updated_time" content="2020-04-12T02:29:32.139Z">
+<meta property="og:updated_time" content="2020-04-12T02:32:10.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM知识梳理">
 <meta name="twitter:description" content="JVM（Java Virtual Machine）是一个能够运行Java字节码的进程，通过软件模拟了一套完整的计算机系统（硬件+软件）。">
@@ -297,6 +297,13 @@
 <h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>本阶段的工作是将<strong>常量池</strong>内的<strong>符号引用</strong>替换为<strong>直接引用</strong>。</p>
 <h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>这个阶段的工作是对类进行初始化，例如执行类中的初始化语句（例如static代码段），为类变量（static变量）赋予初始值。如果有父类，还需要先完成父类的初始化。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">1</span>; <span class="comment">// 类变量</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> b;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> c;</span><br><span class="line">    <span class="comment">//初始化语句</span></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        b = <span class="number">2</span>; <span class="comment">// 在静态代码块处进行初始化</span></span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h3><p>卸载类即该类的Class对象被GC，卸载类需要满足3个要求:</p>
+<ol>
+<li>该类的所有的实例对象都已被GC，也就是说堆不存在该类的实例对象。</li>
+<li>该类没有在其他任何地方被引用</li>
+<li>该类的类加载器的实例已被GC</li>
+</ol>
+<p>所以，在JVM生命周期类，由jvm自带的类加载器加载的类是不会被卸载的。但是用户自定义的类加载器加载的类是可能被卸载的。</p>
 
       
 
@@ -378,7 +385,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM体系架构"><span class="toc-number">1.</span> <span class="toc-text">JVM体系架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#类加载器"><span class="toc-number">2.</span> <span class="toc-text">类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派模型"><span class="toc-number">2.1.</span> <span class="toc-text">双亲委派模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类加载过程"><span class="toc-number">2.2.</span> <span class="toc-text">类加载过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加载"><span class="toc-number">2.2.1.</span> <span class="toc-text">加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证"><span class="toc-number">2.2.2.</span> <span class="toc-text">验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备"><span class="toc-number">2.2.3.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解析"><span class="toc-number">2.2.4.</span> <span class="toc-text">解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化"><span class="toc-number">2.2.5.</span> <span class="toc-text">初始化</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM体系架构"><span class="toc-number">1.</span> <span class="toc-text">JVM体系架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#类加载器"><span class="toc-number">2.</span> <span class="toc-text">类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派模型"><span class="toc-number">2.1.</span> <span class="toc-text">双亲委派模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类加载过程"><span class="toc-number">2.2.</span> <span class="toc-text">类加载过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加载"><span class="toc-number">2.2.1.</span> <span class="toc-text">加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证"><span class="toc-number">2.2.2.</span> <span class="toc-text">验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备"><span class="toc-number">2.2.3.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解析"><span class="toc-number">2.2.4.</span> <span class="toc-text">解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化"><span class="toc-number">2.2.5.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#卸载"><span class="toc-number">2.2.6.</span> <span class="toc-text">卸载</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
