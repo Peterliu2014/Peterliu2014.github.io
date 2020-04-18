@@ -26,11 +26,11 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdntzl7mltj30ji08udh7.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnu8z2se1j30dz08egls.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnuelse2vj30et09gdg0.jpg">
-<meta property="og:image" content="http://yoursite.com/Users/liuyi/Library/Application%20Support/typora-user-images/image-20200409213942132.png">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdy4b5deonj30en07bglw.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnv2mv82tj30g30ermy4.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvb6fzaqj30b108yq3x.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvmfzvtpj30er092mxb.jpg">
-<meta property="og:updated_time" content="2020-04-09T14:19:11.592Z">
+<meta property="og:updated_time" content="2020-04-18T10:57:29.333Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zookeeper架构与原理">
 <meta name="twitter:description" content="Zookeeper是一个高性能、具有严格顺序访问控制（更新操作的严格顺序性）的分布式协调系统，具有高吞吐和低延迟的特性，能够很好的在高并发的环境中完成分布式数据的一致性处理，同时能够优雅的处理运行时故障，并具备快速从故障中恢复的能力。Zookeeper拥有广泛的使用场景，包括数据的发布/订阅、命名服务、负载均衡、master选举、生成唯一ID、分布式锁和分布式队列。">
@@ -309,10 +309,10 @@
 <h2 id="生成分布式唯一ID"><a href="#生成分布式唯一ID" class="headerlink" title="生成分布式唯一ID"></a>生成分布式唯一ID</h2><p>利用zk顺序节点的特性，每次调用create方法创建顺序节点时，zk会在路径名称后追加一个10位的全局（当前层）递增的整数值，create方法会返回创建的节点名称，解析节点名称就能获得分布式唯一ID。</p>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnuelse2vj30et09gdg0.jpg" alt="image-20200409213655055"></p>
 <h2 id="master选举"><a href="#master选举" class="headerlink" title="master选举"></a>master选举</h2><p>采用master/slave架构的分布式系统中，master角色具有一些特殊的功能，例如只能通过master写入数据，或者完成一些管理功能。利用zk不能「创建重复节点」的特性，可以实现master的选举。</p>
-<p><img src="/Users/liuyi/Library/Application Support/typora-user-images/image-20200409213942132.png" alt="image-20200409213942132"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdy4b5deonj30en07bglw.jpg" alt="image-2020040913942132"></p>
 <ul>
 <li>多个client启动时，都会尝试创建/master临时节点，由于zk不能重复创建节点的特性，所以，最终只有一个client会创建成功，其它client会创建失败。</li>
-<li>创建失败的client，添加/master节点的监听，一般/master被删除（客户端A崩溃），重新竞争创建/master节点。</li>
+<li>创建失败的client，添加/master节点的监听，一旦/master被删除（客户端A崩溃），重新竞争创建/master节点。</li>
 </ul>
 <h2 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h2><p>通过zk实现分布式锁有两种方法：临时节点和临时顺序节点。</p>
 <h3 id="临时节点实现"><a href="#临时节点实现" class="headerlink" title="临时节点实现"></a>临时节点实现</h3><ul>
