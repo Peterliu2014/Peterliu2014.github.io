@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnv2mv82tj30g30ermy4.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvb6fzaqj30b108yq3x.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvmfzvtpj30er092mxb.jpg">
-<meta property="og:updated_time" content="2020-04-18T10:57:29.333Z">
+<meta property="og:updated_time" content="2020-04-18T12:52:22.657Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zookeeper架构与原理">
 <meta name="twitter:description" content="Zookeeper是一个高性能、具有严格顺序访问控制（更新操作的严格顺序性）的分布式协调系统，具有高吞吐和低延迟的特性，能够很好的在高并发的环境中完成分布式数据的一致性处理，同时能够优雅的处理运行时故障，并具备快速从故障中恢复的能力。Zookeeper拥有广泛的使用场景，包括数据的发布/订阅、命名服务、负载均衡、master选举、生成唯一ID、分布式锁和分布式队列。">
@@ -185,7 +185,7 @@
 <p>Zookeeper作为一种主/备架构的分布式协调系统，有三种角色：Leader、Follower和Observer。</p>
 <ol>
 <li>Leader：又称为群首，接收客户端的读/写请求，在ZAB的消息广播模式中，将事务请求广播给集群中的Follower和Observer。具有投票权。</li>
-<li>Follower：只能处理客户端的读请求，收到的写请求会转发给Leader处理。在ZAB协议的消息广播模式中，接收Leader的事务消息，与Leader同步数据，并且回向Leader发送ack响应，具有投票权（针对过半写入场景）。在ZAB的崩溃恢复模式中，参与竞选新Leader，具有投票权。</li>
+<li>Follower：只能处理客户端的读请求，收到的写请求会转发给Leader处理。在ZAB协议的消息广播模式中，接收Leader的事务消息，与Leader同步数据，并且会向Leader发送ack响应，具有投票权（针对过半写入场景）。在ZAB的崩溃恢复模式中，参与竞选新Leader，具有投票权。</li>
 <li>Observer：只能处理读请求，收到的写请求会转发给Leader处理。Zookeeper尤其适用于读多写少的场景，增加Observer角色是为了提升系统的读性能，Observer也从Leader同步数据，但是不会发送ack响应，不具备投票权。</li>
 </ol>
 <h2 id="会话"><a href="#会话" class="headerlink" title="会话"></a>会话</h2><p>Client启动后会和集群中的某个实例建立一个TCP长连接，这个连接就是「会话」。会话有这么几个功能：</p>
@@ -269,11 +269,11 @@
 </ul>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmoxh2bolj30jh051aar.jpg" alt="image-20200408214153052"></p>
 <p>顺序节点的编号在每一层都是从1开始的，在这层的内部的任意顺序节点共享这个唯一递增的编号，例如/app1下的顺序节点/app1/t0000000001，然后/app1/p0000000002。</p>
-<h2 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h2><p>每个znode都有一个版本号（stat结构中的version），表示znode被修改的次数，会随着每次修改而递增。当有多个client对同一个znode做修改操作时，可以通过版本号达到“CAS”的效果。例如，在读取节点node值时获得Stat中的lastVersion，然后进入业务处理，处理完成准备更新node节点值时，获得此时的版本号currentVersion，如果与lastVersion相同，表示期间没有其它client更新node值。</p>
+<h2 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h2><p>每个znode都有一个版本号（stat结构中的dataVersion），表示znode被修改的次数，会随着每次修改而递增。当有多个client对同一个znode做修改操作时，可以通过版本号达到“CAS”的效果。例如，在读取节点node值时获得Stat中的lastVersion，然后进入业务处理，处理完成准备更新node节点值时，获得此时的版本号currentVersion，如果与lastVersion相同，表示期间没有其它client更新node值。</p>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmp87znjyj30l909eq73.jpg" alt="image-20200408215212529"></p>
 <h2 id="watcher"><a href="#watcher" class="headerlink" title="watcher"></a>watcher</h2><p><strong>Watcher</strong>（事件监听器）是 Zookeeper 提供的一种 发布/订阅的机制。Zookeeper 允许用户在指定节点上注册一些 Watcher，并且在一些特定事件触发的时候，Zookeeper 服务端会将事件通知给订阅的客户端。该机制是 Zookeeper 实现分布式协调的重要特性。</p>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpbgsn2tj30ht0bgada.jpg" alt="image-20200408215518468"></p>
-<p>其实，注册的监听器在存在一个HashMap里的，key是znode的路径，value是Watcher集合。</p>
+<p>其实，注册的监听器是存在一个HashMap里的，key是znode的路径，value是Watcher集合。</p>
 <h2 id="ACL"><a href="#ACL" class="headerlink" title="ACL"></a>ACL</h2><p>Zookeeper 采用 ACL（Access Control Lists）策略来进行权限控制，其定义了如下五种权限：</p>
 <ul>
 <li>CREATE：创建子节点的权限。</li>
@@ -312,7 +312,7 @@
 <p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdy4b5deonj30en07bglw.jpg" alt="image-2020040913942132"></p>
 <ul>
 <li>多个client启动时，都会尝试创建/master临时节点，由于zk不能重复创建节点的特性，所以，最终只有一个client会创建成功，其它client会创建失败。</li>
-<li>创建失败的client，添加/master节点的监听，一旦/master被删除（客户端A崩溃），重新竞争创建/master节点。</li>
+<li>创建失败的client，添加/master节点的监听，一旦/master被删除（客户端A崩溃），这些clinet会重新竞争，创建/master节点。</li>
 </ul>
 <h2 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h2><p>通过zk实现分布式锁有两种方法：临时节点和临时顺序节点。</p>
 <h3 id="临时节点实现"><a href="#临时节点实现" class="headerlink" title="临时节点实现"></a>临时节点实现</h3><ul>

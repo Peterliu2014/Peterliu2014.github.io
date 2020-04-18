@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhths0hh8j30dx07tdh7.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhuisny7vj30fc09s417.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhutbf2uhj30fa09uacr.jpg">
-<meta property="og:updated_time" content="2020-04-04T10:09:14.902Z">
+<meta property="og:updated_time" content="2020-04-18T12:57:57.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZAB协议">
 <meta name="twitter:description" content="ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。">
@@ -200,17 +200,17 @@
 <p>2PC存在单点问题，同步阻塞，无限期等待等问题。</p>
 <h2 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h2><p>3PC是对2PC的一个改进，将2PC的「执行事务过程」（第一阶段）一分为二，形成canCommit、preCommit，然后doCommit还是原先的「提交事务」过程。</p>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhpj40fr1j30gt0e6gre.jpg" alt="image-20200404141450946"></p>
-<p>解决了单点问题，添加preCommit过程，避免2PC提交协议的无限期等待问题。</p>
+<p>解决了2pc同步阻塞问题，添加preCommit过程，避免2PC提交协议的无限期等待问题。</p>
 <h2 id="原子广播"><a href="#原子广播" class="headerlink" title="原子广播"></a>原子广播</h2><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhq2gnkxaj30e006i0t7.jpg" alt="image-20200404143326470"></p>
 <p>消息广播的流程如下：</p>
 <ol>
 <li>Leader接收到变更类的请求后，将其包装为事务Proposal（提案），每个提案对应一个全局递增的编号，称为事务ID（即zxid）。</li>
 </ol>
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhqezhkacj30je02wglu.jpg" alt="image-20200404144527782"></p>
-<p>ZXID是一个64位的整数，高32位表示Leader的任期，每次leader发生崩溃，重选选举之后，新leader就会将epoch加1。</p>
+<p>ZXID是一个64位的长整型，高32位表示Leader的任期，每次leader发生崩溃，重选选举之后，新leader就会将epoch加1。</p>
 <p>低32位是一个计数器，每次有客户端发送的变更请求后，这个计数器就会加1，这个计数器仅在一个leader任期内递增，更换leader时，会将其重置为0。</p>
 <ol start="2">
-<li>leader 和抹每个follower之前都有一个队列，leader将需要广播的Proposal放入到这些队列中。</li>
+<li>leader 和每个follower之间都有一个队列，leader将需要广播的Proposal放入到这些队列中。</li>
 <li>follower收到Proposal之后，将其写入本地磁盘的「事务日志」中，写入完成后，向leader返回ack，表示写入成功。</li>
 <li>leader收到「大多数」follower的ack之后，发送commit消息，要求follower提交事务Proposal，将其应用到内存数据库DataTree中（就是zk的树状结构）。同时，leader自己也会commit这个Proposal。</li>
 </ol>
@@ -225,7 +225,7 @@
 <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">基于UDP的LeaderElection</span></span><br><span class="line"><span class="attr">基于UDP的FastLeaderElection</span></span><br><span class="line"><span class="attr">基于UDP和认证的FastLeaderElection</span></span><br></pre></td></tr></table></figure>
 <p> 集群初次启动和leader崩溃时都会触发leader的选举，以下分别介绍两种场景下的选举过程。选举算法有两个关键指标：</p>
 <ul>
-<li>持有的疏数据最新，即zxid最大。</li>
+<li>持有的数据最新，即zxid最大。</li>
 <li>服务器的id最大，即sid（这个是配置在zoo.cfg里的）最大。</li>
 </ul>
 <table>
@@ -238,7 +238,7 @@
 <tbody>
 <tr>
 <td style="text-align:left">SID</td>
-<td style="text-align:left">Server ID，用来唯一标识一台Zookeeper集群中的机器，全局唯一，与myid一致</td>
+<td style="text-align:left">Server ID，用来唯一标识Zookeeper集群中的一台机器，全局唯一，与myid一致</td>
 </tr>
 <tr>
 <td style="text-align:left">ZXID</td>
@@ -310,13 +310,13 @@
 <p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhuisny7vj30fc09s417.jpg" alt="image-20200404170732321"></p>
 <p>P1表示Proposal1，C1表示Commit 1，即提交P1的消息。A是原leader，并且提交了C2之后就宕机了，怎么保证P2最终会在所有机器上完成提交呢？</p>
 <ol>
-<li>A宕机之后，集群进入崩溃恢复模式，选举具备最新zxid的服务器位置，这个最新的zxid就是服务器「最近处理过」的Proposal，B机具有最新的zxid —&gt;P3，因此选择B机为准leader。</li>
+<li>A宕机之后，集群进入崩溃恢复模式，选举具备最新zxid的服务器，这个最新的zxid就是服务器「最近处理过」的Proposal，B机具有最新的zxid —&gt;P3，因此选择B机为准leader。</li>
 <li>B机检查自身没有Commit的消息，只有P3，进一步检查集群中是否有过半的服务器上包含P3（包含就表示在旧leader上提交了这个Proposal），结果是只有B机上有P3，因此B会丢弃P3。这就是「丢弃只在leader上提出的事务Proposal」特性。</li>
 <li>选举完成后，follower会向leader发送最新的zxid，leader根据各folower的zxid，发送相应的同步数据。<img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhutbf2uhj30fa09uacr.jpg" alt="image-20200404171738960"></li>
 </ol>
 <p>可以看到，向所有follower都发送了C2消息，而C2正是旧主A上提交的数据，这就是「保证leader上提交的事务最终在所有服务器上提交」。</p>
 <h2 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h2><p>数据同步其实在「基本特征」中已经讲过了，这里简单说下细节。数据同步的过程其实就是leader将那些没有在folower上提交的事务同步给follower。</p>
-<p>Leader中有一个提议缓存队列committedLog，会保存最近一段时间内执行的事务请求议案，个数限制默认为500个议案。根据这个队列可以计算出两个值：</p>
+<p>Leader中有一个提议缓存队列committedLog，会保存最近一段时间内执行的事务请求议案，个数默认限制为500个议案。根据这个队列可以计算出两个值：</p>
 <ul>
 <li>minCommittedLog：Leader服务器提议缓存队列committedLog中的最小ZXID。</li>
 <li>maxCommittedLog：Leader服务器提议缓存队列committedLog中的最大ZXID。</li>
