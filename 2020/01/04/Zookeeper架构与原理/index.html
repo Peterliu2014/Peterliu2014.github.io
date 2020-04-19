@@ -6,31 +6,35 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>ZAB协议 | lz</title>
+  <title>Zookeeper架构与原理 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。">
+  <meta name="description" content="Zookeeper是一个高性能、具有严格顺序访问控制（更新操作的严格顺序性）的分布式协调系统，具有高吞吐和低延迟的特性，能够很好的在高并发的环境中完成分布式数据的一致性处理，同时能够优雅的处理运行时故障，并具备快速从故障中恢复的能力。Zookeeper拥有广泛的使用场景，包括数据的发布/订阅、命名服务、负载均衡、master选举、生成唯一ID、分布式锁和分布式队列。">
 <meta name="keywords" content="zookeeper">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ZAB协议">
-<meta property="og:url" content="http://yoursite.com/2019/09/01/ZAB协议/index.html">
+<meta property="og:title" content="Zookeeper架构与原理">
+<meta property="og:url" content="http://yoursite.com/2020/01/04/Zookeeper架构与原理/index.html">
 <meta property="og:site_name" content="lz">
-<meta property="og:description" content="ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。">
+<meta property="og:description" content="Zookeeper是一个高性能、具有严格顺序访问控制（更新操作的严格顺序性）的分布式协调系统，具有高吞吐和低延迟的特性，能够很好的在高并发的环境中完成分布式数据的一致性处理，同时能够优雅的处理运行时故障，并具备快速从故障中恢复的能力。Zookeeper拥有广泛的使用场景，包括数据的发布/订阅、命名服务、负载均衡、master选举、生成唯一ID、分布式锁和分布式队列。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhjyok07lj30du05wab3.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhoz9fo4vj30e304yac2.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhp2id8psj30e305rmzj.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhp80hxflj30e50aygqd.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhpj40fr1j30gt0e6gre.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhq2gnkxaj30e006i0t7.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhqezhkacj30je02wglu.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhths0hh8j30dx07tdh7.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhuisny7vj30fc09s417.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhutbf2uhj30fa09uacr.jpg">
-<meta property="og:updated_time" content="2020-04-18T12:57:57.200Z">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmn7edig4j30hf08wjty.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmncdpzj9j30k204odhj.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmnyep51nj30hh0atmz5.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmoxh2bolj30jh051aar.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmp87znjyj30l909eq73.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpbgsn2tj30ht0bgada.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpxppxx5j30e908lq3d.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdntzl7mltj30ji08udh7.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnu8z2se1j30dz08egls.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnuelse2vj30et09gdg0.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdy4b5deonj30en07bglw.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnv2mv82tj30g30ermy4.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvb6fzaqj30b108yq3x.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvmfzvtpj30er092mxb.jpg">
+<meta property="og:updated_time" content="2020-04-19T14:05:39.316Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ZAB协议">
-<meta name="twitter:description" content="ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。">
-<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdhjyok07lj30du05wab3.jpg">
+<meta name="twitter:title" content="Zookeeper架构与原理">
+<meta name="twitter:description" content="Zookeeper是一个高性能、具有严格顺序访问控制（更新操作的严格顺序性）的分布式协调系统，具有高吞吐和低延迟的特性，能够很好的在高并发的环境中完成分布式数据的一致性处理，同时能够优雅的处理运行时故障，并具备快速从故障中恢复的能力。Zookeeper拥有广泛的使用场景，包括数据的发布/订阅、命名服务、负载均衡、master选举、生成唯一ID、分布式锁和分布式队列。">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdmn7edig4j30hf08wjty.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -150,185 +154,182 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ZAB协议" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Zookeeper架构与原理" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      ZAB协议
+      Zookeeper架构与原理
     </h1>
   
 
         
-        <a href="/2019/09/01/ZAB协议/" class="archive-article-date">
-  	<time datetime="2019-09-01T13:18:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-01</time>
+        <a href="/2020/01/04/Zookeeper架构与原理/" class="archive-article-date">
+  	<time datetime="2020-01-04T12:37:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-01-04</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>ZAB（Zookeeper Atomic Broadcast）是Zookeeper实现数据一致性的关键算法，是Zookeeper专门设计的一种支持崩溃恢复的原子广播协议（Paxos是一种通用的分布式数据一致性算法），基于这个协议，Zookeeper实现了一种主备架构来保持集群中各副本的数据一致性。<a id="more"></a></p>
-<h1 id="ZAB协议介绍"><a href="#ZAB协议介绍" class="headerlink" title="ZAB协议介绍"></a>ZAB协议介绍</h1><p>ZAB协议提供以下两个核心功能：</p>
-<ol>
-<li>只能通过leader进程（主进程）来处理客户端的变更类请求（增、删、改），follower（副进程）接收到的变更类请求需要转发给Leader处理。采用ZAB协议，将数据的变更请求以事务proposal（提案）的形式广播到follower进程。</li>
-<li>如果主进程宕机，整个集群就不能处理变更请求（事务请求），为了解决这个单点问题，ZAB协议还需要解决leader的选举，以及新leader选举后，与各follower的数据同步问题，完成数据同步之后，才能继续对外提供服务。</li>
-</ol>
-<p>前者对应ZAB协议的「消息广播模式」，后者则是ZAB协议的「崩溃恢复模式」，是ZAB协议的两种基本模式。</p>
-<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhjyok07lj30du05wab3.jpg" alt="image-20200404110210723"></p>
-<h1 id="消息广播"><a href="#消息广播" class="headerlink" title="消息广播"></a>消息广播</h1><p>在Zookeeper集群的正常运行过程中，一直都处于消息广播模式。在这个模式中，Leader接收客户端的变更请求，然后将变更请求消息广播到follower，保证数据的一致性。这个广播的过程，与2PC（两阶段提交，一种一致性协议）有相同之处，因此先介绍下2PC。</p>
-<h2 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h2><p>两阶段提交协议，常应用于数据库和网路领域，用于解决分布式环境下，保持各节点事务提交的一致性问题。每个节点都可以知道本地事务是否执行成功，但是却不能获取其它节点的执行结果，因此2PC的基本思路是：引入协调者角色，参与者将本地事务执行结果通知协调者，由协调者根据反馈结果确定提交事务还是回滚事务。</p>
-<h3 id="提交请求阶段"><a href="#提交请求阶段" class="headerlink" title="提交请求阶段"></a>提交请求阶段</h3><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhoz9fo4vj30e304yac2.jpg" alt="image-20200404135546306"></p>
-<p>2PC的第一个阶段是提交请求阶段（执行事务阶段），流程如下：</p>
-<ol>
-<li>协调者向各参与者发送事务请求。</li>
-<li>参与者接收到事务请求后，执行事务，但是「不提交事务」。</li>
-<li>参与者执行完成后，返回执行成功的消息给协调者。</li>
-</ol>
-<h3 id="提交执行阶段"><a href="#提交执行阶段" class="headerlink" title="提交执行阶段"></a>提交执行阶段</h3><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhp2id8psj30e305rmzj.jpg" alt="image-20200404135853714"></p>
-<p>2PC的第二个阶段是提交执行阶段（提交事务阶段），在这个阶段里，确定是否要提交事务。以全部参与者都执行成功的场景为例，流程如下：</p>
-<ol>
-<li>协调者如果接收到所有参与者的成功反馈，则向所有参与者发送commit请求。</li>
-<li>参与者执行commit请求，这时正式「提交」事务，操作完成后释放事务资源。</li>
-<li>协调者收到参与者的ack消息，就知道事务已经commit。</li>
-</ol>
-<p>接下来看下事务回滚的场景。</p>
-<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhp80hxflj30e50aygqd.jpg" alt="image-20200404140410700"></p>
-<p>如果在第一个阶段，有些参与者执行事务失败，返回了“失败”的消息给协调者。那么在第二阶段，协调者就会发送回滚的请求给参与者，要求事务回滚。</p>
-<p>2PC存在单点问题，同步阻塞，无限期等待等问题。</p>
-<h2 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h2><p>3PC是对2PC的一个改进，将2PC的「执行事务过程」（第一阶段）一分为二，形成canCommit、preCommit，然后doCommit还是原先的「提交事务」过程。</p>
-<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhpj40fr1j30gt0e6gre.jpg" alt="image-20200404141450946"></p>
-<p>解决了2pc同步阻塞问题，添加preCommit过程，避免2PC提交协议的无限期等待问题。</p>
-<h2 id="原子广播"><a href="#原子广播" class="headerlink" title="原子广播"></a>原子广播</h2><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhq2gnkxaj30e006i0t7.jpg" alt="image-20200404143326470"></p>
-<p>消息广播的流程如下：</p>
-<ol>
-<li>Leader接收到变更类的请求后，将其包装为事务Proposal（提案），每个提案对应一个全局递增的编号，称为事务ID（即zxid）。</li>
-</ol>
-<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhqezhkacj30je02wglu.jpg" alt="image-20200404144527782"></p>
-<p>ZXID是一个64位的长整型，高32位表示Leader的任期，每次leader发生崩溃，重选选举之后，新leader就会将epoch加1。</p>
-<p>低32位是一个计数器，每次有客户端发送的变更请求后，这个计数器就会加1，这个计数器仅在一个leader任期内递增，更换leader时，会将其重置为0。</p>
-<ol start="2">
-<li>leader 和每个follower之间都有一个队列，leader将需要广播的Proposal放入到这些队列中。</li>
-<li>follower收到Proposal之后，将其写入本地磁盘的「事务日志」中，写入完成后，向leader返回ack，表示写入成功。</li>
-<li>leader收到「大多数」follower的ack之后，发送commit消息，要求follower提交事务Proposal，将其应用到内存数据库DataTree中（就是zk的树状结构）。同时，leader自己也会commit这个Proposal。</li>
-</ol>
-<p>ZAB的消息广播和2PC的不同之处在于：</p>
-<ol>
-<li>leader和follower之间，通过队列传递消息，解决了同步阻塞的问题。</li>
-<li>leader只需要「过半」follower回复ack即可，提高了响应速度。而2PC需要所有参与者回复ack。</li>
-</ol>
-<p>不难看出，消息广播模式存在单点问题，即如果leader崩溃，整个zookeeper集群将不能提供变更类服务，因此ZAB协议中还提供了崩溃恢复模式。</p>
-<h1 id="崩溃恢复"><a href="#崩溃恢复" class="headerlink" title="崩溃恢复"></a>崩溃恢复</h1><p>崩溃恢复有两个关键过程：Leader选举和数据同步。</p>
-<h2 id="Leader选举"><a href="#Leader选举" class="headerlink" title="Leader选举"></a>Leader选举</h2><p>从zookeeper 3.4.10版本开始，默认值的选举算法时基于TCP的FastLeaderElection。另外三种算法已经被弃用，分别是</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">基于UDP的LeaderElection</span></span><br><span class="line"><span class="attr">基于UDP的FastLeaderElection</span></span><br><span class="line"><span class="attr">基于UDP和认证的FastLeaderElection</span></span><br></pre></td></tr></table></figure>
-<p> 集群初次启动和leader崩溃时都会触发leader的选举，以下分别介绍两种场景下的选举过程。选举算法有两个关键指标：</p>
+        <p>Zookeeper是一个高性能、具有严格顺序访问控制（更新操作的严格顺序性）的分布式协调系统，具有高吞吐和低延迟的特性，能够很好的在高并发的环境中完成分布式数据的一致性处理，同时能够优雅的处理运行时故障，并具备快速从故障中恢复的能力。Zookeeper拥有广泛的使用场景，包括数据的发布/订阅、命名服务、负载均衡、master选举、生成唯一ID、分布式锁和分布式队列。<a id="more"></a></p>
 <ul>
-<li>持有的数据最新，即zxid最大。</li>
-<li>服务器的id最大，即sid（这个是配置在zoo.cfg里的）最大。</li>
+<li>zookeeper将全量数据保存在内存中(DataTree)，因此在读多写少的场景下，具有高性能、高吞吐和低延迟的特点。这也是限制ZNode保存数据量为1MB的原因。</li>
+<li>对于客户端的每个更新类的请求，Leader会将其包装为一个事务请求，分配一个全局递增的事务编号，也就是zxid，根据zxid的大小依次执行事务，保证更新操作的严格顺序性。</li>
+<li><a href="http://go4ward.top/2019/09/01/ZAB%E5%8D%8F%E8%AE%AE/" target="_blank" rel="noopener">ZAB协议</a>的崩溃恢复模式，使Zookeeper具备了快速从故障中恢复的能力。</li>
 </ul>
+<h1 id="从何而来"><a href="#从何而来" class="headerlink" title="从何而来"></a>从何而来</h1><p>Zookeeper最早起源于雅虎研究院的一个小组。在当时，研究人员发现内部很多大型分布式系统都依赖一个相似的分布式系统来协调，并且这些系统往往都存在单点问题。因此，研究人员后来开发了通用的、解决了单点问题的分布式系统—Zookeeper。Zookeeper将那些复杂的、容易出错的分布式一致性服务封装起来，提供可靠、易用的原语集，这样，开发人员就可以将精力集中在业务逻辑上。</p>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h2><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmn7edig4j30hf08wjty.jpg" alt="image-20200408204212961"></p>
+<p>Zookeeper作为一种主/备架构的分布式协调系统，有三种角色：Leader、Follower和Observer。</p>
+<ol>
+<li>Leader：又称为群首，接收客户端的读/写请求，在ZAB的消息广播模式中，将事务请求广播给集群中的Follower和Observer。具有投票权。</li>
+<li>Follower：只能处理客户端的读请求，收到的写请求会转发给Leader处理。在ZAB协议的消息广播模式中，接收Leader的事务消息，与Leader同步数据，并且会向Leader发送ack响应，具有投票权（针对过半写入场景）。在ZAB的崩溃恢复模式中，参与竞选新Leader，具有投票权。</li>
+<li>Observer：只能处理读请求，收到的写请求会转发给Leader处理。Zookeeper尤其适用于读多写少的场景，增加Observer角色是为了提升系统的读性能，Observer也从Leader同步数据，但是不会发送ack响应，不具备投票权。</li>
+</ol>
+<h2 id="会话"><a href="#会话" class="headerlink" title="会话"></a>会话</h2><p>Client启动后会和集群中的某个实例建立一个TCP长连接，这个连接就是「会话」。会话有这么几个功能：</p>
+<ul>
+<li>client和Server间的请求和响应都是通过这个会话完成的。</li>
+<li>client通过会话定时（10s）向Server发送心跳，表示client是活跃的，这样通过这个会话创建的临时节点才不会被删除。</li>
+<li>client注册的监听器Watcher，当相应的事件触发时，也是通过会话通知client的。</li>
+</ul>
+<p>每个会话都对应一个全局唯一的sessionID，会话还有一个重要的配置—&gt;超时时间（sessionTimeout，默认30s），会话是client和Server创建的一个TCP连接，如果Server宕机，client就会尝试连接集群中其它Server，如果在sessionTimeout时间内连接上其它Server，那么这个会话依然是有效的（例如临时节点就不会被删除）。</p>
+<p>会话在整个运行期间的生命周期中，会在不同的会话状态中之间进行切换，这些状态可以分为CONNECTING、CONNECTED、CLOSED和NOT_CONNECTED。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmncdpzj9j30k204odhj.jpg" alt="image-20200408204659666"></p>
+<ol>
+<li>会话的初始状态是NOT_CONNECTED，当client完成初始化之后，其状态转换为CONNECTING（对应图中标号1）。</li>
+<li>当client顺利连接到集群中的Server之后，会话状态转变为CONNECTED（对应图中标号2）。</li>
+<li>当连接到Server突然宕机或者网络不通时，会话状态转换为CONNECTING（对应图中标号3）。</li>
+<li>如果在会话超时之前，重新连接到其它Server，会话状态还可以转换为CONNECTED。否则，因为会话过期，状态转换为CLOSED状态（对应图中标号4）。</li>
+<li>可以在应用中显示关闭会话，这时会话状态转换为CLOSED状态（对应图中标号5）。</li>
+</ol>
+<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><p>Zookeeper的数据模型与Linux文件系统类似，是一个具有层级关系的树状结构。linux文件系统中通过目录和文件的方式构造层次结构，而Zookeeper中通过ZNode形成树状结构。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmnyep51nj30hh0atmz5.jpg" alt="image-20200408210810941"></p>
+<p>每个znode除了自身的路径名之外，还可以存储数据，仅支持以字节数组的形式存入数据，并且数据大小限制在1MB。</p>
+<p>每个znode都对应一个Stat结构(可以使用stat /{nodeName}查看)，这个结构中存储了znode相关的元数据信息。</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:left">术语</th>
-<th style="text-align:left">说明</th>
+<th>字段名称</th>
+<th>含义</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">SID</td>
-<td style="text-align:left">Server ID，用来唯一标识Zookeeper集群中的一台机器，全局唯一，与myid一致</td>
+<td>cZxid</td>
+<td>创建节点的事务zxid</td>
 </tr>
 <tr>
-<td style="text-align:left">ZXID</td>
-<td style="text-align:left">事务ID，用来唯一标识一次服务器状态的变更，在同一时刻，集群中每一台机器的ZXID不一定完全一致</td>
+<td>mzxid</td>
+<td>最近一次修改节点的事务zxid</td>
 </tr>
 <tr>
-<td style="text-align:left">Quorum</td>
-<td style="text-align:left"><code>半数以上</code>机器，<code>quorum &gt;= (n/2+1)</code></td>
+<td>ctime</td>
+<td>znode的创建时间</td>
+</tr>
+<tr>
+<td>mtime</td>
+<td>znode最近修改时间</td>
+</tr>
+<tr>
+<td>pZxid</td>
+<td>添加或删除子节点的znode更改的事务ID</td>
+</tr>
+<tr>
+<td>dataVersion</td>
+<td>对该znode的数据所做的更改次数（初始值是0）</td>
+</tr>
+<tr>
+<td>cversion</td>
+<td>对此znode的子节点进行的更改次数</td>
+</tr>
+<tr>
+<td>aclVersion</td>
+<td>对此znode的ACL进行更改的次数</td>
+</tr>
+<tr>
+<td>ephemeralOwner</td>
+<td>如果znode是ephemeral类型节点，则这是znode所有者的 session ID。 如果znode不是ephemeral节点，则该字段设置为零</td>
+</tr>
+<tr>
+<td>dataLength</td>
+<td>znode数据字段的长度（字节数）</td>
+</tr>
+<tr>
+<td>numChildren</td>
+<td>znode的子节点的数量</td>
 </tr>
 </tbody>
 </table>
-<p>选举过程可以分为：发出投票、接收投票、处理投票、统计投票和改变服务器状态。</p>
-<p>选举过程中主要是比较服务器自身的投票和接收到的投票。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">术语</th>
-<th style="text-align:left">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">vote_sid</td>
-<td style="text-align:left">接收到的投票中所推举Leader服务器的SID</td>
-</tr>
-<tr>
-<td style="text-align:left">vote_zxid</td>
-<td style="text-align:left">接收到的投票中所推举Leader服务器的ZXID</td>
-</tr>
-<tr>
-<td style="text-align:left">self_sid</td>
-<td style="text-align:left">当前服务器自己的SID</td>
-</tr>
-<tr>
-<td style="text-align:left">self_zxid</td>
-<td style="text-align:left">当前服务器自己的ZXID</td>
-</tr>
-</tbody>
-</table>
-<h3 id="初次选举"><a href="#初次选举" class="headerlink" title="初次选举"></a>初次选举</h3><p>集群处理启动时，还没有开始处理事务，因此所有服务器上zxid都是0。以3台服务器为例说明选举过程，sid分别是0，1，2。投票的内容是(sid,zxid)，当然还有表示投票次数的logicClock，这里暂不考虑。</p>
-<ol>
-<li><p>发出投票：每个服务器第一轮投票都会投给自己，因此第一轮的投票是：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server0</span>: <span class="string">(0,0)</span></span><br><span class="line"><span class="attr">server1</span>: <span class="string">(1,0)</span></span><br><span class="line"><span class="attr">server2</span>: <span class="string">(2,0)</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>接收投票：每个服务器都会接收到其它服务器发来的投票：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server0</span>: <span class="string">(0,0)    接收投票:(1,0),(2,0)</span></span><br><span class="line"><span class="attr">server1</span>: <span class="string">(1,0)    接收投票:(0,0),(2,0)</span></span><br><span class="line"><span class="attr">server2</span>: <span class="string">(2,0)    接收投票:(0,0),(1,0)</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>处理投票：将自身的投票和接收到的投票做比较，首先比较zxid，保留zxid最大的投票，如果zxid相同，保留sid最大的投票。因此更新后的投票是：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server0</span>:<span class="string">(2,0)</span></span><br><span class="line"><span class="attr">server1</span>:<span class="string">(2,0)</span></span><br><span class="line"><span class="attr">server2</span>:<span class="string">(2,0)</span></span><br></pre></td></tr></table></figure>
-<p>再将更新的投票重新发出。</p>
-</li>
-<li><p>统计投票：每次投票后，都会统计每个服务器获得票数，如果有过半的机器都投了相同的内容，表示已经达成了共识，这里所有机器都投出了(2,0)，因此选择sid位2的服务器位leader。</p>
-</li>
-<li><p>改变服务器状态：确定leader之后，服务器就会改变自己的状态，follower状态变为FOLLOWING，leader状态变为LEADING。</p>
-</li>
-</ol>
-<h3 id="运行期间选举"><a href="#运行期间选举" class="headerlink" title="运行期间选举"></a>运行期间选举</h3><p>运行期间的选举也是类似的，就是选出zxid最新的服务器（zxid相同则选择sid最大的）。</p>
-<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhths0hh8j30dx07tdh7.jpg" alt="image-20200404163157999"></p>
-<ul>
-<li>Server1和Server2都宕机了，只有Server3、Server4和Server5参与选举。</li>
-<li>由于Server3具有最新的zxid，因此最终选它为主。</li>
+<h2 id="节点特性"><a href="#节点特性" class="headerlink" title="节点特性"></a>节点特性</h2><ul>
+<li>PERSISTENT(持久节点)：持久节点创建后就一直存在，除非通过client主动删除。并不会随着会话的过期而被删除。</li>
+<li>EPHEMERAL（临时节点）：临时节点的生命周期和会话是绑定的，如果会话结束，这个会话上创建的所有临时节点都会被zookeeper删除。当然，也可以通过client主动删除。因为临时的znode在其创建者的会话过期时被删除，所以不允许临时节点拥有子节点。</li>
+<li>顺序节点：每次创建这类节点时，在client给定的节点名称node之后，zk会添加一个全局唯一递增的编号（10位），与node一起组成实际的节点名称，编号的范围是整型的最大值(2147483647)。持久节点、临时节点都可以和顺序节点组合，就有了持久顺序节点和临时顺序节点。</li>
 </ul>
-<h2 id="基本特性"><a href="#基本特性" class="headerlink" title="基本特性"></a>基本特性</h2><p>为了避免在崩溃恢复模式中，数据出现不一致性，ZAB协议必须具备两个特性：</p>
-<ol>
-<li>保证已在leader上「提交」的事务，最终会在所有服务器上完成提交。–这种场景，应该会向客户端返回操作成功的消息。</li>
-<li>丢弃只在leader上提出的事务Proposal。—-这种场景下，应该会向客户端返回操作失败的消息。</li>
-</ol>
-<p>通过一个例子说明这两个特性。</p>
-<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhuisny7vj30fc09s417.jpg" alt="image-20200404170732321"></p>
-<p>P1表示Proposal1，C1表示Commit 1，即提交P1的消息。A是原leader，并且提交了C2之后就宕机了，怎么保证P2最终会在所有机器上完成提交呢？</p>
-<ol>
-<li>A宕机之后，集群进入崩溃恢复模式，选举具备最新zxid的服务器，这个最新的zxid就是服务器「最近处理过」的Proposal，B机具有最新的zxid —&gt;P3，因此选择B机为准leader。</li>
-<li>B机检查自身没有Commit的消息，只有P3，进一步检查集群中是否有过半的服务器上包含P3（包含就表示在旧leader上提交了这个Proposal），结果是只有B机上有P3，因此B会丢弃P3。这就是「丢弃只在leader上提出的事务Proposal」特性。</li>
-<li>选举完成后，follower会向leader发送最新的zxid，leader根据各folower的zxid，发送相应的同步数据。<img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdhutbf2uhj30fa09uacr.jpg" alt="image-20200404171738960"></li>
-</ol>
-<p>可以看到，向所有follower都发送了C2消息，而C2正是旧主A上提交的数据，这就是「保证leader上提交的事务最终在所有服务器上提交」。</p>
-<h2 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h2><p>数据同步其实在「基本特征」中已经讲过了，这里简单说下细节。数据同步的过程其实就是leader将那些没有在folower上提交的事务同步给follower。</p>
-<p>Leader中有一个提议缓存队列committedLog，会保存最近一段时间内执行的事务请求议案，个数默认限制为500个议案。根据这个队列可以计算出两个值：</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmoxh2bolj30jh051aar.jpg" alt="image-20200408214153052"></p>
+<p>顺序节点的编号在每一层都是从1开始的，在这层的内部的任意顺序节点共享这个唯一递增的编号，例如/app1下的顺序节点/app1/t0000000001，然后/app1/p0000000002。</p>
+<h2 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h2><p>每个znode都有一个版本号（stat结构中的dataVersion），表示znode被修改的次数，会随着每次修改而递增。当有多个client对同一个znode做修改操作时，可以通过版本号达到“CAS”的效果。例如，在读取节点node值时获得Stat中的lastVersion，然后进入业务处理，处理完成准备更新node节点值时，获得此时的版本号currentVersion，如果与lastVersion相同，表示期间没有其它client更新node值。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmp87znjyj30l909eq73.jpg" alt="image-20200408215212529"></p>
+<h2 id="watcher"><a href="#watcher" class="headerlink" title="watcher"></a>watcher</h2><p><strong>Watcher</strong>（事件监听器）是 Zookeeper 提供的一种 发布/订阅的机制。Zookeeper 允许用户在指定节点上注册一些 Watcher，并且在一些特定事件触发的时候，Zookeeper 服务端会将事件通知给订阅的客户端。该机制是 Zookeeper 实现分布式协调的重要特性。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpbgsn2tj30ht0bgada.jpg" alt="image-20200408215518468"></p>
+<p>其实，注册的监听器是存在一个HashMap里的，key是znode的路径，value是Watcher集合。</p>
+<h2 id="ACL"><a href="#ACL" class="headerlink" title="ACL"></a>ACL</h2><p>Zookeeper 采用 ACL（Access Control Lists）策略来进行权限控制，其定义了如下五种权限：</p>
 <ul>
-<li>minCommittedLog：Leader服务器提议缓存队列committedLog中的最小ZXID。</li>
-<li>maxCommittedLog：Leader服务器提议缓存队列committedLog中的最大ZXID。</li>
+<li>CREATE：创建子节点的权限。</li>
+<li>READ：获取节点数据和子节点列表的权限。</li>
+<li>WRITE：更新节点数据的权限。</li>
+<li>DELETE：删除子节点的权限。</li>
+<li>ADMIN：设置节点ACL的权限。</li>
 </ul>
-<p>同步开始时，每个folower会发送本机的最新zxid，即peerLastZxid，leader根据peerLastZxid、minCommittedLog和maxCommittedLog三者之间的大小关系，决定同步那哪些数据给各个follower，也就是采用哪种同步类型。</p>
+<h1 id="为什么选择Zookeeper"><a href="#为什么选择Zookeeper" class="headerlink" title="为什么选择Zookeeper"></a>为什么选择Zookeeper</h1><ol>
+<li>从性能、易用性和稳定性来讲，zookeeper已经达到了工业级标准。</li>
+<li>众多大数据组件都使用了zk作为分布式协调服务，例如Hadoop、HBase、Hive、Spark、Kafka等，zk已经经受了大规模应用的考验。</li>
+<li>zk是开源的，可以免费使用，并且社区活跃，可以和众多开发者一起交流使用经验，共同解决问题。</li>
+</ol>
+<h1 id="ZAB协议"><a href="#ZAB协议" class="headerlink" title="ZAB协议"></a>ZAB协议</h1><p>Zookeeper使用ZAB协议实现集群的数据一致性，更多细节见：<a href="http://go4ward.top/2019/09/01/ZAB协议/" target="_blank" rel="noopener">http://go4ward.top/2019/09/01/ZAB%E5%8D%8F%E8%AE%AE/</a></p>
+<h1 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h1><h2 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h2><p>即所谓的配置中心，zk允许多个客户端同时订阅某个节点的变更，并在变更时执行预定义的回调函数。利用这个特性，可以实现配置的集中化管理和动态更新。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdmpxppxx5j30e908lq3d.jpg" alt="image-20200408221641913"></p>
+<p>client启动后注册对节点/Configuration的监听，一旦配置信息发生变动，client就会收到server端的通知，随后调用相应的回调函数就可以实现动态更新应用的配置。</p>
+<h2 id="命名服务"><a href="#命名服务" class="headerlink" title="命名服务"></a>命名服务</h2><p>在分布式系统中存在这种场景：client根据服务名称获得服务器的地址或者其他信息，这就要求服务名称「唯一」，这种场景称为命名服务。作为分布式协调系统，Zookeeper也提供了命名服务。命名服务中可能存在以下两个问题：</p>
+<ol>
+<li>在同一套分布式系统中，可能存在相同的服务名称。</li>
+<li>同一个服务，可能会部署多个实例。</li>
+</ol>
+<p>第一个名称重复的问题，可以通过zk的命名空间解决，第二个名称重复问题，可以通过顺序节点解决。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdntzl7mltj30ji08udh7.jpg" alt="image-20200409212226495"></p>
+<p>例如架构部和商业部都有名称为「metric」的服务，通过创建/infrastructure<code>和</code>/business两个命名空间解决部门间名称重复的问题。而商业部内部，metric服务又需要部署多个实例，通过顺序节点解决部门内部名称重复的问题。</p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>通过Zookeeper可以实现集群中服务的负载均衡。集群中各服务启动时，向zk注册临时节点，节点值中包含ip、端口等信息。client启动后，获得这些临时节点，根据一定的负载均衡算法，选择连接哪台服务器。常见的负载均衡算法有：</p>
+<ol>
+<li>随机算法：把新的连接请求，随机分配到N个服务器中的一个。</li>
+<li>轮询算法：把新的连接请求，依次分配到第1个、第2个、直至第N个服务器上（可以循环分配）。</li>
+<li>最少连接算法。把新的连接请求，分配到当前连接数最少（负载最小）的服务器上。</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnu8z2se1j30dz08egls.jpg" alt="image-20200409213129012"></p>
+<h2 id="生成分布式唯一ID"><a href="#生成分布式唯一ID" class="headerlink" title="生成分布式唯一ID"></a>生成分布式唯一ID</h2><p>利用zk顺序节点的特性，每次调用create方法创建顺序节点时，zk会在路径名称后追加一个10位的全局（当前层）递增的整数值，create方法会返回创建的节点名称，解析节点名称就能获得分布式唯一ID。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnuelse2vj30et09gdg0.jpg" alt="image-20200409213655055"></p>
+<h2 id="master选举"><a href="#master选举" class="headerlink" title="master选举"></a>master选举</h2><p>采用master/slave架构的分布式系统中，master角色具有一些特殊的功能，例如只能通过master写入数据，或者完成一些管理功能。利用zk不能「创建重复节点」的特性，可以实现master的选举。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gdy4b5deonj30en07bglw.jpg" alt="image-2020040913942132"></p>
 <ul>
-<li>差异化同步(DIFF同步)：minCommittedLog<code>&lt;=</code>peerListZxid<code>&lt;=</code>maxCommittedLog</li>
-<li>回滚同步(TRUNC同步)：当peerLastZxid比Leader中maxCommittedLog大时，Leader会要求Learner回滚到ZXID值为maxCommittedLog对应的事务操作。</li>
-<li>先回滚再差异化同步(TRUNC + DIFF同步)：当Leader服务器发现某个Learner「包含一条」自己没有的事务记录，就需要让该Learner进行事务回滚，回滚到Leader服务器上存在的，最接近peerLastZxid的ZXID，然后在进行差异化同步。</li>
-<li>全量同步(SNAP同步)：当peerLastZxid小于minCommittedLog时，或者Leader服务器上没有提议缓存队列时，无法直接使用提议缓存队列和Learner进行数据同步，只能进行全量同步，本机上的全量内存数据都发送给Learner。</li>
+<li>多个client启动时，都会尝试创建/master临时节点，由于zk不能重复创建节点的特性，所以，最终只有一个client会创建成功，其它client会创建失败。</li>
+<li>创建失败的client，添加/master节点的监听，一旦/master被删除（客户端A崩溃），这些clinet会重新竞争，创建/master节点。</li>
 </ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1)<a href="http://www.jasongj.com/zookeeper/fastleaderelection/" target="_blank" rel="noopener">http://www.jasongj.com/zookeeper/fastleaderelection/</a></p>
+<h2 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h2><p>通过zk实现分布式锁有两种方法：临时节点和临时顺序节点。</p>
+<h3 id="临时节点实现"><a href="#临时节点实现" class="headerlink" title="临时节点实现"></a>临时节点实现</h3><ul>
+<li>利用zk不能重复创建相同节点的特性，所有client尝试在/exclusive_lock下创建lock临时节点，创建成功的client就获取到了锁，执行过业务处理后，删除lock节点，表示释放锁。</li>
+<li>其它client创建对lock节点的监听器，一旦监听到lock节点被删除，表示锁已释放，重新竞争锁。</li>
+<li>释放锁的场景有两个：client主动删除lock节点和client宕机。</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnv2mv82tj30g30ermy4.jpg" alt="image-20200409215959739"></p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>如果竞争锁的client数量巨大，每次释放锁之后，就会触发大量的watcher线程被调用，造成集群的不稳定性，这种现象称为“羊群效应”，</p>
+<h2 id="临时顺序节点"><a href="#临时顺序节点" class="headerlink" title="临时顺序节点"></a>临时顺序节点</h2><ul>
+<li>所有client在/lockPath下创建临时顺序节点，并且获得/lockPath下的所有子节点，如果创建的节点就是/lockPath下序号最小的，那么client就获得了锁。序号最小的client就获取到了锁，执行过业务处理后，删除创建的临时节点，表示释放锁。</li>
+<li>未获取到锁的client，也是要读取/lockPath下的所有子节点，根据编号，添加对「相邻」节点的变更监听。当相邻的节点被删除时，表示这个client就获取到了锁。</li>
+<li>释放锁的场景有两个：client主动删除lock节点和client宕机。每次释放锁只会触发一个watcher线程。</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvb6fzaqj30b108yq3x.jpg" alt="image-20200409220813039"></p>
+<h2 id="分布式队列"><a href="#分布式队列" class="headerlink" title="分布式队列"></a>分布式队列</h2><p>利用顺序节点编号的递增性，可以实现分布式队列。创建/queue作为一个队列，然后在其下创建msg顺序节点，由于顺序节点的递增性，生产者先创建的顺序节点编号比后来的生产者创建的要小，消费者只需要监听/queue下子节点的变动，每次取最小的节点，读取其保存的消息，处理完成后，删除这个节点即可。</p>
+<p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdnvmfzvtpj30er092mxb.jpg" alt="image-20200409221902436"></p>
 
       
 
@@ -372,18 +373,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/10/02/Zookeeper架构与原理/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Zookeeper架构与原理
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/08/10/Kafka架构与设计/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Kakfa架构与设计</div>
+    <a href="/2019/11/16/ZAB协议/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ZAB协议</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -410,7 +402,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ZAB协议介绍"><span class="toc-number">1.</span> <span class="toc-text">ZAB协议介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#消息广播"><span class="toc-number">2.</span> <span class="toc-text">消息广播</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2PC"><span class="toc-number">2.1.</span> <span class="toc-text">2PC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#提交请求阶段"><span class="toc-number">2.1.1.</span> <span class="toc-text">提交请求阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#提交执行阶段"><span class="toc-number">2.1.2.</span> <span class="toc-text">提交执行阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3PC"><span class="toc-number">2.2.</span> <span class="toc-text">3PC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原子广播"><span class="toc-number">2.3.</span> <span class="toc-text">原子广播</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#崩溃恢复"><span class="toc-number">3.</span> <span class="toc-text">崩溃恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Leader选举"><span class="toc-number">3.1.</span> <span class="toc-text">Leader选举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初次选举"><span class="toc-number">3.1.1.</span> <span class="toc-text">初次选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行期间选举"><span class="toc-number">3.1.2.</span> <span class="toc-text">运行期间选举</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本特性"><span class="toc-number">3.2.</span> <span class="toc-text">基本特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据同步"><span class="toc-number">3.3.</span> <span class="toc-text">数据同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.4.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#从何而来"><span class="toc-number">1.</span> <span class="toc-text">从何而来</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">2.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#角色"><span class="toc-number">2.1.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#会话"><span class="toc-number">2.2.</span> <span class="toc-text">会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">2.3.</span> <span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#节点特性"><span class="toc-number">2.4.</span> <span class="toc-text">节点特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#版本"><span class="toc-number">2.5.</span> <span class="toc-text">版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#watcher"><span class="toc-number">2.6.</span> <span class="toc-text">watcher</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ACL"><span class="toc-number">2.7.</span> <span class="toc-text">ACL</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#为什么选择Zookeeper"><span class="toc-number">3.</span> <span class="toc-text">为什么选择Zookeeper</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ZAB协议"><span class="toc-number">4.</span> <span class="toc-text">ZAB协议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#典型应用"><span class="toc-number">5.</span> <span class="toc-text">典型应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#发布订阅"><span class="toc-number">5.1.</span> <span class="toc-text">发布订阅</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命名服务"><span class="toc-number">5.2.</span> <span class="toc-text">命名服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">5.3.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生成分布式唯一ID"><span class="toc-number">5.4.</span> <span class="toc-text">生成分布式唯一ID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#master选举"><span class="toc-number">5.5.</span> <span class="toc-text">master选举</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式锁"><span class="toc-number">5.6.</span> <span class="toc-text">分布式锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#临时节点实现"><span class="toc-number">5.6.1.</span> <span class="toc-text">临时节点实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缺点"><span class="toc-number">5.6.1.1.</span> <span class="toc-text">缺点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#临时顺序节点"><span class="toc-number">5.7.</span> <span class="toc-text">临时顺序节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式队列"><span class="toc-number">5.8.</span> <span class="toc-text">分布式队列</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
