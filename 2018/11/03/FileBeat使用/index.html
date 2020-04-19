@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gc7qgl3y65j30qr0kjwgq.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gc7rtgcdyxj308y06ldh7.jpg">
-<meta property="og:updated_time" content="2020-02-26T12:15:56.670Z">
+<meta property="og:updated_time" content="2020-04-19T11:47:16.486Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="FileBeat使用">
 <meta name="twitter:description" content="FileBeat概述Filebeat是一个基于Go语言开发的轻量级日志采集器，监听特定的目录或日志文件，并tail其内容变动，将其「原样」转发到es、logstash、kafka等。Filebeat相对Logstash更加轻量，因此适合部署到生产环境的服务器上，但是功能也更加简单，比如没有提供Logstash的正则功能。">
@@ -164,9 +164,9 @@
       
         <h2 id="FileBeat"><a href="#FileBeat" class="headerlink" title="FileBeat"></a>FileBeat</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Filebeat是一个基于Go语言开发的轻量级日志采集器，监听特定的目录或日志文件，并tail其内容变动，将其「原样」转发到es、logstash、kafka等。Filebeat相对Logstash更加轻量，因此适合部署到生产环境的服务器上，但是功能也更加简单，比如没有提供Logstash的正则功能。<a id="more"></a></p>
 <h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p><img src="https://tva1.sinaimg.cn/large/0082zybpgy1gc7qgl3y65j30qr0kjwgq.jpg" alt="img"></p>
-<p>FB（FileBeat）主要有两个组件组成：采集器（prospector）和收集器（harvester）。</p>
+<p>FB（FileBeat）主要由两个组件组成：采集器（prospector）和收集器（harvester）。</p>
 <h5 id="收集器"><a href="#收集器" class="headerlink" title="收集器"></a>收集器</h5><p>每个文件都会对应一个收集器，这个收集器监听日志的内容变动，将数据「原样」发送到定义的「output」中。</p>
-<h5 id="采集器"><a href="#采集器" class="headerlink" title="采集器"></a>采集器</h5><p>采集器负责查找读取源，并未每个日志文件分配一个采集器。一个例子：</p>
+<h5 id="采集器"><a href="#采集器" class="headerlink" title="采集器"></a>采集器</h5><p>采集器负责查找读取源，并为每个日志文件分配一个采集器。一个例子：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filebeat.prospectors:</span></span><br><span class="line"><span class="comment"># 采集系统日志</span></span><br><span class="line"><span class="attr">- input_type:</span> <span class="string">log</span></span><br><span class="line"><span class="attr">  paths:</span> <span class="string">/var/log/messages</span></span><br><span class="line"><span class="attr">  paths:</span> <span class="string">/var/log/*.log</span></span><br><span class="line">  <span class="comment"># 指定注册表文件，用于记录上次读取的位置，默认位于filebeat下的data目录</span></span><br><span class="line"><span class="attr">  registry_file:</span> <span class="string">/data/filebeat/data/registry</span></span><br></pre></td></tr></table></figure>
 <p>fb会将每个文件的状态保存在注册表文件中，例如上次读取文件的偏移量。当fb重启时，通过读取注册表文件就可以重建监听文件的状态，收集器就可以接着上次的采集位置继续读取数据。</p>
 <p>fb保证变动的数据至少一次传输到「output」中，这种保证正是基于通过注册表记录文件状态的机制。</p>

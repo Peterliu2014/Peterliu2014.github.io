@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Logstash使用 | lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概述Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
+  <meta name="description" content="概述Logstash是基于JRuby开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
 <meta name="keywords" content="ELK">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Logstash使用">
 <meta property="og:url" content="http://yoursite.com/2018/11/11/Logstash使用/index.html">
 <meta property="og:site_name" content="lz">
-<meta property="og:description" content="概述Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
+<meta property="og:description" content="概述Logstash是基于JRuby开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gca32lhjk8j30dv0b8402.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gca3h7s7idj30f30fxjtl.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gca42tsmc2j30ep0c6ta9.jpg">
-<meta property="og:updated_time" content="2020-02-26T13:41:18.505Z">
+<meta property="og:updated_time" content="2020-04-19T11:54:33.929Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Logstash使用">
-<meta name="twitter:description" content="概述Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
+<meta name="twitter:description" content="概述Logstash是基于JRuby开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。">
 <meta name="twitter:image" content="https://tva1.sinaimg.cn/large/0082zybpgy1gca32lhjk8j30dv0b8402.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
@@ -163,8 +163,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Logstash是基于Java开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。<a id="more"></a></p>
-<p>Logstash作为一个数据管道，对数据的处理分为3个阶段：采集（输入）、转换（过滤，非必须）和输出。与FileBeat相比，提供了强大的过滤功能。例如可以使用grok从数据中提取出关心的字段（比如从格式化的日志中提取出时间）。</p>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Logstash是基于JRuby开发的开源的服务器端数据处理管道，能够同时从多个来源（kafka）采集数据、转换数据，然后将数据发送到存储库中（例如es、数据库）。<a id="more"></a></p>
+<p>Logstash作为一个数据管道，对数据的处理分为3个阶段：输入、转换（过滤，非必须）和输出。与FileBeat相比，提供了强大的过滤功能。例如可以使用grok从数据中提取出关心的字段（比如从格式化的日志中提取出时间）。</p>
 <h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><p>采集（在配置文件中配置input来定义）各种格式、大小和来源的数据。通过配置多个input，Logstash可以在同一时间从众多数据源捕捉事件，进而能够以连续的流式传输方式从数据源中采集数据。</p>
 <p><img src="https://tva1.sinaimg.cn/large/0082zybpgy1gca32lhjk8j30dv0b8402.jpg" alt="image-20200226203826967"></p>
 <p>一个配置从kakfa中采集（input）数据的例子：</p>
@@ -191,7 +191,7 @@
 <h4 id="Grok"><a href="#Grok" class="headerlink" title="Grok"></a>Grok</h4><p>grok是一个十分强大的过滤插件，可以通过正则解析任意文本，将非结构化的日志数据转换为结构化和方便查询的结构。也是目前Logstash中解析非结构化日志数据最好的方式。</p>
 <p>语法规则是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%&#123;语法:语义&#125;</span><br></pre></td></tr></table></figure>
-<p>“语法”指的是匹配的模式。例如使用NUMBER可以匹配出数字，DTAE模式可以匹配出日期。“语义”则是为匹配到的文本提供的标识符，简单来说就是将匹配到的文本复制给这个标识符。举个例子：</p>
+<p>“语法”指的是匹配的模式。例如使用NUMBER可以匹配出数字，DATE模式可以匹配出日期。“语义”则是为匹配到的文本提供的标识符，简单来说就是将匹配到的文本复制给这个标识符。举个例子：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2018-11-11 18:18:18.222 INFO com.zz.gdb.XXXX - start calculate</span><br></pre></td></tr></table></figure>
 <p>filter的配置：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">filter&#123;</span></span><br><span class="line">	<span class="string">grok&#123;</span></span><br><span class="line">		<span class="string">match</span> <span class="string">=&gt;</span> <span class="string">&#123;</span></span><br><span class="line">			<span class="string">"message"</span><span class="string">=&gt;</span> <span class="string">"<span class="template-variable">%&#123;DATE:log_date&#125;</span> <span class="template-variable">%&#123;TIME:log_localtime&#125;</span> <span class="template-variable">%&#123;WORD:log_type&#125;</span> <span class="template-variable">%&#123;JAVAFILE:log_file&#125;</span> - <span class="template-variable">%&#123;GREEDYDATA:log_content&#125;</span>"</span></span><br><span class="line">		<span class="string">&#125;</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
@@ -231,7 +231,7 @@
 <p>更多配置参考：<a href="https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html</a></p>
 <h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>下载Logstash 6.4.2版本包并解压，接下来就是创建定义input、filter和output的配置文件。我们可以单独在一个文件中完成这些定义，如果数据源和输出目的端比较多的话，这个文件会很大，不易管理。</p>
 <p>所以，Logstash还支持直接读取目录的方式，即把所有配置文件统一存放在这个目录下，针对不同的数据源（例如kafak的一个topic）单独定义一个配置文件（包含input和output），然后定义一个负责整个系统过滤的配置文件（例如filter.conf）。举个例子，在Logstash根目录下创建一个customer-configs文件夹，然后包含以下这些配置文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">topic1.conf</span><br><span class="line">topic2.conf</span><br><span class="line">filter.cof</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">topic1.conf</span><br><span class="line">topic2.conf</span><br><span class="line">filter.conf</span><br></pre></td></tr></table></figure>
 <h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ./logstash -f ./customer-configs --config.reload.automatic &amp;</span><br></pre></td></tr></table></figure>
 <p>解释下启动的参数：</p>
 <ul>
@@ -240,7 +240,7 @@
 </ul>
 <p>还有个很有用的参数：</p>
 <ul>
-<li><p>-t:这是个检查配置文件是否正确的参数。检查配置语法是否正确并退出。使用方式：</p>
+<li><p>-t(–config.test_and_exit):这是个检查配置文件是否正确的参数。检查配置语法是否正确并退出。使用方式：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash -f my.conf --config.test_and_exit</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
