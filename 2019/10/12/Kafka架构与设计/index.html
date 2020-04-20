@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdarfsvnv2j30ns071tag.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdarq5xwvkj30lr062q3x.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdaruqe1zlj30m50a5q65.jpg">
-<meta property="og:updated_time" content="2020-04-19T14:03:50.545Z">
+<meta property="og:updated_time" content="2020-04-20T14:08:38.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kakfa架构与设计">
 <meta name="twitter:description" content="Kafka是一个分布式的，基于发布-订阅模式的消息队列。发布-订阅系统中一般会有一个存储中间消息的broker，消息的发送者不会直接把消息发送给接收者，而是写入broker，消息的接收者则从broker订阅特定类型的消息。">
@@ -188,7 +188,7 @@
 </ul>
 <h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h2 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h2><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gd9umxiluhj311t0hnwi6.jpg" alt="image-20200328190659206"></p>
 <ol>
-<li>消费者负责生产消息，将消息发送到Kafka集群中。</li>
+<li>生产者负责生产消息，将消息发送到Kafka集群中。</li>
 <li>Kafka集群由若干broker组成，每个borker上存储了主题各分区的数据，分区按照角色又可以分为主分区和副分区，只有主分区才可以提供读/写消息的服务。</li>
 <li>多个消费者组成一个消费者组，消费者组内每个消费者可以消费多个分区的数据，但是一个分区只能被群组内的一个消费者来消费。消费者组的引入，增加了消费者消费能力的横向扩展。</li>
 </ol>
@@ -219,7 +219,7 @@
 <p>Producer 支持批量操作，消息攒够一定数量或者一段时间后再发送，使用适当的延迟换来更高的数据吞吐量。</p>
 <h3 id="consumer"><a href="#consumer" class="headerlink" title="consumer"></a>consumer</h3><p>消费者负责从主题中消费消息，根据偏移量从分区中读取具体的消息。一个消费者可以消费多个分区的数据，但是一个分区只能被一个消费者（一个消费者组内）消费。</p>
 <h3 id="consumer-group"><a href="#consumer-group" class="headerlink" title="consumer group"></a>consumer group</h3><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gd9u6f6f2ij30ey0bcq4x.jpg" alt="image-20200328185107599"></p>
-<p>虽然一个消费者可以处理多个分区的数据，如果主题中包含大量分区，每个分区中包含大量数据，那么这个消费者可能导致消息的处理延迟，称为性能瓶颈。因此Kafka引入了消费者组的概念，属于同一个群组内的消费者「共同」消费某个主题，同时保证一个分区只会被群组内的一个消费者消费，多多出的消费者不会消费消息（例如2个分区，3个消费者，只会有2个消费者在工作）。引入消费者组有这么几个好处：</p>
+<p>虽然一个消费者可以处理多个分区的数据，如果主题中包含大量分区，每个分区中包含大量数据，那么这个消费者可能导致消息的处理延迟，成为性能瓶颈。因此Kafka引入了消费者组的概念，属于同一个群组内的消费者「共同」消费某个主题，同时保证一个分区只会被群组内的一个消费者消费，多多出的消费者不会消费消息（例如2个分区，3个消费者，只会有2个消费者在工作）。引入消费者组有这么几个好处：</p>
 <ol>
 <li>多个消费者并发处理分区的消息，提升消息的处理性能，实现了消费能力的横向扩展。</li>
 <li>某个消费者崩溃后，自动将其原先负责的分区重新分配给其它消费者，保证了消费者的高可用性，称为分区再平衡。</li>
@@ -279,7 +279,7 @@
 </li>
 </ul>
 <h3 id="批量发送"><a href="#批量发送" class="headerlink" title="批量发送"></a>批量发送</h3><p>从Kafka 0.8.2开始，合并了生产者的异步发送和同步发送接口，统一通过send方法发送消息（返回的是一个future对象，可以通过调用get方法实现同步发送）。生产者发送的消息并不是直接通过网络发送出去，而是先存储到内部的缓存区中，消息数量达到一定数目（batch.size，默认是16384）或者延迟一段时间（linger.ms，默认是0ms，即没有延迟，直接发送）之后，才把消息批量发送出去，从而实现批量发送。</p>
-<h3 id="压缩消息"><a href="#压缩消息" class="headerlink" title="压缩消息"></a>压缩消息</h3><p>Kafka从0.7开始，支持生产者将数据压缩（只支持GZIP和Snappy)）后再传输给broker。不仅可以可以将每条消息单独压缩再传输，还支持在批量发送时，将整个Batch的消息一起压缩后传输。</p>
+<h3 id="压缩消息"><a href="#压缩消息" class="headerlink" title="压缩消息"></a>压缩消息</h3><p>Kafka从0.7开始，支持生产者将数据压缩（只支持GZIP和Snappy)）后再传输给broker。不仅可以将每条消息单独压缩再传输，还支持在批量发送时，将整个Batch的消息一起压缩后传输。</p>
 <p>压缩后的消息传输给broker之后，broker不加解压，直接持久化到磁盘，消费者消费消息后，再解压这些消息。这种压缩方式提升了3个流程的性能。</p>
 <ol>
 <li>生产者到broker的传输性能。</li>
