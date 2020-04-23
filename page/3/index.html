@@ -769,7 +769,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <a id="more"></a>
-<h2 id="Hadoop的限制"><a href="#Hadoop的限制" class="headerlink" title="Hadoop的限制**"></a>Hadoop的限制**</h2><p>Hadoop适合以批处理(批量处理)的方式对大数据集进行存储和处理，对数据集进行处理时，需要顺序遍历整个数据集，即使实际的业务只需要分析其中的部分记录，因此Hadoop具有高延迟的缺点。随着Hadoop的流行，发现其在交互型的业务场景中表现欠佳，这种场景要求低延迟的数据访问模式，因此催生了HBase的出现。HBase是一个基于HDFS的列式分布式数据库，提供了随机访问(实时访问)的数据模式(HDFS是顺序访问模式)，具有低延迟的特点。HBase具有存储大数据集和随机读取的优点。</p>
+<h2 id="Hadoop的限制"><a href="#Hadoop的限制" class="headerlink" title="Hadoop的限制"></a>Hadoop的限制</h2><p>Hadoop适合以批处理(批量处理)的方式对大数据集进行存储和处理，对数据集进行处理时，需要顺序遍历整个数据集，即使实际的业务只需要分析其中的部分记录，因此Hadoop具有高延迟的缺点。随着Hadoop的流行，发现其在交互型的业务场景中表现欠佳，这种场景要求低延迟的数据访问模式，因此催生了HBase的出现。HBase是一个基于HDFS的列式分布式数据库，提供了随机访问(实时访问)的数据模式(HDFS是顺序访问模式)，具有低延迟的特点。HBase具有存储大数据集和随机读取的优点。</p>
 <p>Hadoop是一种高吞吐量的离线系统，HBase是一种低延迟的在线系统。</p>
 <h2 id="HBase是什么"><a href="#HBase是什么" class="headerlink" title="HBase是什么"></a><strong>HBase是什么</strong></h2><p>HBase是一个高容错的、横向扩展的、面向列的、稀疏的、键值对形式的分布式数据库，适合存储半结构化和非结构化的数据。</p>
 <h3 id="高容错"><a href="#高容错" class="headerlink" title="高容错"></a>高容错</h3><p>HBase构建于HDFS之上，借助于HDFS的冗余存储机制具有高容错的性质。</p>
