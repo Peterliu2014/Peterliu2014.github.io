@@ -16,18 +16,18 @@
 <meta property="og:site_name" content="lz">
 <meta property="og:description" content="多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/time.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/atomic.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/cpu-mem.jpeg">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/visiable.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/reorder.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/jmm.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/java-memory-model-5.png">
-<meta property="og:updated_time" content="2019-11-04T13:53:06.078Z">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge409q1ob9j308s04k3z6.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40ah274qj30f40db0ts.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40b5mgswj30d00bfn0f.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40bqxwzuj30ae0bn3z2.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40cem9grj30h20dtmz2.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40g34xpsj30cj0c6jsb.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40gl6zepj30mk0aitap.jpg">
+<meta property="og:updated_time" content="2020-04-23T13:16:10.807Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程安全和JMM">
 <meta name="twitter:description" content="多个线程访问「共享变量」（竟态条件）的场景引出了线程安全问题，具体是：原子性、可见性和顺序性。">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/time.png">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge409q1ob9j308s04k3z6.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -171,7 +171,7 @@
 <h1 id="并发问题"><a href="#并发问题" class="headerlink" title="并发问题"></a>并发问题</h1><h2 id="原子性问题由来"><a href="#原子性问题由来" class="headerlink" title="原子性问题由来"></a>原子性问题由来</h2><p>首先解释什么是原子操作：原子操作一旦开始运行，就不应该被打断，直到其运行结束（成功/失败）。</p>
 <p>早期的操作系统是单道程序处理系统，每次将一个程序载入内存，这个程序执行完成之后再将其它程序装入内存，每次装入一个程序。这种单道程序系统的缺点在于：当程序有IO操作时，CPU、内存都要停下来等到IO操作完成之后，才能继续运行。这就造成了CPU、内存资源的浪费，系统吞吐量也不高。</p>
 <p>为了解决这种单个程序独占硬件资源的情况，提高系统的吞吐量，发展了多道程序处理系统和分时系统，引入了多进程/线程交替执行的方式，每次被调度执行时只能运行「一个时间片」，如果没有完成，则需要等待下次被调度。</p>
-<p><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/time.png" alt="Aaron Swartz"><br>也就是说一个线程在执行时可能在任意位置被打断，这种基于时间片的交替执行的调度方法导致了并发的原子性问题。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge409q1ob9j308s04k3z6.jpg" alt="image-20200423210854044"><br>也就是说一个线程在执行时可能在任意位置被打断，这种基于时间片的交替执行的调度方法导致了并发的原子性问题。</p>
 <h2 id="原子性问题实例"><a href="#原子性问题实例" class="headerlink" title="原子性问题实例"></a>原子性问题实例</h2><p>以自增操作来说明并发时的原子性问题。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AtomicTest</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">//counter初始值为0</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> counter;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">increate</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        counter++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>假设线程A和线程B都调用了自增方法，最终counter的结果可能是1（预期是2）。自增操作counter++其实分为3个操作：</p>
 <ul>
@@ -179,15 +179,15 @@
 <li>执行counter+1操作</li>
 <li>将新值写会内存</li>
 </ul>
-<p><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/atomic.png" alt="Aaron Swartz"><br>线程A执行自增运算后时间片用完了，线程B开始执行，当其执行自增完成后，时间片也到了，线程A再次被调度，将counter=1写入内存。最后线程B被调度，将counter=1写入内存，覆盖了A写入的值。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40ah274qj30f40db0ts.jpg" alt="image-20200423210940479"><br>线程A执行自增运算后时间片用完了，线程B开始执行，当其执行自增完成后，时间片也到了，线程A再次被调度，将counter=1写入内存。最后线程B被调度，将counter=1写入内存，覆盖了A写入的值。</p>
 <h2 id="可见性问题由来"><a href="#可见性问题由来" class="headerlink" title="可见性问题由来"></a>可见性问题由来</h2><p>CPU的速度大概比内存快百倍，为了平衡两者之间的速度差距，CPU中增加了高速缓存（L1 Cache，L2 Cache等），cpu读取数据时，先将数据从主存中读取到Cache中，运算的中间结果存储到cache中，最终的计算结果再写回主存中。</p>
-<p><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/cpu-mem.jpeg" alt="Aaron Swartz"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40b5mgswj30d00bfn0f.jpg" alt="image-20200423211020169"></p>
 <h2 id="可见性问题实例"><a href="#可见性问题实例" class="headerlink" title="可见性问题实例"></a>可见性问题实例</h2><p>以计数例子来说明可见性：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VisibleTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">long</span> counter=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> delta=<span class="number">10000</span>;</span><br><span class="line">        Runnable runnable= () -&gt; increate(delta);</span><br><span class="line">        Thread t1=<span class="keyword">new</span> Thread(runnable);</span><br><span class="line">        Thread t2=<span class="keyword">new</span> Thread(runnable);</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t1.join();</span><br><span class="line">        t2.join();</span><br><span class="line">        System.out.println(<span class="string">"counter:"</span>+counter);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">increate</span><span class="params">(<span class="keyword">long</span> delta)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;delta ; i++) &#123;</span><br><span class="line">            counter++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>启动两个线程，每个线程中对共享变量累加10000次，预期结果是20000，但是实际结果却是10000-20000之间的随机值。因为线程在CPU1 Cache中的counter对CPU2中的线程并不可见，也就是说t2「感知不到」线程t1在Cache中对counter的修改，并且在各自将counter值刷写到主存时，还会存在数据彼此「覆盖」的情况。这就是「可见性问题」。</p>
-<p><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/visiable.png" alt="Aaron Swartz"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40bqxwzuj30ae0bn3z2.jpg" alt="image-20200423211054295"></p>
 <h2 id="顺序性问题由来"><a href="#顺序性问题由来" class="headerlink" title="顺序性问题由来"></a>顺序性问题由来</h2><p>为了提升程序的性能，编译器、CPU、内存都会进行指令的重排序，例如这么一段代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> val1,val2;</span><br><span class="line">val1=<span class="number">0</span>;</span><br><span class="line">val2=<span class="number">1</span>;</span><br></pre></td></tr></table></figure></p>
 <p>编译器可能会优化为：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> val1,val2;</span><br><span class="line">val2=<span class="number">1</span>;</span><br><span class="line">val1=<span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
-<p>即调整代码的运行先后顺序。虽然调整了顺序，但是保证不影响程序最终运行结果的正确性，但是这类优化在并发场景中会带来顺序性问题。</p>
+<p>即调整代码的运行先后顺序。虽然调整了顺序，但是保证不影响程序最终运行结果的正确性，但是，这类优化在并发场景中会带来顺序性问题。</p>
 <h2 id="顺序性问题实例"><a href="#顺序性问题实例" class="headerlink" title="顺序性问题实例"></a>顺序性问题实例</h2><p>双重校验锁形式的单例模式<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123; </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;                 </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;          </span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;                       </span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;  </span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) </span><br><span class="line">                    <span class="comment">//new一个对象</span></span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();       </span><br><span class="line">            &#125;    </span><br><span class="line">        &#125;                                           </span><br><span class="line">        <span class="keyword">return</span> instance;                            </span><br><span class="line">    &#125;     </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>当我们new一个Singleton对象时其实包含3个操作：</p>
 <ol>
@@ -202,7 +202,7 @@
 <li>初始化这块内存，为成员变量赋值</li>
 </ol>
 <p>即调整了步骤2和3的顺序。</p>
-<p><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/reorder.png" alt="Aaron Swartz"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40cem9grj30h20dtmz2.jpg" alt="image-20200423211130950"></p>
 <p>假设线程A首先启动，运行到步骤2时让出CPU，此时instance其实没有初始化，线程B判断instance已经不为null，于是直接返回了未初始化的instance，后续如果使用instance访问其成员变量时就会触发空指针异常。</p>
 <h1 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h1><p><strong>线程安全的实现一般有三种方式</strong></p>
 <ol>
@@ -213,12 +213,13 @@
 <li><p>不同步。例如使用ThreadLocal。</p>
 </li>
 </ol>
-<h1 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h1><p>并发模型中线程间通信有两种方式：共享内存模型和消息传递模型。Java中的并发模型采用共享内存的方式，JMM（Java Memory Model，java内存模型）对内存架构进行了抽象，如下：<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/jmm.png" alt="Aaron Swartz"></p>
+<h1 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h1><p>并发模型中线程间通信有两种方式：共享内存模型和消息传递模型。Java中的并发模型采用共享内存的方式，JMM（Java Memory Model，java内存模型）对内存架构进行了抽象，如下：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40g34xpsj30cj0c6jsb.jpg" alt="image-20200423211503065"></p>
+<p>主存中存放共享变量，包括对象实例、静态字段、数组对象、常量、类信息等。工作内存中存放共享变量的副本，以及方法中的本地变量。</p>
 <ul>
-<li>主存中存放共享变量，包括对象实例、静态字段、数组对象、常量、类信息等。工作内存中存放共享变量的副本，以及方法中的本地变量。</li>
 <li>线程不能直接访问主存，通过JMM将共享变量复制一份到工作内存中，线程操作工作内存，计算结果最终通过JMM写入主存中。每个线程只能访问自己的工作内存。</li>
 </ul>
-<p>这里的工作内存（Thread Stack）和主存（Heap）是一种抽象，具体和硬件的对应关系如下。即均可以是寄存器、高速缓存（Cache）以及RAM。<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/java-memory-model-5.png" alt="Aaron Swartz"></p>
+<p>这里的工作内存（Thread Stack）和主存（Heap）是一种抽象，具体和硬件的对应关系如下。即均可以是寄存器、高速缓存（Cache）以及RAM。<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge40gl6zepj30mk0aitap.jpg" alt="image-20200423211532818"></p>
 <h2 id="并发问题解决方法"><a href="#并发问题解决方法" class="headerlink" title="并发问题解决方法"></a>并发问题解决方法</h2><p>JMM提供了一些解决并发问题的关键字给程序员使用。原子性问题可以使用synchronized解决，顺序性问题可以使用synchronized和volatile，可见性问题可以使用synchronized和volatile。也就是说synchronized关键字可以解决并发三大问题，volatile关键字可以解决顺序性和可见性问题。</p>
 <h2 id="happens-before规则"><a href="#happens-before规则" class="headerlink" title="happens-before规则"></a>happens-before规则</h2><p>除了synchronized和volatile关键字之外，还提供了一些规则用于辅助程序员解决并发问题，使程序更简洁（不必大量使用synchronized和volatile等关键字）。这些规则称为“happens-before”规则，这类规则的含义是：行为A happens-before 行为B，表示A的结果在B中是「可见」的。<br>常用的主要有以下这么几个规则：</p>
 <ul>
@@ -240,7 +241,7 @@
 <li>根据顺序性规则，1 happens-before 2</li>
 <li>根据监视器锁规则，2 happens-before 3</li>
 <li>根据顺序性规则，3 happens-before 4</li>
-<li>最终根据传递性规则，1 happens-before 4，所以i的结果是1</li>
+<li>最终根据传递性规则，1 happens-before 4，所以i的结果是1。</li>
 </ul>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>操作系统、硬件、编译器等技术的发展导致了并发的三大问题：原子性、顺序性和可见性。JMM模型向程序员提供了一些关键字解决这些问题，synchronized关键字可以同时解决这三大问题，volatile关键字是轻量级的synchronize，解决了顺序性和可见性。为了使编码更加简洁，避免大量使用这些关键字，JMM还提供了happens-before规则。</p>
 
