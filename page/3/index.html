@@ -768,45 +768,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
-<h2 id="Hadoop的限制"><a href="#Hadoop的限制" class="headerlink" title="Hadoop的限制"></a>Hadoop的限制</h2><p>Hadoop适合以批处理(批量处理)的方式对大数据集进行存储和处理，对数据集进行处理时，需要顺序遍历整个数据集，即使实际的业务只需要分析其中的部分记录，因此Hadoop具有高延迟的缺点。随着Hadoop的流行，发现其在交互型的业务场景中表现欠佳，这种场景要求低延迟的数据访问模式，因此催生了HBase的出现。HBase是一个基于HDFS的列式分布式数据库，提供了随机访问(实时访问)的数据模式(HDFS是顺序访问模式)，具有低延迟的特点。HBase具有存储大数据集和随机读取的优点。</p>
-<p>Hadoop是一种高吞吐量的离线系统，HBase是一种低延迟的在线系统。</p>
-<h2 id="HBase是什么"><a href="#HBase是什么" class="headerlink" title="HBase是什么"></a><strong>HBase是什么</strong></h2><p>HBase是一个高容错的、横向扩展的、面向列的、稀疏的、键值对形式的分布式数据库，适合存储半结构化和非结构化的数据。</p>
-<h3 id="高容错"><a href="#高容错" class="headerlink" title="高容错"></a>高容错</h3><p>HBase构建于HDFS之上，借助于HDFS的冗余存储机制具有高容错的性质。</p>
-<h3 id="横向扩展-Scale-Out-和纵向扩展-Scale-Up"><a href="#横向扩展-Scale-Out-和纵向扩展-Scale-Up" class="headerlink" title="横向扩展(Scale-Out)和纵向扩展(Scale-Up)"></a>横向扩展(Scale-Out)和纵向扩展(Scale-Up)</h3><p>对比传统关系型数据库和分布式数据来说明两种扩展方式，以Oracle和HBase为例说明当数据集大小超出了机器的存储能力时，两种处理策略。</p>
-<p>Oracle：采用纵向扩展方式，在机器上添加新的存储设备，增加机器存储容量，以完成大数据集的存储。</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge41zjwrnkj30ba08pjss.jpg" alt="image-20200423220816309"></p>
-<p>由于Storage Controller数量有限，因此增加的容量有限。将来就要购买容量更大，存储控制器数量更多的机器。</p>
-<p>HBase：采用横向扩展方式，数据集大小超出了单台机器的存储空间的话，就添加一个新的节点来完成大数据集的存储。</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge42147jzdj30gs09dmyp.jpg" alt="image-20200423220946159"></p>
-<p>理论上来说，这种扩展方式可以任意大小的数据集，只需要不断添加节点就可以了。</p>
-<h3 id="行式数据库和列式数据库"><a href="#行式数据库和列式数据库" class="headerlink" title="行式数据库和列式数据库"></a>行式数据库和列式数据库</h3><h4 id="行式数据库"><a href="#行式数据库" class="headerlink" title="行式数据库"></a>行式数据库</h4><p>传统的关系型数据库就是行式数据库，每行就是一条记录，每个记录包含各个字段值，这种行式数据库用于OLTP(在线事务处理)中，因为事务型类操作主要是插入一条记录到数据库、更新记录中的部分字段和删除一条记录等，在线事务处理系统(OLTP)要求快速地返回响应信息，响应时间是毫秒级，例如银行的转账系统。记录依次顺序存放，记录内部的字段也是依次顺序存放，以下是出行式数据库的存储形式(注意箭头)。</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge423ab4frj30aa08djtt.jpg" alt="image-20200423221151913"></p>
-<p>行式数据库在事务性操作中具有很好的表现，随着企业存储的数据量越来越大，企业有了对历史数据进行分析的需求，分析类操作主要是<em>统计型</em>的，例如统计一段时期内总的营业额(sum)、最大的营业额(max)等，虽然只需要营业额字段数据，但是由于数据是以记录(每条记录对应多个字段值)的形式依次存储的，因此需要遍历这个数据表，只保留营业额字段数据，丢弃其他字段，浪费了宝贵的IO资源，并且速度也较慢。虽然可以添加索引(类似字典前部的字母表)，但是实践表明这种方式只能提高少量查询的速度。</p>
-<h4 id="列式数据库"><a href="#列式数据库" class="headerlink" title="列式数据库"></a>列式数据库</h4><p>与行式数据库的存储方式不同，列式数据库依次存储每一列的值，这种数据库用于OLAP(在线分析处理)中，以下是列式数据库的存储形式(注意箭头)。</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge424cbkvlj30a108u0uy.jpg" alt="image-20200423221252463"></p>
-<p>列式数据库更适合OLAP，因为这种处理中更多的是统计类操作，例如字段的值之和、最大值、最小值等。列式数据库将列依次存储，每列的所有取值连续顺序存储在一起，因此对字段值进行统计分析时就是顺序读取。而行式数据库中，对字段所有取值是“跳着”读(因为记录的各个字段值才是连续存储在一起)，也就是随机读。顺序读取的速度远远快于随机读取，以下以SSD的测试数据为例说明。</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge4250xd8ej30dm0bqdn0.jpg" alt="image-20200423221331782"></p>
-<p>Seq就是顺序读取，4K就是随机读取。</p>
-<h3 id="稀疏性"><a href="#稀疏性" class="headerlink" title="稀疏性"></a>稀疏性</h3><p>关系型数据库中每行的字段数量是固定的，对null的存储浪费了存储空间。而HBase中为null的Column不会被存储，节省了存储空间。这样，从HBase的逻辑视图来看的话，每行只有少数的字段值，这种形式就为稀疏性。</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge425znt2cj30h5055js0.jpg" alt="image-20200423221427355"></p>
-<h3 id="k-v数据库"><a href="#k-v数据库" class="headerlink" title="k/v数据库"></a>k/v数据库</h3><p>HBase的存取利用了key/value的思想(不是SQL)，通过表(Table)、行号(RowKey)、列族(ColumnFamily)、列(Column)、时间戳(目前练习还未使用单元格)来定位表示数据的单元格(Cell)，其中行号、列等就是key，单元格就是value。行号类似传统数据库中的主键，是一次读写的基本单位，一条记录的唯一标识。</p>
-<h3 id="存储半结构化和非结构化的数据"><a href="#存储半结构化和非结构化的数据" class="headerlink" title="存储半结构化和非结构化的数据"></a>存储半结构化和非结构化的数据</h3><p>关系型数据库用于存储结构化的数据，这类数据具有固定的模式，例如具有指定数量的字段，每个字段的类型都是固定的。而半结构化和非结构化的数据具有杂乱无章、没有固定模式的特点，HBase具有动态添加列的特点，可以在不停机维护的条件下完成增量数据的添加(传统关系型数据库需要停机维护)。在HBase中创建表时，只需要定义列族名称(一个表中列族的数量以2-3个为宜，不能更多)，对列的定义只需要在使用的时候动态添加即可。</p>
-<h3 id="逻辑视图"><a href="#逻辑视图" class="headerlink" title="逻辑视图"></a>逻辑视图</h3><p>以二维表格的形式显示了每条记录中的字段值，实际上，HBase的数据访问是以键key(RowKey)的值value(某列对应的单元格)为单位进行的，每次访问一个字段的单元格。举个栗子，其中t1是表名称，first是rowKey，查询结果如下：</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge42aqlovrj30k00333yu.jpg" alt="image-20200423221901197"></p>
-<p>查询结果依照列名称排序，每行显示列对应的单元格值。这种结果不太直观，没有清晰的显示出first对应的所有字段值，因此采用更加直观的逻辑视图形式。以下给出逻辑视图的形式。</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge42bkbnbjj30sx0f2aig.jpg" alt="image-20200423221947123"></p>
-<p>从这个逻辑视图可以看出HBase数据表的稀疏性，Row1等是相应的行键(RowKey)。</p>
-<h3 id="物理视图"><a href="#物理视图" class="headerlink" title="物理视图"></a><strong>物理视图</strong></h3><p>显示了数据的实际存储形式，每个列族的字段数据分别存储在对应的HFile中，在HFile内部以RowKey:Column Family:Column:Value的形式存储数据，因此使用put查询的结果是列族、列、单元格值的形式。</p>
-<h2 id="基本元素"><a href="#基本元素" class="headerlink" title="基本元素"></a>基本元素</h2><p>HBase的基本元素有：数据表、行键、列族、列、时间戳和单元格</p>
-<ol>
-<li>行键(RowKey):一条记录的唯一标识，类似于传统数据库中的主键(Row key按字典序排序如1,10,100,11,2)。类型是二进制值(byte[])</li>
-<li>列族(Column Family)：列的集合，是数据存储的基本单元(不同列族中列的单元格存储到不同的HFile中)，使用create命令创建数据表时需要指定列族的名称。举个栗子，“create ‘table1’,’cf’”，’cf’就是列族名称，可以看出创建表时并没有指定任何列以及数据类型。</li>
-<li>列(Column)：以列族名为前缀(cf:message)，不必在创建表时定义，只需要在写入数据时动态增加列并给出具体的字段值。类型是二进制值(byte[])。</li>
-<li>时间戳(Timestamp):由RowKey和Column可以确定一份数据，这份数据可能有多个版本，不同版本按照时间倒序排序，默认有3个版本。时间戳是64位整数，long类型。</li>
-<li>单元格(Value):列对应的字段值，由行键、列族、列、时间戳来定位。类型是字节数组(byte[])。</li>
-</ol>
-
+        <p>HBase是一种面向列的分布式数据库。
+        
+          <a class="article-more-a" href="/2018/02/18/HBase介绍/#more">more >></a>
+        
       
 
       
