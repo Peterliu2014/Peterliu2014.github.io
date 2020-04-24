@@ -16,13 +16,13 @@
 <meta property="og:site_name" content="lz">
 <meta property="og:description" content="volatile解决了并发编程中的顺序性和可见性问题，不会引起线程的阻塞，是一种轻量级的synchronized。这两个问题的解决依赖于内存屏障和缓存一致性协议。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/cache.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge551hxkmfj30en0eijsv.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/volatile-assembly.jpg">
-<meta property="og:updated_time" content="2019-10-20T07:28:48.519Z">
+<meta property="og:updated_time" content="2020-04-24T12:40:38.720Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java的Volatile关键字">
 <meta name="twitter:description" content="volatile解决了并发编程中的顺序性和可见性问题，不会引起线程的阻塞，是一种轻量级的synchronized。这两个问题的解决依赖于内存屏障和缓存一致性协议。">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/cache.jpg">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge551hxkmfj30en0eijsv.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -164,7 +164,7 @@
       
         <p>volatile解决了并发编程中的顺序性和可见性问题，不会引起线程的阻塞，是一种轻量级的synchronized。这两个问题的解决依赖于内存屏障和缓存一致性协议。<a id="more"></a></p>
 <h1 id="内存屏障和缓存一致性"><a href="#内存屏障和缓存一致性" class="headerlink" title="内存屏障和缓存一致性"></a>内存屏障和缓存一致性</h1><h2 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h2><p>由于编译器和CPU在对程序做优化的过程中可能会调整指令的执行顺序，这种优化可以保证单个线程中最终执行结果的正确性。但是，并发环境中却可能导致意想不到的错误。直接禁止这种重排序并不实际，因此引入了内存屏障，屏障之前的指令一定是先于之后的指令执行。<br>内存屏障是一类同步屏障/CPU指令，限制了编译器或者CPU优化后程序指令的执行顺序，保证同步屏障之前的代码先于之后代码执行。另外，在语义上，屏障之前的写操作必须从Cahe中刷新到主存中。</p>
-<h2 id="缓存一致性协议"><a href="#缓存一致性协议" class="headerlink" title="缓存一致性协议"></a>缓存一致性协议</h2><p>线程不会直接读写主存，而是先将数据从主存载入到Cache中再做计算。CPU的每个core独占L1、L2 Cache，主从中的共享变量可能在多个Core的缓存中都有对应的副本，如果其中一个Core修改了这个变量值并更新到主存之后，其它Cache中的副本值也应该更新。<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/cache.jpg" alt="Aaron Swartz"></p>
+<h2 id="缓存一致性协议"><a href="#缓存一致性协议" class="headerlink" title="缓存一致性协议"></a>缓存一致性协议</h2><p>线程不会直接读写主存，而是先将数据从主存载入到Cache中再做计算。CPU的每个core独占L1、L2 Cache，主从中的共享变量可能在多个Core的缓存中都有对应的副本，如果其中一个Core修改了这个变量值并更新到主存之后，其它Cache中的副本值也应该更新。<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ge551hxkmfj30en0eijsv.jpg" alt="image-20200424203927671"></p>
 <p>为了实现CPU缓存中共享变量值的一致性，引入了缓存一致性协议，其中一种是MESI协议，这个协议对Cache中的缓存行引入了四种状态：M（nodify，修改）、E（exclusive，独占）、S（share，共享）、I（invalid，无效）。<br>主存和Cache间通过总线交换数据，每个CPU都会“嗅探”总线上的数据，当发现传播的数据与其自身Cache中副本有对应关系，就会使自身Cache中的缓存行失效，线程读取时发现缓存行无效就会从主存中载入最新数据，实现了缓存的一致性。</p>
 <h1 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h1><h2 id="可见性例子"><a href="#可见性例子" class="headerlink" title="可见性例子"></a>可见性例子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VisibleTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span>  <span class="keyword">boolean</span> flag=<span class="keyword">true</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="comment">//自旋</span></span><br><span class="line">            <span class="keyword">while</span> (flag)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//System.out.println("loop");</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">        TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        <span class="comment">//主线程中设置flag为false</span></span><br><span class="line">        flag=<span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>flag初始值为true，因此子线程刚开始会自旋。随后在主线程中设置了flag=false，但是结果发现这个程序会一直运行，不会停止，也就是说子线程并没有感知到主线程对flag值的修改，工作内存中flag值仍然是false。</p>
@@ -211,7 +211,7 @@
 <tr>
 <td>synchronized</td>
 <td>解决了顺序性、可见性和原子性</td>
-<td>可以修饰变量、方法、代码块</td>
+<td>可以修饰变量(例如以对象作为锁)、方法、代码块</td>
 <td>会阻塞线程</td>
 <td>当锁升级为重量级锁时性能较差</td>
 </tr>
