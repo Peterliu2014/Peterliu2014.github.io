@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdarfsvnv2j30ns071tag.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdarq5xwvkj30lr062q3x.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdaruqe1zlj30m50a5q65.jpg">
-<meta property="og:updated_time" content="2020-04-22T11:31:26.589Z">
+<meta property="og:updated_time" content="2020-05-10T12:13:19.644Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kakfa架构与设计">
 <meta name="twitter:description" content="Kafka是一个分布式的，基于发布-订阅模式的消息队列。发布-订阅系统中一般会有一个存储中间消息的broker，消息的发送者不会直接把消息发送给接收者，而是写入broker，消息的接收者则从broker订阅特定类型的消息。">
@@ -347,7 +347,7 @@
 </li>
 </ul>
 <h2 id="Producer端"><a href="#Producer端" class="headerlink" title="Producer端"></a>Producer端</h2><h3 id="at-least-once"><a href="#at-least-once" class="headerlink" title="at least once"></a>at least once</h3><p>Producer发送一条消息后，会等待确认消息是否发送成功。如果没有收到发送成功的响应，就要重试来发送消息，这种可能会导致重复发送消息，但是保证至少有一条消息已投送。Kafka默认的Producer消息送达语义就是at least once，原因是默认配置是：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">leader不等待其他follower同步，leader分区确认已写入消息之后，发送成功写入的acks给producer。</span></span><br><span class="line">acks=1</span><br><span class="line"><span class="meta">#</span><span class="bash">重试次数</span></span><br><span class="line">retries=2147483647</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">leader不等待其他follower同步，leader分区确认已写入消息之后，发送成功写入的acks给producer。</span></span><br><span class="line">acks=1</span><br><span class="line"><span class="meta">#</span><span class="bash">重试次数</span></span><br><span class="line">retries=0</span><br></pre></td></tr></table></figure>
 <h3 id="at-most-once"><a href="#at-most-once" class="headerlink" title="at most once"></a>at most once</h3><p>Producer发送消息后，不必等待确认消息是否发送成功。通过配置ack=0就可以实现这个语义。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">表示不等待ack，就认为消息已发送成功</span></span><br><span class="line">ack=0</span><br><span class="line"><span class="meta">#</span><span class="bash">表示不进行重试，ack=0时这个参数其实不起作用</span></span><br><span class="line">retries=0</span><br></pre></td></tr></table></figure>
 <h3 id="exactly-once（生产消息幂等性）"><a href="#exactly-once（生产消息幂等性）" class="headerlink" title="exactly once（生产消息幂等性）"></a>exactly once（生产消息幂等性）</h3><p>Producer刚好发送一条消息到broker，没有丢失，也没有重复。Kafka从版本0.11之后提供了对exactly once语义的支持。可以通过配置Producer的以下配置项来实现Exactly once语义：</p>
