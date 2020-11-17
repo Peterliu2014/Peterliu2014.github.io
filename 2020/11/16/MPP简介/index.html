@@ -6,23 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>AQS概述 | lz</title>
+  <title>lz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="背景在JDK5之前，synchronized是仅有的同步手段，也称为内置锁。这种锁在JVM层面实现，使用时需要synchronized修饰方法，或者修饰代码块。JDK5之后，引入了用于构建锁或其它同步组件的基本框架–AQS，通过AQS(AbstractQueuedSynchronizer)实现的锁使用起来更加灵活，并且支持更多的功能，例如支持公平、非公平锁，获取锁时的中断机制和超时机制。">
-<meta name="keywords" content="并发">
+  <meta name="description" content="title: MPP简介categories: 大数据date: 2020-11-15 19:45:14tags:  MPP  MPP(Massive Parallel Processing)，即大规模并行处理，是一种数据处理架构。在了解MPP之前，先看下其它两种架构：SMP和NUMA。 系统架构从CPU角度来看，目前的商用服务器大体可以分为三类，即 SMP(Symmetric Multi-Pro">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AQS概述">
-<meta property="og:url" content="http://yoursite.com/2019/07/06/AQS概述/index.html">
+<meta property="og:title" content="lz">
+<meta property="og:url" content="http://yoursite.com/2020/11/16/MPP简介/index.html">
 <meta property="og:site_name" content="lz">
-<meta property="og:description" content="背景在JDK5之前，synchronized是仅有的同步手段，也称为内置锁。这种锁在JVM层面实现，使用时需要synchronized修饰方法，或者修饰代码块。JDK5之后，引入了用于构建锁或其它同步组件的基本框架–AQS，通过AQS(AbstractQueuedSynchronizer)实现的锁使用起来更加灵活，并且支持更多的功能，例如支持公平、非公平锁，获取锁时的中断机制和超时机制。">
+<meta property="og:description" content="title: MPP简介categories: 大数据date: 2020-11-15 19:45:14tags:  MPP  MPP(Massive Parallel Processing)，即大规模并行处理，是一种数据处理架构。在了解MPP之前，先看下其它两种架构：SMP和NUMA。 系统架构从CPU角度来看，目前的商用服务器大体可以分为三类，即 SMP(Symmetric Multi-Pro">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS1.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/aqs2.png">
-<meta property="og:updated_time" content="2019-09-17T14:24:20.579Z">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gks7jcfbhdj30c707v0th.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gkr5l490s6j30m808aaea.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gkr5mz4zgyj30k80fw7q6.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gkrxndr4uhj30m408ctcu.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gks1a8w6hwj30o70g5ahl.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gks6q5ni12j30h0067q4g.jpg">
+<meta property="og:updated_time" content="2020-11-17T07:35:58.604Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AQS概述">
-<meta name="twitter:description" content="背景在JDK5之前，synchronized是仅有的同步手段，也称为内置锁。这种锁在JVM层面实现，使用时需要synchronized修饰方法，或者修饰代码块。JDK5之后，引入了用于构建锁或其它同步组件的基本框架–AQS，通过AQS(AbstractQueuedSynchronizer)实现的锁使用起来更加灵活，并且支持更多的功能，例如支持公平、非公平锁，获取锁时的中断机制和超时机制。">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS1.png">
+<meta name="twitter:title" content="lz">
+<meta name="twitter:description" content="title: MPP简介categories: 大数据date: 2020-11-15 19:45:14tags:  MPP  MPP(Massive Parallel Processing)，即大规模并行处理，是一种数据处理架构。在了解MPP之前，先看下其它两种架构：SMP和NUMA。 系统架构从CPU角度来看，目前的商用服务器大体可以分为三类，即 SMP(Symmetric Multi-Pro">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gks7jcfbhdj30c707v0th.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -142,172 +145,49 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-AQS概述" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-MPP简介" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      AQS概述
-    </h1>
-  
-
-        
-        <a href="/2019/07/06/AQS概述/" class="archive-article-date">
-  	<time datetime="2019-07-06T12:39:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-06</time>
-</a>
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在JDK5之前，synchronized是仅有的同步手段，也称为内置锁。这种锁在JVM层面实现，使用时需要synchronized修饰方法，或者修饰代码块。JDK5之后，引入了用于构建锁或其它同步组件的基本框架–AQS，通过AQS(AbstractQueuedSynchronizer)实现的锁使用起来更加灵活，并且支持更多的功能，例如支持公平、非公平锁，获取锁时的中断机制和超时机制。<a id="more"></a>以下做一个简单的对比：</p>
-<table>
-<thead>
-<tr>
-<th>类别</th>
-<th>synchronized</th>
-<th>AQS</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>存在层次</td>
-<td>JVM级别</td>
-<td>JUC包</td>
-</tr>
-<tr>
-<td>功能</td>
-<td>可重入 不可中断 非公平</td>
-<td>可重入 可中断 可超时 可公平、非公平</td>
-</tr>
-<tr>
-<td>锁的申请</td>
-<td>如果持有锁的线程阻塞，其它申请锁的线程会死等</td>
-<td>提供了超时机制和中断机制，不会死等</td>
-</tr>
-<tr>
-<td>锁的释放(如果持有锁的线程崩溃)</td>
-<td>JVM会释放锁资源，不会导致死锁</td>
-<td>可能会导致死锁。一般需要在finally块中释放锁</td>
-</tr>
-<tr>
-<td>性能</td>
-<td>JVM底层对synchronized做了很多优化，少量并发可使用</td>
-<td>高并发可使用</td>
-</tr>
-</tbody>
-</table>
-<h1 id="AQS设计目标"><a href="#AQS设计目标" class="headerlink" title="AQS设计目标"></a>AQS设计目标</h1><h2 id="acquire和release"><a href="#acquire和release" class="headerlink" title="acquire和release"></a>acquire和release</h2><p>提供操作同步状态的acquire和release方法，其中acquire方法<strong>阻塞</strong>当前线程，直到或者除非同步状态允许其运行。release方法通过某种方式修改同步状态，<strong>唤醒</strong>一个或者多个被acquire阻塞的线程，允许其继续运行。</p>
-<h2 id="运行模式"><a href="#运行模式" class="headerlink" title="运行模式"></a>运行模式</h2><p>为了使AQS框架应用更加广泛，ASQ提供了两种模式：<strong>独占模式</strong>和<strong>共享模式</strong>。<br>独占模式：某个时刻，只允许<strong>一个</strong>线程通过acquire方法，其它线程都会阻塞到acquire方法上。<br>共享模式：某个时刻，允许<strong>多个</strong>线程通过acquire方法。</p>
-<h2 id="增强功能"><a href="#增强功能" class="headerlink" title="增强功能"></a>增强功能</h2><p>阻塞和非阻塞：除了阻塞的acquire方法以外，提供一个非阻塞获取资源的方法（tryAcquire），允许线程尝试性的获取资源。<br>中断：提供中断机制的acquire，阻塞的线程可以被中断，直接退出。<br>超时：超时是在中断的基础上添加的，一定时间内没有获取到资源，则退出。</p>
-<h1 id="AQS设计与实现"><a href="#AQS设计与实现" class="headerlink" title="AQS设计与实现"></a>AQS设计与实现</h1><p>同步器的实现思想非常简洁，acquire的伪代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (syncronization state does not allow acquire) &#123;</span><br><span class="line">  enqueue current thread <span class="keyword">if</span> not already queued;</span><br><span class="line">  possiblly block current thread;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>release的伪代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">update synchronization state;</span><br><span class="line"><span class="keyword">if</span> (state may premit a blocked thread acuire) &#123;</span><br><span class="line">  unblock one or more queued thread;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>实现以上操作需要三个模块的配合：</p>
+        <h2 id="title-MPP简介"><a href="#title-MPP简介" class="headerlink" title="title: MPP简介"></a>title: MPP简介</h2><p>categories: 大数据<br>date: 2020-11-15 19:45:14<br>tags:</p>
 <ul>
-<li>同步状态的原子性管理</li>
-<li>线程的阻塞和唤醒</li>
-<li>队列的管理<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/AQS1.png" alt="Aaron Swartz"></li>
+<li>MPP</li>
 </ul>
-<h2 id="同步状态"><a href="#同步状态" class="headerlink" title="同步状态"></a>同步状态</h2><p>使用整型变量state表示同步状态，并且使用volatile关键字保证可见性。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> state;</span><br><span class="line"> <span class="comment">//读取同步状态</span></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> state;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">//设置同步状态</span></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(<span class="keyword">int</span> newState)</span> </span>&#123;</span><br><span class="line">   state = newState;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">//通过CAS原子方式设置同步状态</span></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">compareAndSetState</span><span class="params">(<span class="keyword">int</span> expect, <span class="keyword">int</span> update)</span> </span>&#123;</span><br><span class="line">   <span class="comment">// See below for intrinsics setup to support this</span></span><br><span class="line">   <span class="keyword">return</span> unsafe.compareAndSwapInt(<span class="keyword">this</span>,                  stateOffset, expect, update);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个整数可以表现任何状态。比如，Semaphore 用它来表现剩余的许可数，ReentrantLock用它来表现拥有它的线程已经请求了多少次锁；FutureTask用它来表现任务的状态(尚未开始、运行、完成和取消)。</p>
-<h2 id="线程的阻塞和唤醒"><a href="#线程的阻塞和唤醒" class="headerlink" title="线程的阻塞和唤醒"></a>线程的阻塞和唤醒</h2><p>Object的wait和notify方法提供了阻塞和唤醒的功能，但是这种方式有一定的局限性：</p>
+<p>MPP(Massive Parallel Processing)，即大规模并行处理，是一种数据处理架构。在了解MPP之前，先看下其它两种架构：SMP和NUMA。</p>
+<h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><p>从CPU角度来看，目前的商用服务器大体可以分为三类，即 SMP(Symmetric Multi-Processor)对称多处理器结构、NUMA(Non-Uniform Memory Access)非一致存储访问结构、MPP(Massive Parallel Processing)大规模并行处理结构 。</p>
+<h3 id="SMP"><a href="#SMP" class="headerlink" title="SMP"></a>SMP</h3><p>对称多处理器架构，cpu之间是对等的，多个cpu共享服务器的资源，包括内存、总线、IO、操作系统等。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gks7jcfbhdj30c707v0th.jpg" alt="image-20201116172023431"></p>
+<p>各cpu访问内存时，消耗的时间都是相同的，因此SMP结构又被称为UMA(Uniform Memory Access)一致存储结构，这里的一致就是指各cpu访问内存时，消耗的时间是一致的。</p>
+<p>对SMP架构的扩展方式是添加内存、增加cpu数量、使用更快的cpu等，但是由于SMP是一种共享多种资源的结构，每类资源都会成为扩展时的瓶颈，尤其是内存。随着扩展的cpu数量逐渐增多，这些cpu间通过“总线”访问内存时的竞争情况会不断加剧，根据实际的测试结果，在这种架构下，最优的cpu数量是2-4个，更多的话，cpu只会浪费，不能提高系统的处理效率。这种架构由适用于普通 PC、笔记本电脑和小型服务器等。</p>
+<p>使用以下命令确认服务器是否是SMP结构：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/devices/system/node/     # 如果只看到一个 node0 那就是 SMP 架构</span><br></pre></td></tr></table></figure>
+<h3 id="NUMA"><a href="#NUMA" class="headerlink" title="NUMA"></a>NUMA</h3><p>SMP存在扩展性差的问题，原因就在于共享过多的资源。不共享资源是否就可以解决SMP的扩展性问题？基于这个思路，引入了NUMA架构。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gkr5l490s6j30m808aaea.jpg" alt="image-20201116174246595"></p>
+<p>NUMA中引入了CPU模块（节点）的概念，在一个CPU模块中包含cpu、内存、IO等，是一个小的处理系统，cpu可以直接操作模块内的本地内存来进行数据的处理，也可以通过NUMA互联模块访问其它cpu模块中的内存，这个称为远地内存。显然，cpu访问本地内存和远地内存的速度是不一样的，因此称为非一致存储访问结构（Non-Uniform Memory Access）。</p>
+<p>以下是一个从硬件层面理解NUMA架构的例子：</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gkr5mz4zgyj30k80fw7q6.jpg" alt="image-20201116174432593"></p>
+<p>这是一个4路的服务器主板图。4个黄色标签就是4块CPU，离各CPU最近的那4根内存条就是各自所属的。</p>
+<p>利用 NUMA 技术，可以较好地解决原来 SMP 系统的扩展问题，在一个物理服务器内可以支持上百个 CPU 。比较典型的 NUMA 服务器的例子包括 HP 的 Superdome 、 SUN15K 、 IBMp690 等。</p>
+<p>但是，由于访问远地内存的延时远远超过本地内存，并且由于NUMA的互联模块是在一个物理服务器内部实现的，在访问远地内存时需要等待，因此当 CPU 数量增加时，系统性能无法线性增加。如64路CPU的Superdome (NUMA 结构 ) 的相对性能值是20 ，而8路N4000( 共享的 SMP 结构 )的相对性能值是6.3 ， 8倍数量的CPU换来的只是3倍性能的提升。</p>
+<p>使用以下命令确认服务器是否是NUMA结构：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/devices/system/node/     #看到多个node，那就是NUMA架构</span><br></pre></td></tr></table></figure>
+<h3 id="MPP"><a href="#MPP" class="headerlink" title="MPP"></a>MPP</h3><p>NUMA支持在一台服务器上扩展上百个CPU（SMP只能扩展2-4个CPU），但是性能却不能随着CPU数量的增加而线性提升，原因在于NUMA的互联模块是在一台物理服务器内部实现，cpu发起远地内存访问时需要等待。其实，NUMA这个互联模块也是物理服务器内的一种共享资源，也就导致了性能瓶颈，从这个角度来看，与SMP相比，NUMA去除共享资源的动作还是不够彻底。如果能去除这种单台服务器内的互联模块，性能是否就能线性提升呢？基于这个思路，引入了MPP架构，实现线性扩展。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gkrxndr4uhj30m408ctcu.jpg" alt="image-20201117095343985"></p>
+<p>SMP和NUMA结构都是从「硬件」的角度对单台服务器进行扩展，以提升性能。MPP则是从「软件」角度实现扩展，引入了集群的概念，不再采用单台服务器，而是使用网络技术将多台SMP服务器连接起来，建立一个逻辑上的服务器（对用户完全透明，就像使用的就是单台服务器），多个SMP服务器之间的互联通过网络技术实现，打破了NUMA结构中互联模块对扩展性的影响。</p>
+<p>简单来讲，MPP架构就是将一个任务切分为若干子任务，再将这些子任务分配到各节点上执行，子任务执行完成后，将子结果汇总在一起，组成一个最终的结果。</p>
+<p>MPP存在木桶效应，即某个低效（例如磁盘故障，或者操作系统性能问题）的节点可能会导致整个任务的运行效率，因为在实际执行中存在“同步点”，在这个同步点中需要进行数据的整合和汇集，全部子任务执行完成才能进行下一步，执行快的任务就需要等待。如下图，大多数情况下，除了Executor 7 其他的所有执行器都是空闲状态。这是因为他们都在等待Executor 7执行完成后才能执行同步过程，这也是MPP架构问题的根本。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gks1a8w6hwj30o70g5ahl.jpg" alt="image-20201117115929900"></p>
+<h2 id="数据库架构模式"><a href="#数据库架构模式" class="headerlink" title="数据库架构模式"></a>数据库架构模式</h2><p>数据库构架设计中主要有三种模式，分别是Shared Everything（SE）、Shared Disk（SD）和Shared Nothing（SN）。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gks6q5ni12j30h0067q4g.jpg" alt="image-20201117150744102"></p>
 <ul>
-<li>必须在synchronized方法或者代码块中调用，使用方式不够灵活。</li>
-<li>必须在synchronized中调用，隐含着必须先获取到锁才能阻塞/唤醒线程，将获取内置锁和操作线程耦合在一起。</li>
+<li>Shared Everything：一般是指部署在单台服务器上的数据库系统，cpu、内存、io都是共享资源。这种模式下，并行化处理的效率是最差的，扩展性也是最差的，典型的数据库系统是：SQL Server、PostgreSQL、MySQL。</li>
+<li>Shared Disk：数据库系统部署在多台服务器上，每台服务器独立占用cpu、内存，然后在服务器之间共享存储（NAS或SAN），这种系统中，通过增加节点可以提升数据库的性能，但是由于存储是共享资源，所以在存储的接口达到瓶颈是，性能就不能继续提升。这种架构模式下的数据库系统是：Oracle RAC、Sybase IQ。</li>
+<li>Shared Nothing：这种架构模式下，数据库系统也是部署在多个节点上，每台服务器拥有独立的cpu、内存、IO，不存在共享资源，各节点之间通过网络协议进行通信以完成数据的交换。类似于MPP模式，每个节点执行一部分任务，最终将各节点的结果汇总形成最终的结果。这种模式具有良好的扩展性和并行处理的能力，常见的数据库系统是：Teradata、IBM DB2、Greenplum。</li>
 </ul>
-<p>因此，AQS使用LockSupport实现线程的阻塞和唤醒。</p>
-<h3 id="park-unpark"><a href="#park-unpark" class="headerlink" title="park/unpark"></a>park/unpark</h3><p>LockSuppport提供了构建锁或其他同步器的线程阻塞原语。park/unpark模型实现线程粒度的阻塞和唤醒功能。park/unpark模型真正解耦了线程之间的同步，线程之间不再需要一个Object或者其它变量来存储状态。<br>park方法可以响应中断，即中断线程也可以唤醒阻塞的线程，这是实现AQS中断机制的关键。</p>
-<h3 id="许可机制"><a href="#许可机制" class="headerlink" title="许可机制"></a>许可机制</h3><p>LockSupport通过“许可”（permit）机制，使用park/unpark实现线程的阻塞和唤醒。park申请许可，unpark释放许可，默认情况下许可是被占用的。可以将许可机制理解为值为1的信号量。<br>另外，如果unpark先于park被调用，park不会被阻塞（可以通过信号量来理解）。而Object的notify如果先于wait调用，则wait会阻塞。</p>
-<h3 id="LockSupport例子"><a href="#LockSupport例子" class="headerlink" title="LockSupport例子"></a>LockSupport例子</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    Thread threadA = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"周末了我在打游戏"</span>);</span><br><span class="line">            LockSupport.park();</span><br><span class="line">            System.out.println(<span class="string">"陪女朋友逛逛街"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    threadA.start();</span><br><span class="line">    Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">    System.out.println(<span class="string">"女朋友准备要喊男朋友逛街"</span>);</span><br><span class="line">    LockSupport.unpark(threadA);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="同步队列"><a href="#同步队列" class="headerlink" title="同步队列"></a>同步队列</h2><p>AQS对队列的管理是基于<a href="http://go4ward.top/2019/05/19/CLH%E8%87%AA%E6%97%8B%E9%94%81/#more" target="_blank" rel="noopener">CLH队列</a>来实现,是一个CLH变种形式。<br><img src="https://raw.githubusercontent.com/Peterliu2014/markDownPhotos/master/concurrent/aqs2.png" alt="Aaron Swartz"></p>
-<ul>
-<li>head和tail都是懒加载的，只有当产生竞争，线程需要阻塞时才会创建。head指向获得资源的节点，tail指向队列的尾节点。</li>
-<li>CLH队列是自旋锁，获取不到资源时会空旋。而这里同步队列获取不到锁，线程会阻塞，避免空旋浪费资源。</li>
-<li>由于需要使用unpark(Thread t)唤醒后继线程，所以在CLH队列的基础上，还添加了next字段，指向其后继节点。CLH中后继节点不断在前驱节点上自旋，因此不需要next字段。</li>
-</ul>
-<h1 id="AQS具体实现"><a href="#AQS具体实现" class="headerlink" title="AQS具体实现"></a>AQS具体实现</h1><p>实现AQS最好的方式是通过内部类继承AQS，然后实现其模板方法。五个模板方法（UnsupportedOperationException）是：</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>protected boolean tryAcquire(int)</td>
-<td>独占式获取锁，实现该方法需要查询当前状态并判断同步状态是否和预期值相同，然后使用 CAS 操作设置同步状态</td>
-</tr>
-<tr>
-<td>protected boolean tryRelease(int)</td>
-<td>独占式释放锁，实际也是修改同步变量</td>
-</tr>
-<tr>
-<td>protected int tryAcquireShared(int)</td>
-<td>共享式获取锁，返回大于等于 0 的值，表示获取锁成功，反之获取失败</td>
-</tr>
-<tr>
-<td>protected boolean tryReleaseShared(int)</td>
-<td>共享式释放锁</td>
-</tr>
-<tr>
-<td>protected boolean isHeldExclusively()</td>
-<td>判断调用该方法的线程是否持有互斥锁,独占模式需要重写</td>
-</tr>
-</tbody>
-</table>
-<p>独占式获取与释放锁、共享式获取与释放锁的模板方法：</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>void acquire(int)</td>
-<td>独占式获取锁，如果当前线程成功获取锁，那么方法就返回，否则会将当前线程放入同步队列等待。该方法会调用重写的 tryAcquire(int arg) 方法判断是否可以获得锁</td>
-</tr>
-<tr>
-<td>void acquireInterruptibly(int)</td>
-<td>和 acquire(int) 相同，但是该方法响应中断，当线程在同步队列中等待时，如果线程被中断，会抛出中断异常并返回。</td>
-</tr>
-<tr>
-<td>boolean tryAcquireNanos(int, long)</td>
-<td>在 acquireInterruptibly(int) 基础上添加了超时控制，同时支持中断和超时，当在指定时间内没有获得锁时，会返回 false，获取到了返回 true</td>
-</tr>
-<tr>
-<td>void acquireShared(int)</td>
-<td>共享式获得锁，如果成功获得锁就返回，否则将当前线程放入同步队列等待，与独占式获取锁的不同是，同一时刻可以有多个线程获得共享锁，该方法调用 tryAcquireShared(int)</td>
-</tr>
-<tr>
-<td>acquireSharedInterruptibly(int)</td>
-<td>与 acquireShared(int) 相同，该方法响应中断</td>
-</tr>
-<tr>
-<td>tryAcquireSharedNanos(int, long)</td>
-<td>在 acquireSharedInterruptibly(int) 基础上添加了超时控制</td>
-</tr>
-<tr>
-<td>boolean release(int)</td>
-<td>独占式释放锁，该方法会在释放锁后，将同步队列中第一个等待节点唤醒</td>
-</tr>
-<tr>
-<td>boolean releaseShared(int)</td>
-<td>共享式释放锁</td>
-</tr>
-</tbody>
-</table>
-<h2 id="著名实现类"><a href="#著名实现类" class="headerlink" title="著名实现类"></a>著名实现类</h2><ul>
-<li>ReentrantLock 是可重入的互斥锁（独占模式），同步状态来保存锁（重复）持有的次数。ReentrantLock 有公平锁和非公平锁两种模式，对应的，ReentrantLock内部有两个AQS的子类。</li>
-<li>Semaphore表示信号量(共享模式)，同步状态来保存信号量的当前计数。它里面定义的acquireShared方法会减少计数，或当计数为非正值时阻塞线程；tryRelease方法会增加计数，可能在计数为正值时还要解除线程的阻塞。</li>
-<li>CountDownLatch类使用AQS同步状态来表示计数。当该计数为0时，所有的acquire操作（acquire操作是从aqs的角度说的，对应到CountDownLatch中就是await方法）才能通过。</li>
-</ul>
-<p>参考<br>1）<a href="http://gee.cs.oswego.edu/dl/papers/aqs.pdf" target="_blank" rel="noopener">http://gee.cs.oswego.edu/dl/papers/aqs.pdf</a><br>2）<a href="https://leer.moe/2019/04/25/java-concurrent-aqs" target="_blank" rel="noopener">https://leer.moe/2019/04/25/java-concurrent-aqs</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>1）<a href="https://www.cnblogs.com/laoqing/p/13042432.html" target="_blank" rel="noopener">https://www.cnblogs.com/laoqing/p/13042432.html</a></p>
+<p>2）<a href="https://toutiao.io/posts/2a9ayg/preview" target="_blank" rel="noopener">https://toutiao.io/posts/2a9ayg/preview</a></p>
+<p>3）<a href="http://db.csail.mit.edu/madden/high_perf.pdf" target="_blank" rel="noopener">http://db.csail.mit.edu/madden/high_perf.pdf</a></p>
 
       
 
@@ -316,29 +196,7 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">并发</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
 
       
 
@@ -351,18 +209,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/07/14/AQS独占模式与ReentrantLock/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          AQS独占模式与ReentrantLock
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/06/23/Java本地执行Linux命令/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Java本地执行Linux命令</div>
+    <a href="/2020/01/04/Zookeeper架构与原理/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Zookeeper架构与原理</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -389,7 +238,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AQS设计目标"><span class="toc-number">2.</span> <span class="toc-text">AQS设计目标</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#acquire和release"><span class="toc-number">2.1.</span> <span class="toc-text">acquire和release</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行模式"><span class="toc-number">2.2.</span> <span class="toc-text">运行模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#增强功能"><span class="toc-number">2.3.</span> <span class="toc-text">增强功能</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AQS设计与实现"><span class="toc-number">3.</span> <span class="toc-text">AQS设计与实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步状态"><span class="toc-number">3.1.</span> <span class="toc-text">同步状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程的阻塞和唤醒"><span class="toc-number">3.2.</span> <span class="toc-text">线程的阻塞和唤醒</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#park-unpark"><span class="toc-number">3.2.1.</span> <span class="toc-text">park/unpark</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#许可机制"><span class="toc-number">3.2.2.</span> <span class="toc-text">许可机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LockSupport例子"><span class="toc-number">3.2.3.</span> <span class="toc-text">LockSupport例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步队列"><span class="toc-number">3.3.</span> <span class="toc-text">同步队列</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AQS具体实现"><span class="toc-number">4.</span> <span class="toc-text">AQS具体实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#著名实现类"><span class="toc-number">4.1.</span> <span class="toc-text">著名实现类</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title-MPP简介"><span class="toc-number">1.</span> <span class="toc-text">title: MPP简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统架构"><span class="toc-number">2.</span> <span class="toc-text">系统架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SMP"><span class="toc-number">2.1.</span> <span class="toc-text">SMP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NUMA"><span class="toc-number">2.2.</span> <span class="toc-text">NUMA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MPP"><span class="toc-number">2.3.</span> <span class="toc-text">MPP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库架构模式"><span class="toc-number">3.</span> <span class="toc-text">数据库架构模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
                     </div>
                 </span>
             </div>
