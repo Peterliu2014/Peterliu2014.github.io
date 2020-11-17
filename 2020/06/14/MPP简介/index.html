@@ -16,17 +16,17 @@
 <meta property="og:site_name" content="lz">
 <meta property="og:description" content="MPP(Massive Parallel Processing)，即大规模并行处理，是一种数据处理架构。在了解MPP之前，先看下其它两种架构：SMP和NUMA。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/Users/liuyi/Library/Application%20Support/typora-user-images/image-20201116172023431.png">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gks7odbye9j30c707v0th.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gkr5l490s6j30m808aaea.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gkr5mz4zgyj30k80fw7q6.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gkrxndr4uhj30m408ctcu.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gks1a8w6hwj30o70g5ahl.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gks6q5ni12j30h0067q4g.jpg">
-<meta property="og:updated_time" content="2020-11-17T07:39:38.259Z">
+<meta property="og:updated_time" content="2020-11-17T07:40:53.978Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MPP简介">
 <meta name="twitter:description" content="MPP(Massive Parallel Processing)，即大规模并行处理，是一种数据处理架构。在了解MPP之前，先看下其它两种架构：SMP和NUMA。">
-<meta name="twitter:image" content="http://yoursite.com/Users/liuyi/Library/Application%20Support/typora-user-images/image-20201116172023431.png">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/0081Kckwgy1gks7odbye9j30c707v0th.jpg">
   
     <link rel="alternative" href="/atom.xml" title="lz" type="application/atom+xml">
   
@@ -169,7 +169,7 @@
         <p>MPP(Massive Parallel Processing)，即大规模并行处理，是一种数据处理架构。在了解MPP之前，先看下其它两种架构：SMP和NUMA。<a id="more"></a></p>
 <h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><p>从CPU角度来看，目前的商用服务器大体可以分为三类，即 SMP(Symmetric Multi-Processor)对称多处理器结构、NUMA(Non-Uniform Memory Access)非一致存储访问结构、MPP(Massive Parallel Processing)大规模并行处理结构 。</p>
 <h3 id="SMP"><a href="#SMP" class="headerlink" title="SMP"></a>SMP</h3><p>对称多处理器架构，cpu之间是对等的，多个cpu共享服务器的资源，包括内存、总线、IO、操作系统等。</p>
-<p><img src="/Users/liuyi/Library/Application Support/typora-user-images/image-20201116172023431.png" alt="image-20201116172023431"></p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gks7odbye9j30c707v0th.jpg" alt="image-2020111617202341"></p>
 <p>各cpu访问内存时，消耗的时间都是相同的，因此SMP结构又被称为UMA(Uniform Memory Access)一致存储结构，这里的一致就是指各cpu访问内存时，消耗的时间是一致的。</p>
 <p>对SMP架构的扩展方式是添加内存、增加cpu数量、使用更快的cpu等，但是由于SMP是一种共享多种资源的结构，每类资源都会成为扩展时的瓶颈，尤其是内存。随着扩展的cpu数量逐渐增多，这些cpu间通过“总线”访问内存时的竞争情况会不断加剧，根据实际的测试结果，在这种架构下，最优的cpu数量是2-4个，更多的话，cpu只会浪费，不能提高系统的处理效率。这种架构由适用于普通 PC、笔记本电脑和小型服务器等。</p>
 <p>使用以下命令确认服务器是否是SMP结构：</p>
